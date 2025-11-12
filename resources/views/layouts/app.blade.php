@@ -60,13 +60,7 @@
         <span class="page-title">@yield('title', 'Dashboard')</span>
       </div>
 
-      <div class="d-flex align-items-center">
-        <span class="user-info me-3">
-          <i class="bi bi-person-circle me-1"></i> {{ Auth::user()->nama ?? 'Pengguna' }}
-        </span>
 
-
-      </div>
     </nav>
 
     <!--  Area konten utama -->

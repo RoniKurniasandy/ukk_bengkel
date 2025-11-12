@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
     {
         // --- Roles ---
         DB::table('roles')->insert([
-            ['name' => 'admin', 'description' => 'Akses penuh ke sistem'],
+            ['name' => 'admin', 'description' => 'Akses penuh ke sistem'], 
             ['name' => 'mekanik', 'description' => 'Mengelola servis kendaraan'],
             ['name' => 'pelanggan', 'description' => 'Melakukan booking dan melihat status servis'],
         ]);

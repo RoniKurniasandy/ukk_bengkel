@@ -23,4 +23,11 @@ class Booking extends Model
     {
         return $this->hasOne(Servis::class, 'booking_id');
     }
+
+    public function mekanik()
+{
+    return $this->belongsTo(User::class, 'mekanik_id');
+}
+
+
 }

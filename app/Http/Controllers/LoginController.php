@@ -7,24 +7,30 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    // Menampilkan form login
     public function showLoginForm()
     {
+        // Mengembalikan view login
         return view('auth.login');
     }
 
+    // Proses login user
     public function login(Request $request)
     {
+        // Validasi input email dan password
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'email' => 'required|email',    // Email harus diisi dan valid
+            'password' => 'required',       // Password harus diisi
         ]);
 
+        // Coba autentikasi user dengan data yang diberikan
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            // Jika berhasil, regenerasi session untuk keamanan
             $request->session()->regenerate();
 
-            $user = Auth::user();
+            $user = Auth::user(); // Ambil data user yang sedang login
 
-            //  Arahkan sesuai role
+            // Redirect ke dashboard sesuai role user
             if ($user->role === 'admin') {
                 return redirect()->route('dashboard.admin');
             } elseif ($user->role === 'mekanik') {
@@ -34,16 +40,18 @@ class LoginController extends Controller
             }
         }
 
+        // Jika gagal login, kembali ke halaman login dengan pesan error
         return back()->withErrors([
             'email' => 'Email atau password salah.',
         ])->onlyInput('email');
     }
 
+    // Proses logout user
     public function logout(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/login');
+        Auth::logout(); // Logout user
+        $request->session()->invalidate(); // Hapus session
+        $request->session()->regenerateToken(); // Regenerasi CSRF token
+        return redirect('/login'); // Redirect ke halaman login
     }
 }

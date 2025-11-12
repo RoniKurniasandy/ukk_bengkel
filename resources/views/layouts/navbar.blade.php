@@ -23,15 +23,7 @@
         </li>
       </ul>
 
-      <div class="d-flex align-items-center">
-        <span class="me-3 text-primary fw-semibold">{{ Auth::user()->nama }}</span>
-        <form method="POST" action="{{ route('logout') }}">
-          @csrf
-          <button class="btn btn-outline-danger btn-sm">
-            <i class="bi bi-box-arrow-right"></i> Keluar
-          </button>
-        </form>
-      </div>
+
     </div>
   </div>
 </nav>

@@ -11,7 +11,7 @@ class AdminDashboardController extends Controller
 {
 public function index()
 {
-    return view('dashboard.admin', [
+    return view('dashboard.admin', [ 
         'servis_aktif' => Servis::where('status', 'proses')->count(),
         'transaksi_hari_ini' => Transaksi::whereDate('created_at', today())->count(),
         'jumlah_user' => User::where('role', 'user')->count(),

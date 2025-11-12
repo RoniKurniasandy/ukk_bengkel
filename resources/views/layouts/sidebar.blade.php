@@ -3,7 +3,7 @@
     <h5 class="fw-bold">Bengkel Mobil Sejahtera</h5>
   </div>
 
-  <ul class="nav flex-column mt-3">
+  <ul class="nav flex-column" style=" height: calc(100% - 89.06px);">
     <li class="nav-item">
       <a href="{{ route('dashboard') }}" class="nav-link text-white {{ request()->is('dashboard') ? 'active bg-primary' : '' }}">
         <i class="bi bi-speedometer2 me-2"></i> Dashboard
@@ -23,18 +23,23 @@
       <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-check-circle me-2"></i> Servis Selesai</a></li>
     @endif
 
-    @if(Auth::check() && Auth::user()->role === 'user')
-      <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-car-front me-2"></i> Servis Saya</a></li>
-      <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-clock-history me-2"></i> Riwayat Servis</a></li>
+    @if(Auth::check() && Auth::user()->role === 'pelanggan')
+      <li class="nav-item"><a href="{{ route('pelanggan.booking.index') }}" class="nav-link text-white"><i></i> Booking</a></li>
+      <!-- <li class="nav-item"><a href="{{ route('user.') }}"><i class="bi bi-car-front me-2"></i> Servis Saya</a></li>
+      <li class="nav-item"><a href="{{ route('user.') }}e"><i class="bi bi-clock-history me-2"></i> Riwayat Servis</a></li> -->
     @endif
 
-    <li class="mt-3 border-top pt-3">
-      <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit" class="btn btn-outline-light w-100 text-start">
-          <i class="bi bi-box-arrow-right me-2"></i> Keluar
-        </button>
-      </form>
+    
+    <li class="mt-auto border-top pt-3">
+      <div class="d-flex align-items-center">
+        <span class="me-3 text-primary fw-semibold">{{ Auth::user()->nama }}</span>
+        <form method="POST" action="{{ route('logout') }}">
+          @csrf
+          <button class="btn btn-outline-danger btn-sm">
+            <i class="bi bi-box-arrow-right"></i> Keluar
+          </button>
+        </form>
+      </div>
     </li>
   </ul>
 </div>

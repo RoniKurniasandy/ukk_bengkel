@@ -52,9 +52,9 @@
     <section id="tentang" class="h-screen flex items-center bg-white">
         <div class="container mx-auto px-6 text-center">
             <h2 class="text-3xl font-bold mb-6">Tentang Kami</h2>
-            <p class="text-lg max-w-3xl mx-auto">Bengkel Mobil Sejahtera telah melayani pelanggan sejak 2010. Kami
+            <p class="text-lg mx-auto">Bengkel Mobil Sejahtera telah melayani pelanggan sejak 2010. Kami
                 menyediakan layanan servis mobil umum, tune-up, ganti oli, spooring balancing, dan banyak lagi dengan
-                teknisi berpengalaman dan peralatan modern.</p>
+                teknisi berpengalaman dan peralatan modern. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fuga aperiam tenetur excepturi, velit fugiat in. Totam reiciendis magnam quam ex deserunt eaque voluptas. Praesentium sed fugiat laboriosam neque, voluptatibus nisi. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nobis aspernatur debitis facere soluta laudantium harum sit similique voluptatem repellat accusamus quis aperiam, quam perferendis dolorum atque blanditiis porro voluptate libero. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quisquam neque, ut ex numquam impedit dolorem ipsum qui fugit dignissimos similique reiciendis alias ad quasi provident? Laborum magni ipsa suscipit! Iusto. Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem maxime omnis eaque expedita quaerat reiciendis illo. Ipsa aliquam magnam dolor quae facere repellendus tenetur placeat ipsum, est eligendi totam tempore. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel soluta officia vero cumque hic repudiandae labore repellendus ullam id, exercitationem nulla ut animi. Amet, omnis eius dolorem laudantium quidem nemo! Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus voluptas iste eaque sequi. Ratione iusto deleniti alias rem, a provident architecto natus molestias neque ipsum, molestiae eaque, fugiat dolor aut?</p>
         </div>
     </section>
 
@@ -92,8 +92,8 @@
     </section>
 
     <!-- Kontak -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-6 text-center">
+    <section id="kontak" class="py-16 bg-white">
+        <div class="container mx-auto px-6 ">
             <h2 class="text-3xl font-bold mb-4">Hubungi Kami</h2>
             <p class="mb-4">Ingin servis atau tanya-tanya dulu? Silakan hubungi kami:</p>
             <p class="text-lg font-semibold">0812-3456-7890</p>
