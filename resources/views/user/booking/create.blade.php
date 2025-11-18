@@ -1,58 +1,54 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Booking Servis')
-
 @section('content')
-<div class="container-fluid py-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Tambah Booking Servis</h4>
-        </div>
+<div class="container mt-4">
 
-        <div class="card-body">
-            <form action="{{ route('user.booking.store') }}" method="POST">
-                @csrf
+    <div class="card shadow-lg border-0 p-4">
+        <h3 class="fw-bold mb-3">Booking Servis Baru</h3>
 
-                <div class="mb-3">
-                    <label for="kendaraan_id" class="form-label">Pilih Kendaraan</label>
-                    <select name="kendaraan_id" id="kendaraan_id" class="form-select" required>
-                        <option value="" disabled selected>-- Pilih Kendaraan --</option>
-                        @foreach($kendaraan as $item)
-                            <option value="{{ $item->id }}">{{ $item->nama_kendaraan }} - {{ $item->no_polisi }}</option>
-                        @endforeach
-                    </select>
-                </div>
+        <form action="{{ route('user.booking.store') }}" method="POST">
+            @csrf
 
-                <div class="mb-3">
-                    <label for="jenis_layanan" class="form-label">Jenis Layanan</label>
-                    <select name="jenis_layanan" id="jenis_layanan" class="form-select" required>
-                        <option value="" disabled selected>-- Pilih Jenis Layanan --</option>
-                        <option value="servis mesin">Servis Mesin</option>
-                        <option value="listrik">Servis Kelistrikan</option>
-                        <option value="tune up">Tune Up</option>
-                        <option value="ganti oli">Ganti Oli</option>
-                        <option value="aki">Ganti Aki</option>
-                        <option value="ganti ban">Ganti Ban</option>
-                        <option value="servis AC">Servis AC</option>
-                    </select>
-                </div>
 
-                <div class="mb-3">
-                    <label for="keluhan" class="form-label">Keluhan</label>
-                    <textarea name="keluhan" id="keluhan" class="form-control" rows="3" placeholder="Tuliskan keluhan kendaraan..."></textarea>
-                </div>
+            <div class="mb-3">
+                <label class="fw-semibold">Layanan Servis</label>
+                <select name="jenis_servis" class="form-select" required>
+                    <option value="">-- Pilih Layanan Servis --</option>
+                    <option value="Servis Listrik">Servis Listrik</option>
+                    <option value="Tune Up">Tune Up</option>
+                    <option value="Ganti Oli">Ganti Oli</option>
+                    <option value="Ganti Aki">Ganti Aki</option>
+                    <option value="Ganti Ban">Ganti Ban</option>
+                    <option value="Servis AC">Servis AC</option>
+                </select>
+            </div>
 
-                <div class="mb-3">
-                    <label for="tanggal_booking" class="form-label">Tanggal & Waktu Booking</label>
-                    <input type="datetime-local" name="tanggal_booking" id="tanggal_booking" class="form-control" required>
-                </div>
+            <div class="mb-3">
+                <label for="kendaraan_id" class="form-label">Pilih Kendaraan</label>
+                <select name="kendaraan_id" class="form-control" required>
+                    @foreach ($kendaraan as $k)
+                    <option value="{{ $k->id }}">{{ $k->model }} - {{ $k->plat_nomor }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-                <div class="d-flex justify-content-end">
-                    <a href="{{ route('user.booking.index') }}" class="btn btn-secondary me-2">Batal</a>
-                    <button type="submit" class="btn btn-primary">Simpan Booking</button>
-                </div>
-            </form>
-        </div>
+
+            <div class="mb-3">
+                <label class="fw-semibold">Tanggal Booking</label>
+                <input type="date" name="tanggal_booking" class="form-control"
+                    min="{{ date('Y-m-d') }}" required>
+            </div>
+
+
+            <div class="mb-3">
+                <label class="fw-semibold">Keluhan Kendaraan</label>
+                <textarea name="keluhan" class="form-control" rows="4" required></textarea>
+            </div>
+
+            <button class="btn btn-primary px-4">Kirim Booking</button>
+            <a href="{{ route('user.booking.index') }}" class="btn btn-secondary">Kembali</a>
+        </form>
     </div>
+
 </div>
 @endsection

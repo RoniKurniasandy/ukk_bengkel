@@ -27,8 +27,9 @@ class User extends Authenticatable
     // Relasi contoh, sesuaikan kalau perlu
     public function kendaraan()
     {
-        return $this->hasMany(Kendaraan::class, 'user_id');
+        return $this->hasMany(Kendaraan::class);
     }
+
 
     public function bookings()
     {

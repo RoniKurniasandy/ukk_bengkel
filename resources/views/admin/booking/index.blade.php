@@ -45,8 +45,6 @@
                                     <span class="badge bg-warning text-dark">Menunggu</span>
                                 @elseif($booking->status == 'disetujui')
                                     <span class="badge bg-primary">Disetujui</span>
-                                @elseif($booking->status == 'selesai')
-                                    <span class="badge bg-success">Selesai</span>
                                 @elseif($booking->status == 'ditolak')
                                     <span class="badge bg-danger">Ditolak</span>
                                 @elseif($booking->status == 'dibatalkan')

@@ -11,25 +11,40 @@
     </li>
 
     @if(Auth::check() && Auth::user()->role === 'admin')
-      <li class="nav-item"><a href="{{ route('admin.users') }}" class="nav-link text-white">Kelola User</a></li>
-      <li class="nav-item"><a href="{{ route('admin.servis') }}" class="nav-link text-white">Kelola Servis</a></li>
-      <li class="nav-item"><a href="{{ route('admin.booking') }}" class="nav-link text-white">Kelola Booking</a></li>
-      <li class="nav-item"><a href="{{ route('admin.sparepart') }}" class="nav-link text-white">Sparepart</a></li>
-      <li class="nav-item"><a href="{{ route('admin.transaksi') }}" class="nav-link text-white">Transaksi</a></li>
+    <li class="nav-item"><a href="{{ route('admin.users') }}" class="nav-link text-white">Kelola User</a></li>
+    <li class="nav-item"><a href="{{ route('admin.servis') }}" class="nav-link text-white">Kelola Servis</a></li>
+    <li class="nav-item"><a href="{{ route('admin.booking') }}" class="nav-link text-white">Kelola Booking</a></li>
+    <li class="nav-item"><a href="{{ route('admin.stok.index') }}" class="nav-link text-white">Stok</a></li>
+    <li class="nav-item"><a href="{{ route('admin.transaksi') }}" class="nav-link text-white">Transaksi</a></li>
     @endif
 
     @if(Auth::check() && Auth::user()->role === 'mekanik')
-      <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-tools me-2"></i> Servis Dikerjakan</a></li>
-      <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-check-circle me-2"></i> Servis Selesai</a></li>
+    <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-tools me-2"></i> Servis Dikerjakan</a></li>
+    <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-check-circle me-2"></i> Servis Selesai</a></li>
     @endif
 
     @if(Auth::check() && Auth::user()->role === 'pelanggan')
-      <li class="nav-item"><a href="{{ route('pelanggan.booking.index') }}" class="nav-link text-white"><i></i> Booking</a></li>
-      <!-- <li class="nav-item"><a href="{{ route('user.') }}"><i class="bi bi-car-front me-2"></i> Servis Saya</a></li>
-      <li class="nav-item"><a href="{{ route('user.') }}e"><i class="bi bi-clock-history me-2"></i> Riwayat Servis</a></li> -->
+    <li class="nav-item">
+      <a href="{{ route('user.servis') }}" class="nav-link text-white {{ request()->is('pelanggan/servis') ? 'active bg-primary' : '' }}">
+        <i class="bi bi-tools me-2"></i> Servis Saya
+      </a>
+    </li>
+
+      <li class="nav-item">
+      <a href="{{ route('user.kendaraan') }}" class="nav-link text-white {{ request()->is('pelanggan/kendaraan') ? 'active bg-primary' : '' }}">
+        <i class="bi bi-car-front me-2"></i> Kendaraan Saya
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="{{ route('user.booking.index') }}" class="nav-link text-white {{ request()->is('pelanggan/booking') ? 'active bg-primary' : '' }}">
+        <i class="bi bi-calendar-check me-2"></i> Booking Servis
+      </a>
+    </li>
     @endif
 
-    
+
+
     <li class="mt-auto border-top pt-3">
       <div class="d-flex align-items-center">
         <span class="me-3 text-primary fw-semibold">{{ Auth::user()->nama }}</span>
@@ -48,11 +63,12 @@
   .sidebar .nav-link {
     padding: 10px 15px;
     border-radius: 6px;
-    transition: background-color 0.2s;
+    transition: all 0.25s;
   }
 
   .sidebar .nav-link:hover {
-    background-color: #2563eb;
+    background-color: #0d6efd;
+    transform: translateX(4px);
   }
 
   .sidebar .nav-link.active {
@@ -65,6 +81,7 @@
       transition: all 0.3s;
       z-index: 1050;
     }
+
     .sidebar.show {
       left: 0;
     }

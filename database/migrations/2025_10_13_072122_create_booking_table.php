@@ -16,6 +16,9 @@ return new class extends Migration {
             $table->dateTime('tanggal_booking');
             $table->enum('status', ['menunggu', 'disetujui', 'ditolak', 'dibatalkan', 'selesai'])->default('menunggu');
             $table->timestamps();
+            $table->string('jenis_servis')->after('user_id');
+            $table->dropForeign(['servis_id']);
+            $table->dropColumn('servis_id');
         });
     }
 
