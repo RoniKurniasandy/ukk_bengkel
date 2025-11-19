@@ -17,8 +17,6 @@ class KendaraanController extends Controller
 
     public function store(Request $request)
     {
-        dd('STORE MASUK');
-
         $request->validate([
             'merk' => 'required',
             'model' => 'required',
@@ -37,11 +35,11 @@ class KendaraanController extends Controller
 
     public function destroy($id)
     {
-        $kendaraan = Kendaraan::where('user_id', Auth::id())
-            ->orderBy('created_at', 'DESC')
-            ->get();
-        $kendaraan->delete();
+        Kendaraan::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->delete();
 
-        return back()->with('success', 'Kendaraan berhasil dihapus');
+        return redirect()->route('user.kendaraan')
+            ->with('success', 'Kendaraan berhasil dihapus!');
     }
 }

@@ -24,27 +24,31 @@
     @endif
 
     @if(Auth::check() && Auth::user()->role === 'pelanggan')
+
     <li class="nav-item">
-      <a href="{{ route('user.servis') }}" class="nav-link text-white {{ request()->is('pelanggan/servis') ? 'active bg-primary' : '' }}">
+      <a href="{{ route('user.servis') }}"
+        class="nav-link text-white {{ request()->is('pelanggan/servis') ? 'active bg-primary' : '' }}">
         <i class="bi bi-tools me-2"></i> Servis Saya
       </a>
     </li>
 
-      <li class="nav-item">
-      <a href="{{ route('user.kendaraan') }}" class="nav-link text-white {{ request()->is('pelanggan/kendaraan') ? 'active bg-primary' : '' }}">
+    <li class="nav-item">
+      <a href="{{ route('user.kendaraan') }}"
+        class="nav-link text-white {{ request()->is('pelanggan/kendaraan') ? 'active bg-primary' : '' }}">
         <i class="bi bi-car-front me-2"></i> Kendaraan Saya
       </a>
     </li>
 
     <li class="nav-item">
-      <a href="{{ route('user.booking.index') }}" class="nav-link text-white {{ request()->is('pelanggan/booking') ? 'active bg-primary' : '' }}">
+      <a href="{{ route('user.booking.index') }}"
+        class="nav-link text-white {{ request()->is('pelanggan/booking') ? 'active bg-primary' : '' }}">
         <i class="bi bi-calendar-check me-2"></i> Booking Servis
       </a>
     </li>
+
     @endif
 
-
-
+    
     <li class="mt-auto border-top pt-3">
       <div class="d-flex align-items-center">
         <span class="me-3 text-primary fw-semibold">{{ Auth::user()->nama }}</span>

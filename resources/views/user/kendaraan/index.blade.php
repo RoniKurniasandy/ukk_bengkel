@@ -1,4 +1,4 @@
-@extends('layouts.app') 
+@extends('layouts.app')
 @section('title', 'Kendaraan Saya')
 
 @section('content')
@@ -7,7 +7,7 @@
     {{-- Judul Halaman --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="fw-bold">Kendaraan Saya</h3>
-        
+
         <!-- Tombol Tambah Kendaraan -->
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKendaraanModal">
             + Tambah Kendaraan
@@ -16,10 +16,10 @@
 
     {{-- Notifikasi --}}
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+    <div class="alert alert-success">{{ session('success') }}</div>
     @endif
     @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
+    <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
     {{-- Tabel Kendaraan --}}
@@ -37,29 +37,26 @@
                 </thead>
                 <tbody>
                     @forelse ($kendaraan as $index => $item)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $item->merk }}</td>
-                            <td>{{ $item->model }}</td>
-                            <td>{{ $item->plat_nomor }}</td>
-                            <td>
-                                <form action="{{ route('user.kendaraan.destroy', $item->id) }}" 
-                                    method="POST" 
-                                    onsubmit="return confirm('Hapus kendaraan ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">
-                                        Hapus
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $item->merk }}</td>
+                        <td>{{ $item->model }}</td>
+                        <td>{{ $item->plat_nomor }}</td>
+                        <td>
+                            <form action="{{ route('user.kendaraan.destroy', $item->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm">Hapus</button>
+                            </form>
+
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="5" class="text-center py-3 text-secondary">
-                                Belum ada kendaraan terdaftar
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="5" class="text-center py-3 text-secondary">
+                            Belum ada kendaraan terdaftar
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
@@ -77,12 +74,12 @@
                 <h5 class="modal-title">Tambah Kendaraan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            
+
             <div class="mb-3">
                 <label class="form-label">Merk</label>
                 <input type="text" name="merk" class="form-control" required>
             </div>
-            
+
             <div class="mb-3">
                 <label class="form-label">Model</label>
                 <input type="text" name="model" class="form-control" required>
@@ -93,14 +90,20 @@
                 <input type="text" name="plat_nomor" class="form-control" required>
             </div>
 
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button class="btn btn-primary" type="submit">Simpan</button>
-            </div>
-        </form>
     </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button class="btn btn-primary" type="submit">Simpan</button>
+    </div>
+
+</form>
+</div>
 </div>
 
+@if ($errors->any())
+<script>
+    var addModal = new bootstrap.Modal(document.getElementById('addKendaraanModal'));
+    addModal.show();
+</script>
+@endif
 @endsection

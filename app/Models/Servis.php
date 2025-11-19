@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Servis extends Model
 {
     protected $table = 'servis';
-    protected $primaryKey = 'servis_id';
-    protected $fillable = ['mekanik_id','booking_id','diagnosa','estimasi_biaya','estimasi_waktu','status','tanggal_mulai','tanggal_selesai'];
+
+    protected $fillable = [
+        'booking_id',
+        'mekanik_id',
+        'status'
+    ];
 
     public function booking()
     {
-        return $this->belongsTo(Booking::class, 'booking_id');
-    }
-
-    public function transaksi()
-    {
-        return $this->hasOne(Transaksi::class, 'servis_id');
+        // FIX foreign key
+        return $this->belongsTo(Booking::class, 'booking_id', 'booking_id');
     }
 }

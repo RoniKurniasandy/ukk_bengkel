@@ -31,7 +31,7 @@ class Booking extends Model
 
     public function servis()
     {
-        return $this->hasOne(Servis::class, 'booking_id');
+        return $this->hasOne(Servis::class, 'booking_id', 'booking_id');
     }
 
     public function mekanik()

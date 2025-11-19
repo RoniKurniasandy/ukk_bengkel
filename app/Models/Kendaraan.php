@@ -23,6 +23,6 @@ class Kendaraan extends Model
 
     public function bookings()
     {
-        return $this->hasMany(Booking::class, 'kendaraan_id');
+        return $this->hasMany(Booking::class);
     }
 }

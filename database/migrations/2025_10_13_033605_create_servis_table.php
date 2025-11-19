@@ -11,11 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('servis', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('mekanik_id')->constrained('users');
-            $table->string('status');
-            $table->timestamps();
+        Schema::table('servis', function (Blueprint $table) {
+            if (!Schema::hasColumn('servis', 'booking_id')) {
+                $table->unsignedBigInteger('booking_id');
+            }
+            if (!Schema::hasColumn('servis', 'harga')) {
+                $table->decimal('harga', 12, 2)->default(0);
+            }
+            if (!Schema::hasColumn('servis', 'sparepart')) {
+                $table->string('sparepart')->nullable();
+            }
+            if (!Schema::hasColumn('servis', 'status')) {
+                $table->enum('status', ['dikerjakan', 'selesai'])->default('dikerjakan');
+            }
         });
     }
 
