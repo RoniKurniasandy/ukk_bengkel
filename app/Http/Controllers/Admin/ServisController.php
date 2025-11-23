@@ -9,9 +9,10 @@ use App\Models\Servis;
 
 class ServisController extends Controller
 {
-    public function index()
-    {
-        $servis = Servis::with(['booking.user', 'mekanik', 'spareparts'])->get();
-        return view('admin.servis.index', compact('servis'));
-    }
+public function index()
+{
+    $servis = Servis::with(['booking.user', 'mekanik'])->get();
+    return view('admin.servis.index', compact('servis'));
+}
+
 }

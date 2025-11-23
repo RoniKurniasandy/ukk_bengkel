@@ -8,7 +8,7 @@
   <div class="card border-0 shadow-sm mb-4">
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
       <h5 class="mb-0"><i class="ti ti-calendar me-2"></i>Riwayat Booking Servis</h5>
-      <a href="#" class="btn btn-light btn-sm">Booking Baru</a>
+      <a href="{{ route('user.booking.create') }}" class="btn btn-light btn-sm">Booking Baru</a>
     </div>
     <div class="card-body p-0">
       <table class="table table-hover mb-0">
@@ -34,7 +34,9 @@
             </td>
           </tr>
           @empty
-          <tr><td colspan="4" class="text-center text-muted py-4">Belum ada booking servis.</td></tr>
+          <tr>
+            <td colspan="4" class="text-center text-muted py-4">Belum ada booking servis.</td>
+          </tr>
           @endforelse
         </tbody>
       </table>

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,7 +8,16 @@ class Booking extends Model
 {
     protected $table = 'booking';
     protected $primaryKey = 'booking_id';
-    protected $fillable = ['user_id','kendaraan_id','jenis_layanan','keluhan','tanggal_booking','status'];
+    protected $fillable = [
+        'user_id',
+        'kendaraan_id',
+        'tanggal_booking',
+        'jenis_servis',
+        'keluhan',
+        'status',
+    ];
+
+
 
     public function user()
     {
@@ -25,9 +35,7 @@ class Booking extends Model
     }
 
     public function mekanik()
-{
-    return $this->belongsTo(User::class, 'mekanik_id');
-}
-
-
+    {
+        return $this->belongsTo(User::class, 'mekanik_id');
+    }
 }

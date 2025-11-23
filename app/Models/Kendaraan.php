@@ -7,12 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class Kendaraan extends Model
 {
     protected $table = 'kendaraan';
-    protected $primaryKey = 'kendaraan_id';
-    protected $fillable = ['user_id', 'merk', 'model', 'no_plat', 'tahun'];
+    protected $primaryKey = 'id'; // Karena migrasi memakai id()
+
+    protected $fillable = [
+        'user_id',
+        'merk',
+        'model',
+        'plat_nomor',  // perbaikan
+    ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function bookings()

@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+<!-- @extends('layouts.app')
 
 @section('title', 'Detail Sparepart')
 
@@ -61,11 +61,11 @@
                         <i class="fas fa-trash me-1"></i> Hapus
                     </button>
                 </form>
-                <a href="{{ route('admin.sparepart.index') }}" class="btn btn-secondary">
+                <a href="{{ route('admin.stok.index') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left me-1"></i> Kembali
                 </a>
             </div>
         </div>
     </div>
 </div>
-@endsection
+@endsection -->

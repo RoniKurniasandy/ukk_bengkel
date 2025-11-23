@@ -8,7 +8,7 @@ class Servis extends Model
 {
     protected $table = 'servis';
     protected $primaryKey = 'servis_id';
-    protected $fillable = ['mekanik_id','booking_id','diagnosa','estimasi_biaya','estimasi_waktu','status','tanggal_mulai','tanggal_selesai'];
+    protected $fillable = ['mekanik_id', 'booking_id', 'diagnosa', 'estimasi_biaya', 'estimasi_waktu', 'status', 'tanggal_mulai', 'tanggal_selesai'];
 
     public function booking()
     {
@@ -19,4 +19,9 @@ class Servis extends Model
     {
         return $this->hasOne(Transaksi::class, 'servis_id');
     }
+    public function mekanik()
+    {
+        return $this->belongsTo(User::class, 'mekanik_id', 'id');
+    }
+
 }
