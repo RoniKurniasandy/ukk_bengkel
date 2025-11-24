@@ -12,12 +12,8 @@ class Servis extends Model
 
     public function booking()
     {
-        return $this->belongsTo(Booking::class, 'booking_id');
-    }
-
-    public function transaksi()
-    {
-        return $this->hasOne(Transaksi::class, 'servis_id');
+        // FIX foreign key
+        return $this->belongsTo(Booking::class, 'booking_id', 'booking_id');
     }
     public function mekanik()
     {

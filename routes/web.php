@@ -14,11 +14,13 @@ use App\Http\Controllers\Admin\ServisController as AdminServisController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\StokController as AdminStokController;
 use App\Http\Controllers\Admin\LayananController as AdminLayananController;
+
 use App\Http\Controllers\TransaksiController as TransaksiController;
 
 use App\Http\Controllers\User\PelangganController as UserPelangganController;
 use App\Http\Controllers\User\BookingController as UserBookingController;
 use App\Http\Controllers\User\KendaraanController as UserKendaraanController;
+use App\Http\Controllers\User\ServisController as UserServisController;
 
 use App\Http\Controllers\MekanikController;
 use App\Models\User;
@@ -62,7 +64,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
             'destroy' => 'admin.layanan.destroy',
         ]);
 
-
     // Booking
     Route::get('/booking', [AdminBookingController::class, 'index'])->name('admin.booking');
     Route::get('/booking/{id}/edit', [AdminBookingController::class, 'edit'])->name('admin.booking.edit');
@@ -95,17 +96,20 @@ Route::middleware('role:mekanik')->prefix('mekanik')->group(function () { // Uba
 
 
 // Pelanggan-only routes
-Route::middleware('role:pelanggan')->prefix('pelanggan')->group(function () { // Ubah prefix sesuai kebutuhan
-    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard.user'); // Ubah nama route sesuai kebutuhan
-    Route::get('/servis', [UserPelangganController::class, 'index'])->name('user.servis');
-    Route::get('/riwayat', [UserPelangganController::class, 'riwayatServis'])->name('user.riwayat');
+Route::middleware(['auth', 'role:pelanggan'])->prefix('pelanggan')->group(function () {
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard.user');
+    
+    // Servis
+    Route::get('/servis', [UserServisController::class, 'index'])->name('user.servis');
+    // Jika masih butuh riwayat terpisah, bisa di-uncomment, tapi biasanya index servis sudah mencakup riwayat
+    // Route::get('/riwayat', [UserPelangganController::class, 'riwayatServis'])->name('user.riwayat');
+
+    // Kendaraan
     Route::get('/kendaraan', [UserKendaraanController::class, 'index'])->name('user.kendaraan');
     Route::post('/kendaraan', [UserKendaraanController::class, 'store'])->name('user.kendaraan.store');
     Route::delete('/kendaraan/{id}', [UserKendaraanController::class, 'destroy'])->name('user.kendaraan.destroy');
-});
 
-// Booking User (Pelanggan)
-Route::prefix('pelanggan')->middleware(['auth', 'role:pelanggan'])->group(function () {
+    // Booking
     Route::get('/booking', [UserBookingController::class, 'index'])->name('user.booking.index');
     Route::get('/booking/create', [UserBookingController::class, 'create'])->name('user.booking.create');
     Route::post('/booking/store', [UserBookingController::class, 'store'])->name('user.booking.store');

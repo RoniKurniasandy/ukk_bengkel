@@ -22,12 +22,23 @@
                     <label for="status" class="form-label fw-semibold">Pilih Status</label>
                     <select name="status" id="status" class="form-select" required>
                         @foreach($statusOptions as $status)
-                            <option value="{{ $status }}" {{ $booking->status == $status ? 'selected' : '' }}>
-                                {{ ucfirst($status) }}
-                            </option>
+                        <option value="{{ $status }}" {{ $booking->status == $status ? 'selected' : '' }}>
+                            {{ ucfirst($status) }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Pilih Mekanik</label>
+                    <select name="mekanik_id" class="form-select" required>
+                        <option value="">-- Pilih Mekanik --</option>
+                        @foreach($mekanik as $m)
+                        <option value="{{ $m->id }}">{{ $m->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
 
                 <div class="d-flex justify-content-between">
                     <a href="{{ route('admin.booking') }}" class="btn btn-secondary">Kembali</a>

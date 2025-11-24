@@ -10,7 +10,7 @@
       </a>
     </li>
 
-@if(Auth::check() && Auth::user()->role === 'admin')
+    @if(Auth::check() && Auth::user()->role === 'admin')
     <li class="nav-item">
       <a href="{{ route('admin.users') }}" class="nav-link text-white {{ request()->is('admin/users*') ? 'active bg-primary' : '' }}">
         Kelola User
@@ -40,8 +40,7 @@
     <li class="nav-item">
       <a href="{{ route('admin.transaksi') }}" class="nav-link text-white">Transaksi</a>
     </li>
-@endif
-
+    @endif
 
     @if(Auth::check() && Auth::user()->role === 'mekanik')
     <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-tools me-2"></i> Servis Dikerjakan</a></li>
@@ -55,7 +54,7 @@
       </a>
     </li>
 
-      <li class="nav-item">
+    <li class="nav-item">
       <a href="{{ route('user.kendaraan') }}" class="nav-link text-white {{ request()->is('pelanggan/kendaraan') ? 'active bg-primary' : '' }}">
         <i class="bi bi-car-front me-2"></i> Kendaraan Saya
       </a>

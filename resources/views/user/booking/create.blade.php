@@ -13,19 +13,16 @@
                 <div class="mb-3">
                     <label class="fw-semibold">Layanan Servis</label>
                     <select name="jenis_layanan" class="form-select" required>
-                        <select name="jenis_layanan" class="form-select" required>
-                            <option value="">-- Pilih Layanan Servis --</option>
-                            @foreach($layanan as $l)
-                                <option value="{{ $l->nama_layanan }}">
-                                    {{ $l->nama_layanan }}
-                                    — Rp {{ number_format($l->harga, 0, ',', '.') }}
-                                    ({{ $l->estimasi_waktu }})
-                                </option>
+                        <option value="">-- Pilih Layanan Servis --</option>
+                        @foreach($layanan as $l)
+                            <option value="{{ $l->nama_layanan }}">
+                                {{ $l->nama_layanan }}
+                                — Rp {{ number_format($l->harga, 0, ',', '.') }}
+                                ({{ $l->estimasi_waktu }})
+                            </option>
 
-                            @endforeach
-                        </select>
-
-
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="mb-3">

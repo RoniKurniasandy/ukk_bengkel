@@ -1,4 +1,5 @@
-@extends('layouts.app') 
+@extends('layouts.app')
+
 @section('title', 'Kendaraan Saya')
 
 @section('content')
@@ -78,29 +79,36 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             
-            <div class="mb-3">
-                <label class="form-label">Merk</label>
-                <input type="text" name="merk" class="form-control" required>
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Model</label>
-                <input type="text" name="model" class="form-control" required>
-            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Merk</label>
+                    <input type="text" name="merk" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Model</label>
+                    <input type="text" name="model" class="form-control" required>
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">Nomor Plat</label>
-                <input type="text" name="plat_nomor" class="form-control" required>
-            </div>
-
+                <div class="mb-3">
+                    <label class="form-label">Nomor Plat</label>
+                    <input type="text" name="plat_nomor" class="form-control" required>
+                </div>
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Batal</button>
                 <button class="btn btn-primary" type="submit">Simpan</button>
             </div>
         </form>
     </div>
 </div>
+
+@if ($errors->any())
+<script>
+    var addModal = new bootstrap.Modal(document.getElementById('addKendaraanModal'));
+    addModal.show();
+</script>
+@endif
 
 @endsection
