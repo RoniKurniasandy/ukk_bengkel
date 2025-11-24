@@ -63,8 +63,22 @@ Route::middleware('role:admin')->prefix('admin')->group(function () {
         'destroy' => 'admin.stok.destroy',
     ]);
 
+    // Penjualan Stok
+    Route::get('/penjualan', [App\Http\Controllers\Admin\PenjualanController::class, 'create'])->name('admin.penjualan.create');
+    Route::post('/penjualan', [App\Http\Controllers\Admin\PenjualanController::class, 'store'])->name('admin.penjualan.store');
+
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('admin.transaksi');
+    
+    // Layanan
+    Route::resource('layanan', \App\Http\Controllers\Admin\LayananController::class)->names([
+        'index' => 'admin.layanan.index',
+        'create' => 'admin.layanan.create',
+        'store' => 'admin.layanan.store',
+        'edit' => 'admin.layanan.edit',
+        'update' => 'admin.layanan.update',
+        'destroy' => 'admin.layanan.destroy',
+    ]);
 });
 
 

@@ -11,6 +11,7 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'kendaraan_id',
+        'layanan_id',
         'tanggal_booking',
         'jenis_servis',
         'keluhan',
@@ -37,5 +38,10 @@ class Booking extends Model
     public function mekanik()
     {
         return $this->belongsTo(User::class, 'mekanik_id');
+    }
+
+    public function layanan()
+    {
+        return $this->belongsTo(Layanan::class, 'layanan_id');
     }
 }

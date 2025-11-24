@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Membuat tabel servis baru
-        Schema::create('servis', function (Blueprint $table) {
+        Schema::create('layanans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('booking_id');
-            $table->decimal('harga', 12, 2)->default(0);
-            $table->string('sparepart')->nullable();
-            $table->enum('status', ['dikerjakan', 'selesai'])->default('dikerjakan');
+            $table->string('nama_layanan');
+            $table->integer('harga');
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('servis');
+        Schema::dropIfExists('layanans');
     }
 };

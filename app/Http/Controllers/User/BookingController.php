@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Kendaraan;
+use App\Models\Layanan;
 use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
@@ -23,14 +24,15 @@ class BookingController extends Controller
     {
         // kendaraan hanya milik user yang sedang login
         $kendaraan = Kendaraan::where('user_id', Auth::id())->get();
-        return view('user.booking.create', compact('kendaraan'));
+        $layanan = Layanan::all();
+        return view('user.booking.create', compact('kendaraan', 'layanan'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'kendaraan_id' => 'required',
-            'jenis_servis' => 'required',
+            'layanan_id' => 'required|exists:layanans,id',
             'tanggal_booking' => 'required|date|after_or_equal:today',
             'keluhan' => 'required',
         ]);
@@ -38,7 +40,7 @@ class BookingController extends Controller
         Booking::create([
             'user_id' => Auth::id(),
             'kendaraan_id' => $request->kendaraan_id,
-            'jenis_layanan' => $request->jenis_servis,
+            'layanan_id' => $request->layanan_id,
             'tanggal_booking' => $request->tanggal_booking,
             'keluhan' => $request->keluhan,
             'status' => 'menunggu', // FIX ENUM

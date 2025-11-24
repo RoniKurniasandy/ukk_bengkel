@@ -12,15 +12,17 @@
 
     @if(Auth::check() && Auth::user()->role === 'admin')
     <li class="nav-item"><a href="{{ route('admin.users') }}" class="nav-link text-white">Kelola User</a></li>
+    <li class="nav-item"><a href="{{ route('admin.layanan.index') }}" class="nav-link text-white">Kelola Layanan</a></li>
     <li class="nav-item"><a href="{{ route('admin.servis') }}" class="nav-link text-white">Kelola Servis</a></li>
     <li class="nav-item"><a href="{{ route('admin.booking') }}" class="nav-link text-white">Kelola Booking</a></li>
     <li class="nav-item"><a href="{{ route('admin.stok.index') }}" class="nav-link text-white">Stok</a></li>
+    <li class="nav-item"><a href="{{ route('admin.penjualan.create') }}" class="nav-link text-white">Penjualan Stok</a></li>
     <li class="nav-item"><a href="{{ route('admin.transaksi') }}" class="nav-link text-white">Transaksi</a></li>
     @endif
 
     @if(Auth::check() && Auth::user()->role === 'mekanik')
-    <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-tools me-2"></i> Servis Dikerjakan</a></li>
-    <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-check-circle me-2"></i> Servis Selesai</a></li>
+    <li class="nav-item"><a href="{{ route('mekanik.servis.aktif') }}" class="nav-link text-white"><i class="bi bi-tools me-2"></i> Servis Dikerjakan</a></li>
+    <li class="nav-item"><a href="{{ route('mekanik.servis.selesai') }}" class="nav-link text-white"><i class="bi bi-check-circle me-2"></i> Servis Selesai</a></li>
     @endif
 
     @if(Auth::check() && Auth::user()->role === 'pelanggan')

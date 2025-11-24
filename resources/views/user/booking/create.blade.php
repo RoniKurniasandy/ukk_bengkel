@@ -12,14 +12,11 @@
 
             <div class="mb-3">
                 <label class="fw-semibold">Layanan Servis</label>
-                <select name="jenis_servis" class="form-select" required>
+                <select name="layanan_id" class="form-select" required>
                     <option value="">-- Pilih Layanan Servis --</option>
-                    <option value="Servis Listrik">Servis Listrik</option>
-                    <option value="Tune Up">Tune Up</option>
-                    <option value="Ganti Oli">Ganti Oli</option>
-                    <option value="Ganti Aki">Ganti Aki</option>
-                    <option value="Ganti Ban">Ganti Ban</option>
-                    <option value="Servis AC">Servis AC</option>
+                    @foreach($layanan as $item)
+                    <option value="{{ $item->id }}">{{ $item->nama_layanan }} - Rp {{ number_format($item->harga, 0, ',', '.') }}</option>
+                    @endforeach
                 </select>
             </div>
 
