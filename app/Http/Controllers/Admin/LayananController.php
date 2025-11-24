@@ -22,9 +22,9 @@ class LayananController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_layanan' => 'required',
-            'harga' => 'required|numeric',
-            'deskripsi' => 'nullable',
+            'nama_layanan' => 'required|string|max:255',
+            'harga' => 'required|numeric|min:0',
+            'deskripsi' => 'nullable|string',
             'estimasi_waktu' => 'required' // contoh input: "1-2 Jam" atau "30 Menit"
         ]);
 
@@ -45,9 +45,9 @@ class LayananController extends Controller
         $layanan = Layanan::findOrFail($id);
 
         $request->validate([
-            'nama_layanan' => 'required',
-            'harga' => 'required|numeric',
-            'deskripsi' => 'nullable',
+            'nama_layanan' => 'required|string|max:255',
+            'harga' => 'required|numeric|min:0',
+            'deskripsi' => 'nullable|string',
             'estimasi_waktu' => 'required'
         ]);
 

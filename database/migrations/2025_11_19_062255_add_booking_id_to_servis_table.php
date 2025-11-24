@@ -9,7 +9,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('servis', function (Blueprint $table) {
-            $table->unsignedBigInteger('booking_id')->after('id')->nullable();
+            // Pastikan kolom booking_id belum ada sebelum menambah
+            if (!Schema::hasColumn('servis', 'booking_id')) {
+                $table->unsignedBigInteger('booking_id')->after('id')->nullable();
+            }
+            // Tambahkan foreign key jika belum ada
             $table->foreign('booking_id')->references('booking_id')->on('booking')->onDelete('cascade');
         });
     }

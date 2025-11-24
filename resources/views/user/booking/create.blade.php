@@ -10,20 +10,18 @@
                 @csrf
 
 
-                <div class="mb-3">
-                    <label class="fw-semibold">Layanan Servis</label>
-                    <select name="jenis_layanan" class="form-select" required>
-                        <option value="">-- Pilih Layanan Servis --</option>
-                        @foreach($layanan as $l)
-                            <option value="{{ $l->nama_layanan }}">
-                                {{ $l->nama_layanan }}
-                                — Rp {{ number_format($l->harga, 0, ',', '.') }}
-                                ({{ $l->estimasi_waktu }})
-                            </option>
-
-                        @endforeach
-                    </select>
-                </div>
+            <div class="mb-3">
+                <label class="fw-semibold">Layanan Servis</label>
+                <select name="jenis_servis" class="form-select" required>
+                    <option value="">-- Pilih Layanan Servis --</option>
+                    <option value="Servis Listrik">Servis Listrik</option>
+                    <option value="Tune Up">Tune Up</option>
+                    <option value="Ganti Oli">Ganti Oli</option>
+                    <option value="Ganti Aki">Ganti Aki</option>
+                    <option value="Ganti Ban">Ganti Ban</option>
+                    <option value="Servis AC">Servis AC</option>
+                </select>
+            </div>
 
                 <div class="mb-3">
                     <label for="kendaraan_id" class="form-label">Pilih Kendaraan</label>

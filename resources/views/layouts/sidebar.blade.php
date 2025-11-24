@@ -19,7 +19,7 @@
 
     <li class="nav-item">
       <a href="{{ route('admin.layanan.index') }}" class="nav-link text-white {{ request()->is('admin/layanan*') ? 'active bg-primary' : '' }}">
-        Layanan
+        Kelola Layanan
       </a>
     </li>
 
@@ -38,13 +38,19 @@
     </li>
 
     <li class="nav-item">
+      <a href="{{ route('admin.penjualan.create') }}" class="nav-link text-white {{ request()->is('admin/penjualan*') ? 'active bg-primary' : '' }}">
+        Penjualan Stok
+      </a>
+    </li>
+
+    <li class="nav-item">
       <a href="{{ route('admin.transaksi') }}" class="nav-link text-white">Transaksi</a>
     </li>
     @endif
 
     @if(Auth::check() && Auth::user()->role === 'mekanik')
-    <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-tools me-2"></i> Servis Dikerjakan</a></li>
-    <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-check-circle me-2"></i> Servis Selesai</a></li>
+    <li class="nav-item"><a href="{{ route('mekanik.servis.aktif') }}" class="nav-link text-white"><i class="bi bi-tools me-2"></i> Servis Dikerjakan</a></li>
+    <li class="nav-item"><a href="{{ route('mekanik.servis.selesai') }}" class="nav-link text-white"><i class="bi bi-check-circle me-2"></i> Servis Selesai</a></li>
     @endif
 
     @if(Auth::check() && Auth::user()->role === 'pelanggan')
