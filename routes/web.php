@@ -7,25 +7,23 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\MekanikDashboardController;
 use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\LandingController;
 use App\Http\Middleware\RoleMiddleware;
 
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\ServisController as AdminServisController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\StokController as AdminStokController;
-use App\Http\Controllers\Admin\LayananController as AdminLayananController;
-
 use App\Http\Controllers\TransaksiController as TransaksiController;
 
 use App\Http\Controllers\User\PelangganController as UserPelangganController;
 use App\Http\Controllers\User\BookingController as UserBookingController;
 use App\Http\Controllers\User\KendaraanController as UserKendaraanController;
 use App\Http\Controllers\User\ServisController as UserServisController;
-
 use App\Http\Controllers\MekanikController;
 use App\Models\User;
 
-Route::get('/', fn() => view('landing'));
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 
 // Guest (belum login)
@@ -43,32 +41,17 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 // Dashboard redirect (otomatis sesuai role)
 Route::middleware('auth')->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-
 // Admin-only routes
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-
+// Admin-only routes
+Route::middleware('role:admin')->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
-
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
-    Route::get('/servis', [AdminServisController::class, 'index'])->name('admin.servis');
 
-    Route::resource('layanan', AdminLayananController::class)
-        ->parameters(['layanan' => 'layanan_id'])
-        ->names([
-            'index' => 'admin.layanan.index',
-            'create' => 'admin.layanan.create',
-            'store' => 'admin.layanan.store',
-            'show' => 'admin.layanan.show',
-            'edit' => 'admin.layanan.edit',
-            'update' => 'admin.layanan.update',
-            'destroy' => 'admin.layanan.destroy',
-        ]);
-
-    // Booking
-    Route::get('/booking', [AdminBookingController::class, 'index'])->name('admin.booking');
-    Route::get('/booking/{id}/edit', [AdminBookingController::class, 'edit'])->name('admin.booking.edit');
-    Route::put('/booking/{id}', [AdminBookingController::class, 'update'])->name('admin.booking.update');
-    Route::delete('/booking/{id}', [AdminBookingController::class, 'destroy'])->name('admin.booking.destroy');
+    // Manajemen Servis (Gabungan Booking & Servis)
+    Route::get('/servis', [AdminServisController::class, 'index'])->name('admin.servis.index');
+    Route::get('/servis/{id}/edit', [AdminServisController::class, 'edit'])->name('admin.servis.edit');
+    Route::put('/servis/{id}', [AdminServisController::class, 'update'])->name('admin.servis.update');
+    Route::delete('/servis/{id}', [AdminServisController::class, 'destroy'])->name('admin.servis.destroy');
 
     Route::resource('stok', AdminStokController::class)->names([
         'index' => 'admin.stok.index',
@@ -84,8 +67,21 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/penjualan', [App\Http\Controllers\Admin\PenjualanController::class, 'create'])->name('admin.penjualan.create');
     Route::post('/penjualan', [App\Http\Controllers\Admin\PenjualanController::class, 'store'])->name('admin.penjualan.store');
 
+
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('admin.transaksi');
+
+    // Layanan
+    Route::resource('layanan', \App\Http\Controllers\Admin\LayananController::class)->names([
+        'index' => 'admin.layanan.index',
+        'create' => 'admin.layanan.create',
+        'store' => 'admin.layanan.store',
+        'edit' => 'admin.layanan.edit',
+        'update' => 'admin.layanan.update',
+        'destroy' => 'admin.layanan.destroy',
+    ]);
 });
+
+
 
 
 // Mekanik-only routes
@@ -93,26 +89,24 @@ Route::middleware('role:mekanik')->prefix('mekanik')->group(function () { // Uba
     Route::get('/dashboard', [MekanikDashboardController::class, 'index'])->name('dashboard.mekanik'); // Ubah nama route sesuai kebutuhan
     Route::get('/servis-dikerjakan', [MekanikController::class, 'servisAktif'])->name('mekanik.servis.aktif');
     Route::get('/servis-selesai', [MekanikController::class, 'servisSelesai'])->name('mekanik.servis.selesai');
+    Route::put('/servis/{id}', [MekanikController::class, 'updateStatus'])->name('mekanik.servis.update');
 });
 
 
 // Pelanggan-only routes
 Route::middleware(['auth', 'role:pelanggan'])->prefix('pelanggan')->group(function () {
-    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard.user');
-    
-    // Servis
-    Route::get('/servis', [UserServisController::class, 'index'])->name('user.servis');
-    // Jika masih butuh riwayat terpisah, bisa di-uncomment, tapi biasanya index servis sudah mencakup riwayat
-    // Route::get('/riwayat', [UserPelangganController::class, 'riwayatServis'])->name('user.riwayat');
 
-    // Kendaraan
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard.user'); // Ubah nama route sesuai kebutuhan
+    Route::get('/servis', [App\Http\Controllers\User\ServisController::class, 'index'])
+        ->name('user.servis');
+
     Route::get('/kendaraan', [UserKendaraanController::class, 'index'])->name('user.kendaraan');
     Route::post('/kendaraan', [UserKendaraanController::class, 'store'])->name('user.kendaraan.store');
     Route::delete('/kendaraan/{id}', [UserKendaraanController::class, 'destroy'])->name('user.kendaraan.destroy');
 
-    // Booking
     Route::get('/booking', [UserBookingController::class, 'index'])->name('user.booking.index');
     Route::get('/booking/create', [UserBookingController::class, 'create'])->name('user.booking.create');
     Route::post('/booking/store', [UserBookingController::class, 'store'])->name('user.booking.store');
     Route::delete('/booking/{id}', [UserBookingController::class, 'destroy'])->name('user.booking.destroy');
 });
+

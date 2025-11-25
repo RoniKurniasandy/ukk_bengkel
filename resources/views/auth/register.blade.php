@@ -1,91 +1,318 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daftar - Bengkel Mobil Sejahtera</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Daftar - Kings Bengkel Mobil</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
   <style>
-
-
-    /* Overlay hitam transparan di atas background */
-    body::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-color: rgba(0, 0, 0, 0.5); /* Sesuaikan gelap/terangnya */
-      z-index: 0;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      background-image: url('{{ asset("image/bg_bengkel.jpg") }}');
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.95) 0%, rgba(59, 130, 246, 0.9) 100%),
+        url('{{ asset("image/uploaded_image_1764054764874.jpg") }}');
       background-size: cover;
       background-position: center;
+      background-attachment: fixed;
+      position: relative;
+      padding: 40px 20px;
     }
 
-    /* Pastikan konten berada di atas overlay */
-    body > * {
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 0;
+    }
+
+    .register-container {
       position: relative;
       z-index: 10;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .register-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .brand-logo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #3b82f6, #1e40af);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 2.5rem;
+      color: #fff;
+    }
+
+    .register-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1e3a8a;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .register-subtitle {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #1e3a8a;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .form-control {
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    .input-icon {
+      position: relative;
+    }
+
+    .input-icon i {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 1.1rem;
+    }
+
+    .btn-register {
+      background: linear-gradient(135deg, #3b82f6, #1e40af);
+      color: #fff;
+      font-weight: 600;
+      padding: 0.85rem 2rem;
+      border-radius: 12px;
+      border: none;
+      width: 100%;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    .btn-register:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+      background: linear-gradient(135deg, #2563eb, #1e3a8a);
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    .login-link a {
+      color: #3b82f6;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .login-link a:hover {
+      color: #1e40af;
+      text-decoration: underline;
+    }
+
+    .alert {
+      border-radius: 12px;
+      border: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .divider {
+      text-align: center;
+      margin: 1.5rem 0;
+      position: relative;
+    }
+
+    .divider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #e2e8f0;
+    }
+
+    .divider span {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 0 1rem;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      position: relative;
+    }
+
+    .password-strength {
+      height: 4px;
+      margin-top: 0.5rem;
+      border-radius: 2px;
+      background: #e2e8f0;
+      overflow: hidden;
+    }
+
+    .password-strength-bar {
+      height: 100%;
+      width: 0;
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 576px) {
+      .register-card {
+        padding: 2rem 1.5rem;
+      }
+
+      .register-title {
+        font-size: 1.5rem;
+      }
     }
   </style>
 </head>
-<body class="min-h-screen flex items-center justify-center bg-black bg-opacity-60">
 
+<body>
 
-
-<div class="w-full max-w-md bg-white/90 backdrop-blur-md rounded-lg shadow-lg p-8">
-    <h1 class="text-3xl font-bold text-center text-blue-800 mb-6">Daftar</h1>
-
-    @if ($errors->any())
-      <div class="mb-4 text-sm text-red-600">
-        <ul class="list-disc list-inside">
-          @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-          @endforeach
-        </ul>
+  <div class="register-container">
+    <div class="register-card">
+      <div class="brand-logo">
+        <i class="bi bi-tools"></i>
       </div>
-    @endif
+      <h1 class="register-title">Buat Akun Baru</h1>
+      <p class="register-subtitle">Daftar untuk mulai menggunakan layanan kami</p>
 
-    <form action="{{ route('register') }}" method="POST" class="space-y-5">
-      @csrf
+      @if ($errors->any())
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-circle me-2"></i>
+          <strong>Oops!</strong> Terjadi kesalahan:
+          <ul class="mb-0 mt-2">
+            @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+      @endif
 
-      <div>
-        <label for="name" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-        <input id="name" name="name" type="text" value="{{ old('name') }}" required autofocus
-               class="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500">
+      <form action="{{ route('register') }}" method="POST">
+        @csrf
+
+        <div class="mb-3">
+          <label for="name" class="form-label">Nama Lengkap</label>
+          <div class="input-icon">
+            <input id="name" name="name" type="text" value="{{ old('name') }}" required autofocus class="form-control"
+              placeholder="Masukkan nama lengkap">
+            <i class="bi bi-person"></i>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <div class="input-icon">
+            <input id="email" name="email" type="email" value="{{ old('email') }}" required class="form-control"
+              placeholder="nama@email.com">
+            <i class="bi bi-envelope"></i>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-icon">
+            <input id="password" name="password" type="password" required class="form-control"
+              placeholder="Minimal 8 karakter">
+            <i class="bi bi-lock"></i>
+          </div>
+          <small class="text-muted">Password minimal 8 karakter</small>
+        </div>
+
+        <div class="mb-3">
+          <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+          <div class="input-icon">
+            <input id="password_confirmation" name="password_confirmation" type="password" required class="form-control"
+              placeholder="Ulangi password">
+            <i class="bi bi-lock-fill"></i>
+          </div>
+        </div>
+
+        <div class="form-check mb-3">
+          <input type="checkbox" class="form-check-input" id="terms" required>
+          <label class="form-check-label" for="terms" style="color: #64748b; font-size: 0.85rem;">
+            Saya setuju dengan <a href="#" style="color: #3b82f6;">syarat dan ketentuan</a> yang berlaku
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-register">
+          <i class="bi bi-person-plus me-2"></i>Daftar Sekarang
+        </button>
+      </form>
+
+      <div class="login-link">
+        Sudah punya akun?
+        <a href="{{ route('login') }}">Masuk di sini</a>
       </div>
 
-      <div>
-        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-        <input id="email" name="email" type="email" value="{{ old('email') }}" required
-               class="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500">
+      <div class="divider">
+        <span>atau kembali ke</span>
       </div>
 
-      <div>
-        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-        <input id="password" name="password" type="password" required
-               class="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500">
+      <div class="text-center">
+        <a href="{{ route('landing') }}"
+          style="color: #3b82f6; text-decoration: none; font-weight: 500; font-size: 0.9rem;">
+          <i class="bi bi-house-door me-1"></i>Halaman Utama
+        </a>
       </div>
-
-      <div>
-        <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
-        <input id="password_confirmation" name="password_confirmation" type="password" required
-               class="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500">
-      </div>
-
-      <button type="submit"
-              class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition">
-        Daftar
-      </button>
-    </form>
-    
-
-    <div class="mt-6 text-center text-sm">
-      Sudah punya akun?
-      <a href="{{ route('login') }}" class="text-blue-600 hover:underline">Masuk di sini</a>
     </div>
   </div>
 
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+
 </html>

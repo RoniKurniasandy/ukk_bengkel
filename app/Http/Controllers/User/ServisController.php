@@ -11,7 +11,7 @@ class ServisController extends Controller
     public function index()
     {
         // Ambil data servis milik user berdasarkan relasi booking -> user
-        $servis = Servis::whereHas('booking', function($q) {
+        $servis = Servis::with('booking.kendaraan')->whereHas('booking', function($q) {
             $q->where('user_id', Auth::id());
         })->latest()->get();
 

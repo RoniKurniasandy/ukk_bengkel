@@ -13,8 +13,12 @@ class MekanikDashboardController extends Controller
         $mekanik_id = Auth::id();
         $servis_dikerjakan = Servis::where('status', 'dikerjakan')
             ->where('mekanik_id', $mekanik_id)
-            ->get();
+            ->count();
 
-        return view('dashboard.mekanik', compact('servis_dikerjakan'));
+        $servis_selesai = Servis::where('status', 'selesai')
+            ->where('mekanik_id', $mekanik_id)
+            ->count();
+
+        return view('dashboard.mekanik', compact('servis_dikerjakan', 'servis_selesai'));
     }
 }
