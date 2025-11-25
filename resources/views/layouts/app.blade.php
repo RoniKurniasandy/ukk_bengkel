@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,42 +10,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
-  <style>
-    body {
-      background-color: #f8f9fa;
-      font-family: "Poppins", sans-serif;
-    }
+  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-    .main-content {
-      margin-left: 250px;
-      transition: all 0.3s ease;
-      min-height: 100vh;
-      background-color: #f8f9fa;
-    }
-
-    @media (max-width: 992px) {
-      .main-content {
-        margin-left: 0;
-      }
-    }
-
-    .navbar-dashboard {
-      background-color: #ffffff;
-      border-bottom: 1px solid #dee2e6;
-      padding: 12px 20px;
-    }
-
-    .page-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #1e40af;
-    }
-
-    .user-info {
-      font-weight: 500;
-      color: #374151;
-    }
-  </style>
 </head>
 
 <body>
@@ -77,4 +44,5 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -1,60 +1,112 @@
 @extends('layouts.app')
-@section('title', 'Dashboard Admin - Bengkel Mobil Sejahtera')
+@section('title', 'Dashboard Admin')
 
 @section('content')
-<div class="container-fluid py-4">
-  <div class="row g-3 mb-4">
-    <div class="col-md-6 col-xl-3">
-      <div class="card border-0 shadow-sm">
-        <div class="card-body">
-          <h6 class="text-muted mb-2"><i class="bi bi-tools me-2"></i>Servis Aktif</h6>
-          <h3 class="fw-bold">{{ $servis_aktif ?? 0 }}</h3>
-          <small class="text-muted">Pekerjaan sedang berlangsung</small>
+  <div class="container-fluid px-4">
+    <!-- Header -->
+    <div class="user-management-header mb-4"
+      style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);">
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <div>
+          <h2 class="text-white fw-bold m-0" style="font-size: 1.75rem;"><i class="bi bi-speedometer2 me-2"></i>Dashboard
+            Admin</h2>
+          <p class="text-white-50 m-0 mt-2">Ringkasan aktivitas bengkel hari ini</p>
+        </div>
+        <div class="text-white-50">
+          {{ now()->format('l, d F Y') }}
         </div>
       </div>
     </div>
-    <div class="col-md-6 col-xl-3">
-      <div class="card border-0 shadow-sm">
-        <div class="card-body">
-          <h6 class="text-muted mb-2"><i class="bi bi-receipt me-2"></i>Total Transaksi</h6>
-          <h3 class="fw-bold">{{ $transaksi_hari_ini ?? 0 }}</h3>
-          <small class="text-muted">Transaksi hari ini</small>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 col-xl-3">
-      <div class="card border-0 shadow-sm">
-        <div class="card-body">
-          <h6 class="text-muted mb-2"><i class="bi bi-people me-2"></i>Total Pelanggan</h6>
-          <h3 class="fw-bold">{{ $jumlah_user ?? 0 }}</h3>
-          <small class="text-muted">Akun pelanggan terdaftar</small>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 col-xl-3">
-      <div class="card border-0 shadow-sm">
-        <div class="card-body">
-          <h6 class="text-muted mb-2"><i class="bi bi-person-gear me-2"></i>Total Mekanik</h6>
-          <h3 class="fw-bold">{{ $jumlah_mekanik ?? 0 }}</h3>
-          <small class="text-muted">Mekanik aktif</small>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Servis Terbaru -->
-  <div class="card shadow-sm border-0">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-      <h5 class="mb-0"><i class="bi bi-car-front me-2"></i>Servis Terbaru</h5>
-      <a href="#" class="btn btn-light btn-sm">Lihat Semua</a>
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+      <div class="col-md-6 col-xl-3">
+        <div class="card-modern h-100 p-4">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <p class="text-muted mb-1 font-weight-bold" style="font-size: 0.85rem;">SERVIS AKTIF</p>
+              <h3 class="fw-bold mb-0" style="color: #2d3748;">{{ $servis_aktif ?? 0 }}</h3>
+            </div>
+            <div
+              class="icon-shape bg-primary text-white rounded-circle p-3 d-flex align-items-center justify-content-center"
+              style="width: 48px; height: 48px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <i class="bi bi-tools fs-5"></i>
+            </div>
+          </div>
+          <div class="mt-3">
+            <span class="text-success small fw-bold"><i class="bi bi-arrow-up-short"></i> Sedang dikerjakan</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="card-modern h-100 p-4">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <p class="text-muted mb-1 font-weight-bold" style="font-size: 0.85rem;">TRANSAKSI HARI INI</p>
+              <h3 class="fw-bold mb-0" style="color: #2d3748;">{{ $transaksi_hari_ini ?? 0 }}</h3>
+            </div>
+            <div class="icon-shape text-white rounded-circle p-3 d-flex align-items-center justify-content-center"
+              style="width: 48px; height: 48px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <i class="bi bi-receipt fs-5"></i>
+            </div>
+          </div>
+          <div class="mt-3">
+            <span class="text-muted small">Total transaksi selesai</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="card-modern h-100 p-4">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <p class="text-muted mb-1 font-weight-bold" style="font-size: 0.85rem;">TOTAL PELANGGAN</p>
+              <h3 class="fw-bold mb-0" style="color: #2d3748;">{{ $jumlah_user ?? 0 }}</h3>
+            </div>
+            <div class="icon-shape text-white rounded-circle p-3 d-flex align-items-center justify-content-center"
+              style="width: 48px; height: 48px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <i class="bi bi-people fs-5"></i>
+            </div>
+          </div>
+          <div class="mt-3">
+            <span class="text-muted small">Akun terdaftar</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="card-modern h-100 p-4">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <p class="text-muted mb-1 font-weight-bold" style="font-size: 0.85rem;">TOTAL MEKANIK</p>
+              <h3 class="fw-bold mb-0" style="color: #2d3748;">{{ $jumlah_mekanik ?? 0 }}</h3>
+            </div>
+            <div class="icon-shape text-white rounded-circle p-3 d-flex align-items-center justify-content-center"
+              style="width: 48px; height: 48px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+              <i class="bi bi-person-gear fs-5"></i>
+            </div>
+          </div>
+          <div class="mt-3">
+            <span class="text-muted small">Mekanik aktif</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card-body p-0">
+
+    <!-- Servis Terbaru Section -->
+    <div class="card-modern">
+      <div class="p-4 border-bottom d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold m-0" style="color: #2d3748;"><i class="bi bi-clock-history me-2 text-primary"></i>Servis
+          Terbaru</h5>
+        <a href="{{ route('admin.servis.index') }}" class="btn btn-sm btn-modern">Lihat Semua</a>
+      </div>
       <div class="table-responsive">
-        <table class="table table-hover mb-0 align-middle">
-          <thead class="table-light">
+        <table class="table-modern mb-0">
+          <thead>
             <tr>
-              <th>No.</th>
-              <th>Nama Pelanggan</th>
+              <th class="ps-4">No</th>
+              <th>Pelanggan</th>
               <th>Kendaraan</th>
               <th>Jenis Servis</th>
               <th>Status</th>
@@ -63,27 +115,47 @@
           </thead>
           <tbody>
             @forelse($servis_terbaru ?? [] as $index => $s)
-            <tr>
-              <td>{{ $index + 1 }}</td>
-              <td>{{ data_get($s, 'nama_pelanggan', '—') }}</td>
-              <td>{{ data_get($s, 'kendaraan', '—') }}</td>
-              <td>{{ data_get($s, 'jenis_servis', '—') }}</td>
-              <td>
-                <span class="badge bg-{{ data_get($s, 'status') == 'selesai' ? 'success' : 'warning' }}">
-                  {{ ucfirst(data_get($s, 'status', 'proses')) }}
-                </span>
-              </td>
-              <td>{{ data_get($s, 'tanggal', '-') }}</td>
-            </tr>
+              <tr>
+                <td class="ps-4">{{ $index + 1 }}</td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-2"
+                      style="width: 32px; height: 32px; color: #667eea; font-weight: bold;">
+                      {{ strtoupper(substr(data_get($s, 'nama_pelanggan', '?'), 0, 1)) }}
+                    </div>
+                    <span class="fw-semibold">{{ data_get($s, 'nama_pelanggan', '—') }}</span>
+                  </div>
+                </td>
+                <td>{{ data_get($s, 'kendaraan', '—') }}</td>
+                <td>{{ data_get($s, 'jenis_servis', '—') }}</td>
+                <td>
+                  @php $status = data_get($s, 'status', 'proses'); @endphp
+                  @if($status == 'selesai')
+                    <span class="badge badge-modern"
+                      style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">Selesai</span>
+                  @elseif($status == 'batal')
+                    <span class="badge badge-modern"
+                      style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #fff;">Batal</span>
+                  @else
+                    <span class="badge badge-modern"
+                      style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">Proses</span>
+                  @endif
+                </td>
+                <td>{{ data_get($s, 'tanggal', '-') }}</td>
+              </tr>
             @empty
-            <tr>
-              <td colspan="6" class="text-center text-muted py-4">Belum ada data servis terbaru.</td>
-            </tr>
+              <tr>
+                <td colspan="6" class="text-center py-5">
+                  <div class="text-muted">
+                    <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
+                    <p class="mb-0">Belum ada data servis terbaru</p>
+                  </div>
+                </td>
+              </tr>
             @endforelse
           </tbody>
         </table>
       </div>
     </div>
   </div>
-</div>
 @endsection

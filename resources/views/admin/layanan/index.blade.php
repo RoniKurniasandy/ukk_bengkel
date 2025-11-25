@@ -1,67 +1,94 @@
 @extends('layouts.app')
+@section('title', 'Kelola Layanan')
 
 @section('content')
-<div class="container-fluid px-4">
-    <h1 class="mt-4">Kelola Layanan</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard.admin') }}">Dashboard</a></li>
-        <li class="breadcrumb-item active">Layanan</li>
-    </ol>
-
-    <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <div>
-                <i class="fas fa-table me-1"></i>
-                Data Layanan
+    <div class="container-fluid px-4">
+        <div class="user-management-header mb-4"
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h2 class="text-white fw-bold m-0" style="font-size: 1.75rem;"><i
+                            class="bi bi-gear-wide-connected me-2"></i>Kelola Layanan</h2>
+                    <p class="text-white-50 m-0 mt-2">Manajemen daftar layanan dan harga servis</p>
+                </div>
+                <a href="{{ route('admin.layanan.create') }}"
+                    class="btn btn-light text-primary fw-bold mt-3 mt-md-0 shadow-sm" style="border-radius: 10px;">
+                    <i class="bi bi-plus-circle me-2"></i>Tambah Layanan
+                </a>
             </div>
-            <a href="{{ route('admin.layanan.create') }}" class="btn btn-primary btn-sm">
-                <i class="fas fa-plus"></i> Tambah Layanan
-            </a>
         </div>
-        <div class="card-body">
-            @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
+
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert"
+                style="border-radius: 12px;">
+                <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            @endif
+        @endif
 
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Layanan</th>
-                        <th>Harga</th>
-                        <th>Estimasi Waktu</th>
-                        <th>Deskripsi</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($layanan as $item)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->nama_layanan }}</td>
-                        <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
-                        <td>{{ $item->estimasi_waktu }}</td>
-                        <td>{{ $item->deskripsi }}</td>
-                        <td>
-                            <a href="{{ route('admin.layanan.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('admin.layanan.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus layanan ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="text-center">Belum ada data layanan.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <div class="card-modern">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table-modern mb-0">
+                        <thead>
+                            <tr>
+                                <th class="ps-4" style="width: 5%;">No</th>
+                                <th style="width: 25%;">Nama Layanan</th>
+                                <th style="width: 20%;">Harga</th>
+                                <th style="width: 15%;">Estimasi</th>
+                                <th style="width: 20%;">Deskripsi</th>
+                                <th class="text-end pe-4" style="width: 15%;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($layanan as $item)
+                                <tr>
+                                    <td class="ps-4">{{ $loop->iteration }}</td>
+                                    <td>
+                                        <span class="fw-semibold text-dark">{{ $item->nama_layanan }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-modern"
+                                            style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); font-size: 0.85rem;">
+                                            Rp {{ number_format($item->harga, 0, ',', '.') }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center text-muted">
+                                            <i class="bi bi-clock me-2"></i>{{ $item->estimasi_waktu }}
+                                        </div>
+                                    </td>
+                                    <td class="text-muted small">{{ Str::limit($item->deskripsi, 50) }}</td>
+                                    <td class="text-end pe-4">
+                                        <a href="{{ route('admin.layanan.edit', $item->id) }}"
+                                            class="btn btn-sm btn-outline-warning me-1" style="border-radius: 8px;">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <form action="{{ route('admin.layanan.destroy', $item->id) }}" method="POST"
+                                            class="d-inline" onsubmit="return confirm('Yakin ingin menghapus layanan ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                style="border-radius: 8px;">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center py-5">
+                                        <div class="text-muted">
+                                            <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
+                                            <p class="mb-0">Belum ada data layanan.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 @endsection

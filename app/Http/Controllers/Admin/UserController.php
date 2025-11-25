@@ -10,11 +10,18 @@ class UserController extends Controller
     // Method untuk menampilkan daftar user
     public function index()
     {
-        // Ambil semua data user dari database, urutkan dari yang terbaru
-        $users = User::orderBy('created_at', 'desc')->get();
+        // Ambil semua data user dari database kecuali admin
+        // Urutkan berdasarkan role (mekanik, pelanggan) kemudian abjad nama
+        $users = User::where('role', '!=', 'admin')
+            ->orderByRaw("CASE 
+                         WHEN role = 'mekanik' THEN 1
+                         WHEN role = 'pelanggan' THEN 2
+                         ELSE 3
+                     END")
+            ->orderBy('nama', 'asc')
+            ->get();
 
         // Kirim data user ke view 'admin.user.index'
-        // (Catatan: harusnya compact('users'), bukan 'user')
         return view('admin.user.index', compact('users'));
     }
 }

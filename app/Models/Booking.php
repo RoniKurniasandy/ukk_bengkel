@@ -13,7 +13,6 @@ class Booking extends Model
         'kendaraan_id',
         'layanan_id',
         'tanggal_booking',
-        'jenis_servis',
         'keluhan',
         'status',
     ];

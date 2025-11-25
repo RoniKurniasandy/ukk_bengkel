@@ -1,0 +1,211 @@
+/* Design System */
+:root {
+  --color-primary: #667eea;
+  --color-primary-dark: #5a5fc4;
+  --color-secondary: #764ba2;
+  --color-success: #43e97b;
+  --color-info: #4facfe;
+  --color-warning: #f093fb;
+  --color-danger: #f5576c;
+  --color-bg: #f8f9fa;
+  --color-card-bg: #ffffff;
+  --color-text: #212529;
+  --font-family: 'Inter', 'Poppins', sans-serif;
+  --sidebar-width: 250px;
+}
+
+body {
+  background-color: var(--color-bg);
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+}
+
+/* Layout */
+.main-content {
+  margin-left: var(--sidebar-width);
+  transition: all 0.3s ease;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.navbar-dashboard {
+  background-color: #ffffff;
+  border-bottom: 1px solid #dee2e6;
+  padding: 12px 20px;
+}
+
+.page-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e40af;
+}
+
+/* Sidebar */
+.sidebar {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: #fff;
+  width: var(--sidebar-width);
+  position: fixed;
+  height: 100%;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.sidebar .nav-link {
+  color: rgba(255, 255, 255, 0.85);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  transition: all 0.25s;
+  margin-bottom: 0.25rem;
+}
+
+.sidebar .nav-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(4px);
+  color: #fff;
+}
+
+.sidebar .nav-link.active {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Responsive Layout */
+@media (max-width: 992px) {
+  .sidebar {
+    left: calc(var(--sidebar-width) * -1);
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+/* Buttons */
+.btn-modern {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1.4rem;
+  font-weight: 600;
+  color: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  color: #fff;
+}
+
+/* Cards */
+.card-modern {
+  background: var(--color-card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: none;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card-modern:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Badges */
+.badge-modern {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.badge-pelanggan {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
+
+.badge-mekanik {
+  background: linear-gradient(135deg, var(--color-warning) 0%, var(--color-danger) 100%);
+}
+
+.badge-admin {
+  background: linear-gradient(135deg, var(--color-info) 0%, var(--color-success) 100%);
+}
+
+/* Tables */
+.table-modern {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 0;
+}
+
+.table-modern thead {
+  background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+}
+
+.table-modern th {
+  border: none;
+  padding: 1rem;
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table-modern tbody tr {
+  background: var(--color-card-bg);
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.table-modern tbody tr:hover {
+  background: #f8f9fa;
+  transform: scale(1.005);
+}
+
+.table-modern td {
+  padding: 1rem;
+  border-bottom: 1px solid #f1f3f5;
+  color: #495057;
+  vertical-align: middle;
+}
+
+/* Search Box */
+.search-box {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+  outline: none;
+}
+
+.search-box i {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+}

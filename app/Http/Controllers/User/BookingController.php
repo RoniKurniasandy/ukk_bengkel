@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 <?php
 
 namespace App\Http\Controllers\User;
@@ -69,4 +67,4 @@ class BookingController extends Controller
             ->with('success', 'Booking berhasil dibatalkan.');
     }
 }
->>>>>>> 2f9a12e6b36e5ea78911cc2bbb6eeffa2c9d8f16
+
