@@ -52,6 +52,6 @@ class LoginController extends Controller
         Auth::logout(); // Logout user
         $request->session()->invalidate(); // Hapus session
         $request->session()->regenerateToken(); // Regenerasi CSRF token
-        return redirect('/login'); // Redirect ke halaman login
+        return redirect()->route('landing'); // Redirect ke halaman landing/homepage
     }
 }

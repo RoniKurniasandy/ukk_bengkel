@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\MekanikDashboardController;
 use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\LandingController;
 use App\Http\Middleware\RoleMiddleware;
 
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -22,7 +23,7 @@ use App\Http\Controllers\User\ServisController as UserServisController;
 use App\Http\Controllers\MekanikController;
 use App\Models\User;
 
-Route::get('/', fn() => view('landing'));
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 
 // Guest (belum login)
@@ -45,13 +46,12 @@ Route::middleware('auth')->get('/dashboard', [DashboardController::class, 'index
 Route::middleware('role:admin')->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
-    Route::get('/servis', [AdminServisController::class, 'index'])->name('admin.servis');
 
-    // Booking
-    Route::get('/booking', [AdminBookingController::class, 'index'])->name('admin.booking');
-    Route::get('/booking/{id}/edit', [AdminBookingController::class, 'edit'])->name('admin.booking.edit');
-    Route::put('/booking/{id}', [AdminBookingController::class, 'update'])->name('admin.booking.update');
-    Route::delete('/booking/{id}', [AdminBookingController::class, 'destroy'])->name('admin.booking.destroy');
+    // Manajemen Servis (Gabungan Booking & Servis)
+    Route::get('/servis', [AdminServisController::class, 'index'])->name('admin.servis.index');
+    Route::get('/servis/{id}/edit', [AdminServisController::class, 'edit'])->name('admin.servis.edit');
+    Route::put('/servis/{id}', [AdminServisController::class, 'update'])->name('admin.servis.update');
+    Route::delete('/servis/{id}', [AdminServisController::class, 'destroy'])->name('admin.servis.destroy');
 
     Route::resource('stok', AdminStokController::class)->names([
         'index' => 'admin.stok.index',
@@ -69,7 +69,7 @@ Route::middleware('role:admin')->prefix('admin')->group(function () {
 
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('admin.transaksi');
-    
+
     // Layanan
     Route::resource('layanan', \App\Http\Controllers\Admin\LayananController::class)->names([
         'index' => 'admin.layanan.index',
@@ -89,13 +89,14 @@ Route::middleware('role:mekanik')->prefix('mekanik')->group(function () { // Uba
     Route::get('/dashboard', [MekanikDashboardController::class, 'index'])->name('dashboard.mekanik'); // Ubah nama route sesuai kebutuhan
     Route::get('/servis-dikerjakan', [MekanikController::class, 'servisAktif'])->name('mekanik.servis.aktif');
     Route::get('/servis-selesai', [MekanikController::class, 'servisSelesai'])->name('mekanik.servis.selesai');
+    Route::put('/servis/{id}', [MekanikController::class, 'updateStatus'])->name('mekanik.servis.update');
 });
 
 
-    // Pelanggan-only routes
-    Route::middleware(['auth', 'role:pelanggan'])->prefix('pelanggan')->group(function () {
-        
-        Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard.user'); // Ubah nama route sesuai kebutuhan
+// Pelanggan-only routes
+Route::middleware(['auth', 'role:pelanggan'])->prefix('pelanggan')->group(function () {
+
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard.user'); // Ubah nama route sesuai kebutuhan
     Route::get('/servis', [App\Http\Controllers\User\ServisController::class, 'index'])
         ->name('user.servis');
 

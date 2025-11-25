@@ -11,13 +11,11 @@
     </li>
 
     @if(Auth::check() && Auth::user()->role === 'admin')
-    <li class="nav-item"><a href="{{ route('admin.users') }}" class="nav-link text-white">Kelola User</a></li>
-    <li class="nav-item"><a href="{{ route('admin.layanan.index') }}" class="nav-link text-white">Kelola Layanan</a></li>
-    <li class="nav-item"><a href="{{ route('admin.servis') }}" class="nav-link text-white">Kelola Servis</a></li>
-    <li class="nav-item"><a href="{{ route('admin.booking') }}" class="nav-link text-white">Kelola Booking</a></li>
-    <li class="nav-item"><a href="{{ route('admin.stok.index') }}" class="nav-link text-white">Stok</a></li>
-    <li class="nav-item"><a href="{{ route('admin.penjualan.create') }}" class="nav-link text-white">Penjualan Stok</a></li>
-    <li class="nav-item"><a href="{{ route('admin.transaksi') }}" class="nav-link text-white">Transaksi</a></li>
+    <li class="nav-item"><a href="{{ route('admin.servis.index') }}" class="nav-link text-white"><i class="bi bi-wrench me-2"></i> Manajemen Servis</a></li>
+    <li class="nav-item"><a href="{{ route('admin.users') }}" class="nav-link text-white"><i class="bi bi-people me-2"></i> Data Pengguna</a></li>
+    <li class="nav-item"><a href="{{ route('admin.stok.index') }}" class="nav-link text-white"><i class="bi bi-box-seam me-2"></i> Stok Sparepart</a></li>
+    <li class="nav-item"><a href="{{ route('admin.layanan.index') }}" class="nav-link text-white"><i class="bi bi-gear me-2"></i> Layanan</a></li>
+    <li class="nav-item"><a href="{{ route('admin.transaksi') }}" class="nav-link text-white"><i class="bi bi-cash-stack me-2"></i> Transaksi</a></li>
     @endif
 
     @if(Auth::check() && Auth::user()->role === 'mekanik')
@@ -26,7 +24,6 @@
     @endif
 
     @if(Auth::check() && Auth::user()->role === 'pelanggan')
-
     <li class="nav-item">
       <a href="{{ route('user.servis') }}"
         class="nav-link text-white {{ request()->is('pelanggan/servis') ? 'active bg-primary' : '' }}">
@@ -47,10 +44,8 @@
         <i class="bi bi-calendar-check me-2"></i> Booking Servis
       </a>
     </li>
-
     @endif
 
-    
     <li class="mt-auto border-top pt-3">
       <div class="d-flex align-items-center">
         <span class="me-3 text-primary fw-semibold">{{ Auth::user()->nama }}</span>
