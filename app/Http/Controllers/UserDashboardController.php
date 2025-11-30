@@ -8,10 +8,10 @@ use App\Models\Booking;
 
 class UserDashboardController extends Controller
 {
-public function index()
-{
-    $bookings = Booking::where('user_id', Auth::id())->get();
-    return view('dashboard.user', compact('bookings'));
-}
+    public function index()
+    {
+        $bookings = Booking::with(['layanan', 'servis'])->where('user_id', Auth::id())->get();
+        return view('dashboard.user', compact('bookings'));
+    }
 
 }

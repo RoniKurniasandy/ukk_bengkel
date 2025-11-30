@@ -51,6 +51,9 @@ Route::middleware('role:admin')->prefix('admin')->group(function () {
     Route::get('/servis', [AdminServisController::class, 'index'])->name('admin.servis.index');
     Route::get('/servis/{id}/edit', [AdminServisController::class, 'edit'])->name('admin.servis.edit');
     Route::put('/servis/{id}', [AdminServisController::class, 'update'])->name('admin.servis.update');
+    Route::post('/servis/{id}/update-status', [AdminServisController::class, 'updateStatusQuick'])->name('admin.servis.updateStatus');
+    Route::post('/servis/{id}/add-item', [AdminServisController::class, 'addItem'])->name('admin.servis.addItem');
+    Route::delete('/servis/item/{detailId}', [AdminServisController::class, 'removeItem'])->name('admin.servis.removeItem');
     Route::delete('/servis/{id}', [AdminServisController::class, 'destroy'])->name('admin.servis.destroy');
 
     Route::resource('stok', AdminStokController::class)->names([
@@ -69,6 +72,13 @@ Route::middleware('role:admin')->prefix('admin')->group(function () {
 
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('admin.transaksi');
+    Route::get('/transaksi/{id}', [TransaksiController::class, 'show'])->name('admin.transaksi.show');
+
+    // Pembayaran
+    Route::get('/pembayaran', [App\Http\Controllers\Admin\PembayaranController::class, 'index'])->name('admin.pembayaran.index');
+    Route::post('/pembayaran/{id}/verify', [App\Http\Controllers\Admin\PembayaranController::class, 'verify'])->name('admin.pembayaran.verify');
+    Route::get('/pembayaran/{id}/bayar', [App\Http\Controllers\Admin\PembayaranController::class, 'create'])->name('admin.pembayaran.create');
+    Route::post('/pembayaran/{id}/bayar', [App\Http\Controllers\Admin\PembayaranController::class, 'store'])->name('admin.pembayaran.store');
 
     // Layanan
     Route::resource('layanan', \App\Http\Controllers\Admin\LayananController::class)->names([
@@ -79,17 +89,37 @@ Route::middleware('role:admin')->prefix('admin')->group(function () {
         'update' => 'admin.layanan.update',
         'destroy' => 'admin.layanan.destroy',
     ]);
+
+    // Profil Admin
+    Route::get('/profil', [App\Http\Controllers\Admin\ProfilController::class, 'index'])->name('admin.profil.index');
+    Route::get('/profil/edit', [App\Http\Controllers\Admin\ProfilController::class, 'edit'])->name('admin.profil.edit');
+    Route::put('/profil/update', [App\Http\Controllers\Admin\ProfilController::class, 'update'])->name('admin.profil.update');
+    Route::put('/profil/password', [App\Http\Controllers\Admin\ProfilController::class, 'updatePassword'])->name('admin.profil.password');
 });
 
 
 
 
 // Mekanik-only routes
-Route::middleware('role:mekanik')->prefix('mekanik')->group(function () { // Ubah prefix sesuai kebutuhan
-    Route::get('/dashboard', [MekanikDashboardController::class, 'index'])->name('dashboard.mekanik'); // Ubah nama route sesuai kebutuhan
+Route::middleware('role:mekanik')->prefix('mekanik')->group(function () {
+    Route::get('/dashboard', [MekanikDashboardController::class, 'index'])->name('dashboard.mekanik');
+
+    // Jadwal Servis
+    Route::get('/jadwal-servis', [MekanikController::class, 'jadwalServis'])->name('mekanik.jadwal.servis');
+    Route::post('/booking/{id}/mulai', [MekanikController::class, 'startServis'])->name('mekanik.booking.start');
+
     Route::get('/servis-dikerjakan', [MekanikController::class, 'servisAktif'])->name('mekanik.servis.aktif');
     Route::get('/servis-selesai', [MekanikController::class, 'servisSelesai'])->name('mekanik.servis.selesai');
+    Route::get('/servis/{id}/detail', [MekanikController::class, 'detail'])->name('mekanik.servis.detail');
     Route::put('/servis/{id}', [MekanikController::class, 'updateStatus'])->name('mekanik.servis.update');
+    Route::post('/servis/{id}/add-item', [MekanikController::class, 'addItem'])->name('mekanik.servis.addItem');
+    Route::delete('/servis/item/{detailId}', [MekanikController::class, 'removeItem'])->name('mekanik.servis.removeItem');
+
+    // Profil Mekanik
+    Route::get('/profil', [App\Http\Controllers\Mekanik\ProfilController::class, 'index'])->name('mekanik.profil.index');
+    Route::get('/profil/edit', [App\Http\Controllers\Mekanik\ProfilController::class, 'edit'])->name('mekanik.profil.edit');
+    Route::put('/profil/update', [App\Http\Controllers\Mekanik\ProfilController::class, 'update'])->name('mekanik.profil.update');
+    Route::put('/profil/password', [App\Http\Controllers\Mekanik\ProfilController::class, 'updatePassword'])->name('mekanik.profil.password');
 });
 
 
@@ -104,9 +134,24 @@ Route::middleware(['auth', 'role:pelanggan'])->prefix('pelanggan')->group(functi
     Route::post('/kendaraan', [UserKendaraanController::class, 'store'])->name('user.kendaraan.store');
     Route::delete('/kendaraan/{id}', [UserKendaraanController::class, 'destroy'])->name('user.kendaraan.destroy');
 
+    // Servis (approved/ongoing services)
+    Route::get('/servis', [UserBookingController::class, 'servisIndex'])->name('user.servis.index');
+
     Route::get('/booking', [UserBookingController::class, 'index'])->name('user.booking.index');
     Route::get('/booking/create', [UserBookingController::class, 'create'])->name('user.booking.create');
     Route::post('/booking/store', [UserBookingController::class, 'store'])->name('user.booking.store');
+    Route::get('/booking/{id}', [UserBookingController::class, 'show'])->name('user.booking.show');
     Route::delete('/booking/{id}', [UserBookingController::class, 'destroy'])->name('user.booking.destroy');
+
+    // Pembayaran
+    Route::get('/pembayaran/{servisId}', [App\Http\Controllers\User\PembayaranController::class, 'create'])->name('user.pembayaran.create');
+    Route::post('/pembayaran/{servisId}', [App\Http\Controllers\User\PembayaranController::class, 'store'])->name('user.pembayaran.store');
+
+    // Profil
+    Route::get('/profil', [App\Http\Controllers\User\ProfilController::class, 'index'])->name('user.profil.index');
+    Route::get('/profil/edit', [App\Http\Controllers\User\ProfilController::class, 'edit'])->name('user.profil.edit');
+    Route::put('/profil/update', [App\Http\Controllers\User\ProfilController::class, 'update'])->name('user.profil.update');
+    Route::put('/profil/password', [App\Http\Controllers\User\ProfilController::class, 'updatePassword'])->name('user.profil.password');
 });
 
+require __DIR__ . '/debug.php';

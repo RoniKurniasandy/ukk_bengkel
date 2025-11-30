@@ -121,27 +121,28 @@
                   <div class="d-flex align-items-center">
                     <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-2"
                       style="width: 32px; height: 32px; color: #667eea; font-weight: bold;">
-                      {{ strtoupper(substr(data_get($s, 'nama_pelanggan', '?'), 0, 1)) }}
+                      {{ strtoupper(substr($s->booking->user->nama ?? '?', 0, 1)) }}
                     </div>
-                    <span class="fw-semibold">{{ data_get($s, 'nama_pelanggan', '—') }}</span>
+                    <span class="fw-semibold">{{ $s->booking->user->nama ?? '-' }}</span>
                   </div>
                 </td>
-                <td>{{ data_get($s, 'kendaraan', '—') }}</td>
-                <td>{{ data_get($s, 'jenis_servis', '—') }}</td>
                 <td>
-                  @php $status = data_get($s, 'status', 'proses'); @endphp
-                  @if($status == 'selesai')
+                  {{ $s->booking->kendaraan->merk ?? '' }} {{ $s->booking->kendaraan->model ?? '' }}
+                  <br><small class="text-muted">{{ $s->booking->kendaraan->plat_nomor ?? '-' }}</small>
+                </td>
+                <td>{{ $s->booking->layanan->nama_layanan ?? '-' }}</td>
+                <td>
+                  @if($s->status == 'selesai')
                     <span class="badge badge-modern"
                       style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">Selesai</span>
-                  @elseif($status == 'batal')
+                  @elseif($s->status == 'dikerjakan')
                     <span class="badge badge-modern"
-                      style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #fff;">Batal</span>
+                      style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">Dikerjakan</span>
                   @else
-                    <span class="badge badge-modern"
-                      style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">Proses</span>
+                    <span class="badge badge-modern bg-secondary">{{ ucfirst($s->status) }}</span>
                   @endif
                 </td>
-                <td>{{ data_get($s, 'tanggal', '-') }}</td>
+                <td>{{ $s->created_at->format('d M Y') }}</td>
               </tr>
             @empty
               <tr>

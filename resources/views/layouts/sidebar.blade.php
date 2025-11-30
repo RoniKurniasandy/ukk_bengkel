@@ -20,11 +20,15 @@
             class="bi bi-box-seam me-2"></i> Stok Sparepart</a></li>
       <li class="nav-item"><a href="{{ route('admin.layanan.index') }}" class="nav-link text-white"><i
             class="bi bi-gear me-2"></i> Layanan</a></li>
+      <li class="nav-item"><a href="{{ route('admin.pembayaran.index') }}" class="nav-link text-white"><i
+            class="bi bi-credit-card me-2"></i> Pembayaran</a></li>
       <li class="nav-item"><a href="{{ route('admin.transaksi') }}" class="nav-link text-white"><i
             class="bi bi-cash-stack me-2"></i> Transaksi</a></li>
     @endif
 
     @if(Auth::check() && Auth::user()->role === 'mekanik')
+      <li class="nav-item"><a href="{{ route('mekanik.jadwal.servis') }}" class="nav-link text-white"><i
+            class="bi bi-calendar-check me-2"></i> Jadwal Servis</a></li>
       <li class="nav-item"><a href="{{ route('mekanik.servis.aktif') }}" class="nav-link text-white"><i
             class="bi bi-tools me-2"></i> Servis Dikerjakan</a></li>
       <li class="nav-item"><a href="{{ route('mekanik.servis.selesai') }}" class="nav-link text-white"><i
@@ -33,7 +37,7 @@
 
     @if(Auth::check() && Auth::user()->role === 'pelanggan')
       <li class="nav-item">
-        <a href="{{ route('user.servis') }}"
+        <a href="{{ route('user.servis.index') }}"
           class="nav-link text-white {{ request()->is('pelanggan/servis') ? 'active bg-primary' : '' }}">
           <i class="bi bi-tools me-2"></i> Servis Saya
         </a>
@@ -52,18 +56,60 @@
           <i class="bi bi-calendar-check me-2"></i> Booking Servis
         </a>
       </li>
+
+      <li class="nav-item">
+        <a href="{{ route('user.profil.index') }}"
+          class="nav-link text-white {{ request()->is('pelanggan/profil*') ? 'active bg-primary' : '' }}">
+          <i class="bi bi-person-circle me-2"></i> Profil Saya
+        </a>
+      </li>
     @endif
 
     <li class="mt-auto border-top pt-3">
-      <div class="d-flex align-items-center">
-        <span class="me-3 text-primary fw-semibold">{{ Auth::user()->nama }}</span>
-        <form method="POST" action="{{ route('logout') }}">
-          @csrf
-          <button class="btn btn-outline-danger btn-sm">
-            <i class="bi bi-box-arrow-right"></i> Keluar
-          </button>
-        </form>
-      </div>
+      @php
+        $profileRoute = match (Auth::user()->role) {
+          'pelanggan' => route('user.profil.index'),
+          'admin' => route('admin.profil.index'),
+          'mekanik' => route('mekanik.profil.index'),
+          default => '#'
+        };
+      @endphp
+
+      <a href="{{ $profileRoute }}" class="text-decoration-none">
+        <div class="d-flex align-items-center p-2 rounded user-profile-hover">
+          <div class="me-2">
+            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
+              style="width: 40px; height: 40px;">
+              <i class="bi bi-person-fill text-white fs-5"></i>
+            </div>
+          </div>
+          <div class="flex-grow-1 text-white">
+            <div class="fw-semibold small">{{ Auth::user()->nama }}</div>
+            <div class="text-white-50" style="font-size: 0.75rem;">{{ ucfirst(Auth::user()->role) }}</div>
+          </div>
+          <div>
+            <i class="bi bi-chevron-right text-white-50"></i>
+          </div>
+        </div>
+      </a>
+
+      <form method="POST" action="{{ route('logout') }}" class="mt-2">
+        @csrf
+        <button class="btn btn-outline-danger btn-sm w-100">
+          <i class="bi bi-box-arrow-right"></i> Keluar
+        </button>
+      </form>
     </li>
   </ul>
+
+  <style>
+    .user-profile-hover {
+      transition: all 0.3s ease;
+    }
+
+    .user-profile-hover:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      transform: translateX(5px);
+    }
+  </style>
 </div>

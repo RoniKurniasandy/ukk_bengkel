@@ -68,20 +68,35 @@
                                 @enderror
                             </div>
 
-                            <div class="mb-4">
-                                <label for="tanggal_booking" class="form-label fw-bold text-secondary">Tanggal
-                                    Booking</label>
-                                <input type="date" name="tanggal_booking" id="tanggal_booking"
-                                    class="form-control form-control-lg @error('tanggal_booking') is-invalid @enderror"
-                                    min="{{ date('Y-m-d') }}" value="{{ old('tanggal_booking') }}" required
-                                    style="border-radius: 10px;">
-                                @error('tanggal_booking')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <small class="text-muted mt-1 d-block">
-                                    <i class="bi bi-info-circle me-1"></i>Pilih tanggal minimal hari ini
-                                </small>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="tanggal_booking" class="form-label fw-bold text-secondary">Tanggal
+                                        Booking</label>
+                                    <input type="date" name="tanggal_booking" id="tanggal_booking"
+                                        class="form-control form-control-lg @error('tanggal_booking') is-invalid @enderror"
+                                        min="{{ date('Y-m-d') }}" value="{{ old('tanggal_booking') }}" required
+                                        style="border-radius: 10px;">
+                                    @error('tanggal_booking')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label for="jam_booking" class="form-label fw-bold text-secondary">Jam Booking</label>
+                                    <input type="time" name="jam_booking" id="jam_booking"
+                                        class="form-control form-control-lg @error('jam_booking') is-invalid @enderror"
+                                        value="{{ old('jam_booking') }}" required style="border-radius: 10px;" min="08:00"
+                                        max="18:00">
+                                    @error('jam_booking')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="text-muted mt-1 d-block">
+                                        <i class="bi bi-clock me-1"></i>Jam operasional: 08:00 - 18:00 WIB
+                                    </small>
+                                </div>
                             </div>
+                            <small class="text-muted mt-1 d-block">
+                                <i class="bi bi-info-circle me-1"></i>Pilih tanggal minimal hari ini
+                            </small>
 
                             <div class="mb-4">
                                 <label for="keluhan" class="form-label fw-bold text-secondary">Keluhan Kendaraan</label>

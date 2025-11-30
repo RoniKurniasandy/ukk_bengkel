@@ -13,8 +13,13 @@ class Booking extends Model
         'kendaraan_id',
         'layanan_id',
         'tanggal_booking',
+        'jam_booking',
         'keluhan',
         'status',
+    ];
+
+    protected $casts = [
+        'tanggal_booking' => 'date',
     ];
 
 

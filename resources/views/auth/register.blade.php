@@ -246,7 +246,7 @@
         <div class="mb-3">
           <label for="name" class="form-label">Nama Lengkap</label>
           <div class="input-icon">
-            <input id="name" name="name" type="text" value="{{ old('name') }}" required autofocus class="form-control"
+            <input id="nama" name="nama" type="text" value="{{ old('nama') }}" required autofocus class="form-control"
               placeholder="Masukkan nama lengkap">
             <i class="bi bi-person"></i>
           </div>

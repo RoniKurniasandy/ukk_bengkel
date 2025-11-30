@@ -22,4 +22,9 @@ class Stok extends Model
         'nomor_seri',
         'keterangan',
     ];
+
+    public function detailServis()
+    {
+        return $this->hasMany(DetailServis::class, 'stok_id', 'stok_id');
+    }
 }

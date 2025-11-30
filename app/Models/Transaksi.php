@@ -8,20 +8,30 @@ class Transaksi extends Model
 {
     protected $table = 'transaksi';
     protected $primaryKey = 'transaksi_id';
-    protected $fillable = ['servis_id','total_biaya','diskon','pajak','dibayar','kembali','invoice_no','status_invoice','metode_id','tanggal_transaksi'];
+    protected $fillable = [
+        'user_id',
+        'servis_id',
+        'stok_id',
+        'jenis_transaksi', // pemasukan, pengeluaran
+        'sumber', // servis, belanja_stok, penjualan_stok
+        'jumlah',
+        'total',
+        'keterangan',
+        'status'
+    ];
 
     public function servis()
     {
         return $this->belongsTo(Servis::class, 'servis_id');
     }
 
-    public function pembayaran()
+    public function stok()
     {
-        return $this->hasMany(Pembayaran::class, 'transaksi_id');
+        return $this->belongsTo(Stok::class, 'stok_id', 'stok_id');
     }
 
-    public function metode()
+    public function user()
     {
-        return $this->belongsTo(MetodePembayaran::class, 'metode_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

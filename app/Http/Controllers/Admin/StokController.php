@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Stok;
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StokController extends Controller
 {
@@ -30,7 +32,22 @@ class StokController extends Controller
             'jumlah' => 'required|integer'
         ]);
 
-        Stok::create($request->all());
+        $stok = Stok::create($request->all());
+
+        // Record Transaction (Pengeluaran - Belanja Stok Awal)
+        if ($request->jumlah > 0) {
+            Transaksi::create([
+                'user_id' => Auth::id(),
+                'stok_id' => $stok->stok_id,
+                'jenis_transaksi' => 'pengeluaran',
+                'sumber' => 'belanja_stok',
+                'jumlah' => $request->jumlah,
+                'total' => $request->jumlah * $request->harga_beli,
+                'keterangan' => 'Belanja Stok Baru: ' . $stok->nama_barang,
+                'status' => 'selesai'
+            ]);
+        }
+
         return redirect()->route('admin.stok.index')->with('success', 'Data barang berhasil ditambahkan');
     }
 
@@ -52,7 +69,27 @@ class StokController extends Controller
             'jumlah' => 'required|integer'
         ]);
 
+        // Calculate difference for transaction
+        $oldJumlah = $stok->jumlah;
+        $newJumlah = $request->jumlah;
+        $diff = $newJumlah - $oldJumlah;
+
         $stok->update($request->all());
+
+        // Record Transaction if stock increased (Restock)
+        if ($diff > 0) {
+            Transaksi::create([
+                'user_id' => Auth::id(),
+                'stok_id' => $stok->stok_id,
+                'jenis_transaksi' => 'pengeluaran',
+                'sumber' => 'belanja_stok',
+                'jumlah' => $diff,
+                'total' => $diff * $request->harga_beli,
+                'keterangan' => 'Restock Barang: ' . $stok->nama_barang,
+                'status' => 'selesai'
+            ]);
+        }
+
         return redirect()->route('admin.stok.index')->with('success', 'Data barang berhasil diperbarui');
     }
 

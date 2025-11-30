@@ -28,6 +28,7 @@ class LoginController extends Controller
             // Jika berhasil, regenerasi session untuk keamanan
             $request->session()->regenerate();
 
+            /** @var \App\Models\User $user */
             $user = Auth::user(); // Ambil data user yang sedang login
 
             // Redirect ke dashboard sesuai role user
