@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('layanans', function (Blueprint $table) {
             $table->id();
             $table->string('nama_layanan');
-            $table->integer('harga');
+            $table->integer('harga'); // Harga jasa
+            $table->string('estimasi_waktu')->nullable(); // e.g., "30 menit", "1 jam"
             $table->text('deskripsi')->nullable();
             $table->timestamps();
         });

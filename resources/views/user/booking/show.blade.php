@@ -6,7 +6,7 @@
     <div class="container py-4">
         {{-- Action Buttons (Hidden when printing) --}}
         <div class="d-flex justify-content-between mb-4 d-print-none">
-            <a href="{{ route('user.booking.index') }}" class="btn btn-secondary">
+            <a href="{{ route('user.servis') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Kembali
             </a>
             @if($booking->status == 'selesai')

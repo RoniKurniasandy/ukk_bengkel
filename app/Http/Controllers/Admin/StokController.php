@@ -62,7 +62,7 @@ class StokController extends Controller
         $stok = Stok::findOrFail($id);
 
         $request->validate([
-            'kode_barang' => 'required|unique:stok,kode_barang,' . $id . ',stok_id',
+            // exclude kode_barang validation since it's not editable
             'nama_barang' => 'required',
             'harga_beli' => 'required|numeric',
             'harga_jual' => 'required|numeric',
@@ -74,7 +74,8 @@ class StokController extends Controller
         $newJumlah = $request->jumlah;
         $diff = $newJumlah - $oldJumlah;
 
-        $stok->update($request->all());
+        // Prevent kode_barang from updating
+        $stok->update($request->except('kode_barang'));
 
         // Record Transaction if stock increased (Restock)
         if ($diff > 0) {

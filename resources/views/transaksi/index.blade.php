@@ -19,6 +19,50 @@
 
         <div class="card shadow-sm">
             <div class="card-body">
+                {{-- Filter Form --}}
+                <form action="{{ route('admin.transaksi') }}" method="GET" class="mb-4">
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+                                <input type="text" name="search" class="form-control"
+                                    placeholder="Cari keterangan, user, plat..." value="{{ request('search') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-calendar"></i></span>
+                                <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}">
+                            </div>
+                            <small class="text-muted">Dari Tanggal</small>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-calendar"></i></span>
+                                <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
+                            </div>
+                            <small class="text-muted">Sampai Tanggal</small>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-filter"></i></span>
+                                <select name="jenis_transaksi" class="form-select">
+                                    <option value="">Semua Jenis</option>
+                                    <option value="pemasukan" {{ request('jenis_transaksi') == 'pemasukan' ? 'selected' : '' }}>Pemasukan</option>
+                                    <option value="pengeluaran" {{ request('jenis_transaksi') == 'pengeluaran' ? 'selected' : '' }}>Pengeluaran</option>
+                                </select>
+                            </div>
+                            <small class="text-muted">Jenis</small>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="submit" class="btn btn-primary w-100">Cari</button>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{{ route('admin.transaksi') }}" class="btn btn-outline-secondary w-100">Reset</a>
+                        </div>
+                    </div>
+                </form>
+
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-light">

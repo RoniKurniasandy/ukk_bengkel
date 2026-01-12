@@ -61,6 +61,6 @@ class PembayaranController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->route('dashboard.user')->with('success', 'Pembayaran berhasil dikirim dan menunggu verifikasi admin.');
+        return redirect()->route('user.servis')->with('success', 'Pembayaran berhasil dikirim dan menunggu verifikasi admin.');
     }
 }

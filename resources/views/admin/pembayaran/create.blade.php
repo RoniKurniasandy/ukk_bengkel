@@ -26,7 +26,7 @@
                             </div>
                         </div>
 
-                        <form action="{{ route('admin.pembayaran.store', $servis->id) }}" method="POST">
+                        <form action="{{ route('admin.pembayaran.store', $servis->id) }}" method="POST" id="adminPaymentForm">
                             @csrf
 
                             <div class="mb-3">
@@ -54,7 +54,7 @@
                             </div>
 
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-success btn-lg">
+                                <button type="submit" class="btn btn-success btn-lg" id="btnAdminPaymentSubmit">
                                     <i class="bi bi-check-circle"></i> Proses Pembayaran
                                 </button>
                                 <a href="{{ route('admin.pembayaran.index') }}" class="btn btn-secondary">Batal</a>
@@ -65,4 +65,12 @@
             </div>
         </div>
     </div>
+    
+    <script>
+        document.getElementById('adminPaymentForm').addEventListener('submit', function() {
+            const btn = document.getElementById('btnAdminPaymentSubmit');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...';
+        });
+    </script>
 @endsection

@@ -21,7 +21,7 @@
         <div class="alert alert-info">
             <i class="bi bi-info-circle"></i> <strong>Info:</strong> Halaman ini hanya menampilkan booking yang
             <strong>belum disetujui</strong>.
-            Untuk melihat servis yang sudah disetujui/dikerjakan, silakan ke menu <a href="{{ route('user.servis.index') }}"
+            Untuk melihat servis yang sudah disetujui/dikerjakan, silakan ke menu <a href="{{ route('user.servis') }}"
                 class="alert-link"><strong>Servis Saya</strong></a>.
         </div>
 
@@ -53,14 +53,26 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="badge 
-                                                @if($b->status == 'menunggu') bg-warning text-dark
-                                                @elseif($b->status == 'ditolak') bg-danger
-                                                @elseif($b->status == 'dibatalkan') bg-secondary
-                                                @endif
-                                            ">
-                                        {{ ucfirst($b->status) }}
-                                    </span>
+                                    @if($b->status == 'disetujui')
+                                        <div class="d-flex flex-column align-items-start">
+                                            <span class="badge bg-warning text-dark mb-1">
+                                                <i class="bi bi-check-circle-fill"></i> Disetujui
+                                            </span>
+                                            <small class="text-danger fw-bold" style="font-size: 0.75rem;">
+                                                <i class="bi bi-hourglass-split"></i> Menunggu Mekanik
+                                            </small>
+                                        </div>
+                                    @elseif($b->status == 'menunggu')
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="bi bi-hourglass-top"></i> Menunggu Konfirmasi
+                                        </span>
+                                    @elseif($b->status == 'ditolak')
+                                        <span class="badge bg-danger">Ditolak</span>
+                                    @elseif($b->status == 'dibatalkan')
+                                        <span class="badge bg-secondary">Dibatalkan</span>
+                                    @else
+                                        <span class="badge bg-secondary">{{ ucfirst($b->status) }}</span>
+                                    @endif
                                 </td>
                                 <td>
                                     @if($b->status == 'menunggu')

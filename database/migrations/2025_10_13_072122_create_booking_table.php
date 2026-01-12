@@ -8,14 +8,15 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('booking', function (Blueprint $table) {
-            $table->id('booking_id'); // atau $table->id();
+            $table->id('booking_id');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->unsignedBigInteger('kendaraan_id');
-            $table->enum('jenis_layanan', ['servis mesin', 'listrik', 'tune up', 'ganti oli', 'aki', 'ganti ban', 'servis AC']);
-            $table->string('jenis_servis')->nullable(); // tambahkan di sini tanpa after()
+            $table->foreignId('kendaraan_id')->constrained('kendaraan')->onDelete('cascade');
+            $table->foreignId('layanan_id')->constrained('layanans')->onDelete('cascade');
+            $table->foreignId('mekanik_id')->nullable()->constrained('users')->onDelete('set null'); // Mekanik uses users table
             $table->text('keluhan')->nullable();
             $table->dateTime('tanggal_booking');
-            $table->enum('status', ['menunggu', 'disetujui', 'ditolak', 'dibatalkan', 'selesai'])->default('menunggu');
+            $table->time('jam_booking')->nullable();
+            $table->enum('status', ['menunggu', 'disetujui', 'dikerjakan', 'ditolak', 'dibatalkan', 'selesai'])->default('menunggu');
             $table->timestamps();
         });
     }

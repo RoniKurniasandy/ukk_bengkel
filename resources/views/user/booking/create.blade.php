@@ -33,7 +33,7 @@
                                     <option value="">-- Pilih Kendaraan Anda --</option>
                                     @forelse ($kendaraan as $k)
                                         <option value="{{ $k->id }}" {{ old('kendaraan_id') == $k->id ? 'selected' : '' }}>
-                                            {{ $k->model }} - {{ $k->plat_nomor }}
+                                            {{ $k->merk }} {{ $k->model }} - {{ $k->plat_nomor }}
                                         </option>
                                     @empty
                                         <option value="" disabled>Belum ada kendaraan terdaftar</option>
@@ -112,7 +112,7 @@
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5">
                                 <a href="{{ route('user.booking.index') }}" class="btn btn-light btn-lg px-4 me-md-2"
                                     style="border-radius: 10px; font-weight: 600;">Batal</a>
-                                <button type="submit" class="btn btn-modern btn-lg px-5">
+                                <button type="submit" class="btn btn-modern btn-lg px-5" id="btnBookingSubmit">
                                     <i class="bi bi-send me-2"></i>Kirim Booking
                                 </button>
                             </div>
@@ -122,4 +122,12 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function() {
+            const btn = document.getElementById('btnBookingSubmit');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengirim...';
+        });
+    </script>
 @endsection

@@ -16,7 +16,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Kode Barang</label>
-                        <input type="text" name="kode_barang" value="{{ $stok->kode_barang }}" class="form-control" required>
+                        <input type="text" name="kode_barang" value="{{ $stok->kode_barang }}" class="form-control bg-light" readonly>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Nama Barang</label>

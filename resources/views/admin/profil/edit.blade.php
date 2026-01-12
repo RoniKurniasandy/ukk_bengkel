@@ -21,9 +21,20 @@
                         <h5 class="mb-0"><i class="bi bi-person-circle me-2"></i>Edit Data Profil</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('admin.profil.update') }}" method="POST">
+                        <form action="{{ route('admin.profil.update') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
+
+                            <div class="mb-3">
+                                <label for="foto" class="form-label">Foto Profil</label>
+                                @if($user->foto)
+                                    <div class="mb-2">
+                                        <img src="{{ asset('storage/photos/' . $user->foto) }}" alt="Foto Profil" class="img-thumbnail rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                                    </div>
+                                @endif
+                                <input type="file" name="foto" id="foto" class="form-control">
+                                <small class="text-muted">Format: JPG, JPEG, PNG. Maks: 2MB</small>
+                            </div>
 
                             <div class="mb-3">
                                 <label for="nama" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
@@ -39,8 +50,9 @@
 
                             <div class="mb-3">
                                 <label for="no_hp" class="form-label">No. HP</label>
-                                <input type="text" name="no_hp" id="no_hp" class="form-control"
-                                    value="{{ old('no_hp', $user->no_hp) }}" placeholder="Contoh: 08123456789">
+                                <input type="text" name="no_hp" id="no_hp" class="form-control bg-light"
+                                    value="{{ old('no_hp', $user->no_hp) }}" readonly>
+                                <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Hubungi Admin untuk mengubah nomor HP.</small>
                             </div>
 
                             <div class="mb-3">

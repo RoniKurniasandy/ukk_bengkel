@@ -15,13 +15,13 @@
 
                     <div class="mb-3">
                         <label class="form-label">Pelanggan</label>
-                        <input type="text" class="form-control" value="{{ $booking->user->name ?? '-' }}" disabled>
+                        <input type="text" class="form-control" value="{{ $booking->user->nama ?? '-' }}" disabled>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Kendaraan</label>
                         <input type="text" class="form-control"
-                            value="{{ $booking->kendaraan->merek ?? '-' }} - {{ $booking->kendaraan->model ?? '-' }}"
+                            value="{{ $booking->kendaraan->merk ?? '-' }} {{ $booking->kendaraan->model ?? '-' }} - {{ $booking->kendaraan->plat_nomor ?? '-' }}"
                             disabled>
                     </div>
 

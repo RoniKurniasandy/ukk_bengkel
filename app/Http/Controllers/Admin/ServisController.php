@@ -21,7 +21,9 @@ class ServisController extends Controller
         $status = $request->get('status');
 
         $search = $request->get('search');
-        $date = $request->get('date');
+        $dateFrom = $request->get('date_from');
+        $dateTo = $request->get('date_to');
+        $sort = $request->get('sort', 'terbaru'); // default: terbaru
 
         $query = Booking::with(['user', 'kendaraan', 'servis.mekanik']);
 
@@ -56,14 +58,28 @@ class ServisController extends Controller
             });
         }
 
-        // Filter Tanggal
-        if ($date) {
-            $query->whereDate('tanggal_booking', $date);
+        // Filter Rentang Tanggal
+        if ($dateFrom && $dateTo) {
+            $query->whereBetween('tanggal_booking', [$dateFrom, $dateTo]);
+        } elseif ($dateFrom) {
+            // Jika hanya tanggal dari yang diisi
+            $query->whereDate('tanggal_booking', '>=', $dateFrom);
+        } elseif ($dateTo) {
+            // Jika hanya tanggal sampai yang diisi
+            $query->whereDate('tanggal_booking', '<=', $dateTo);
         }
 
-        $bookings = $query->orderBy('tanggal_booking', 'desc')
-            ->orderBy('jam_booking', 'asc')
-            ->get();
+        // Sorting
+        if ($sort === 'terlama') {
+            $bookings = $query->orderBy('tanggal_booking', 'asc')
+                ->orderBy('jam_booking', 'asc')
+                ->get();
+        } else {
+            // Default: terbaru
+            $bookings = $query->orderBy('tanggal_booking', 'desc')
+                ->orderBy('jam_booking', 'desc')
+                ->get();
+        }
 
         return view('admin.servis.index', compact('bookings'));
     }

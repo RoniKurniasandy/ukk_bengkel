@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
-                                <h4 class="fw-bold text-primary">BENGKEL UKK</h4>
+@section('content')
+<div class="container mt-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
                                 <p class="text-muted mb-0">Jl. Raya Bengkel No. 123</p>
                                 <p class="text-muted">Telp: 0812-3456-7890</p>
                             </div>
@@ -15,20 +20,20 @@
                             </div>
                         </div>
 
-                        <!-- Info Pelanggan (Jika Servis) -->
+                                <!-- Info Pelanggan (Jika Servis) -->
                         @if($transaksi->servis)
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <h6 class="fw-bold text-uppercase text-muted">Pelanggan</h6>
-                                    <p class="fw-bold mb-0">{{ $transaksi->servis->booking->user->nama ?? '-' }}</p>
-                                    <p class="mb-0">{{ $transaksi->servis->booking->user->no_hp ?? '-' }}</p>
-                                    <p class="mb-0">{{ $transaksi->servis->booking->user->alamat ?? '-' }}</p>
+                                    <p class="fw-bold mb-0">{{ $transaksi->servis->booking?->user?->nama ?? $transaksi->user->nama ?? '-' }}</p>
+                                    <p class="mb-0">{{ $transaksi->servis->booking?->user?->no_hp ?? $transaksi->user->no_hp ?? '-' }}</p>
+                                    <p class="mb-0">{{ $transaksi->servis->booking?->user?->alamat ?? $transaksi->user->alamat ?? '-' }}</p>
                                 </div>
                                 <div class="col-md-6 text-md-end">
                                     <h6 class="fw-bold text-uppercase text-muted">Kendaraan</h6>
-                                    <p class="fw-bold mb-0">{{ $transaksi->servis->booking->kendaraan->merk ?? '-' }}
-                                        {{ $transaksi->servis->booking->kendaraan->model ?? '' }}</p>
-                                    <p class="mb-0">{{ $transaksi->servis->booking->kendaraan->plat_nomor ?? '-' }}</p>
+                                    <p class="fw-bold mb-0">{{ $transaksi->servis->booking?->kendaraan?->merk ?? '-' }}
+                                        {{ $transaksi->servis->booking?->kendaraan?->model ?? '' }}</p>
+                                    <p class="mb-0">{{ $transaksi->servis->booking?->kendaraan?->plat_nomor ?? '-' }}</p>
                                 </div>
                             </div>
                         @endif
@@ -49,13 +54,13 @@
                                         <!-- Biaya Jasa -->
                                         <tr>
                                             <td>Jasa Servis
-                                                ({{ $transaksi->servis->booking->layanan->nama_layanan ?? 'Servis' }})</td>
+                                                ({{ $transaksi->servis->booking?->layanan?->nama_layanan ?? 'Servis Umum' }})</td>
                                             <td class="text-center">1</td>
                                             <td class="text-end">Rp
-                                                {{ number_format($transaksi->servis->booking->layanan->harga ?? 0, 0, ',', '.') }}
+                                                {{ number_format($transaksi->servis->booking?->layanan?->harga ?? $transaksi->servis->estimasi_biaya ?? 0, 0, ',', '.') }}
                                             </td>
                                             <td class="text-end">Rp
-                                                {{ number_format($transaksi->servis->booking->layanan->harga ?? 0, 0, ',', '.') }}
+                                                {{ number_format($transaksi->servis->booking?->layanan?->harga ?? $transaksi->servis->estimasi_biaya ?? 0, 0, ',', '.') }}
                                             </td>
                                         </tr>
 
@@ -73,8 +78,14 @@
                                         <!-- Pembelian Stok (Pengeluaran) -->
                                         <tr>
                                             <td>Pembelian Stok: {{ $transaksi->stok->nama_barang }}</td>
-                                            <td class="text-center">-</td>
-                                            <td class="text-end">-</td>
+                                            <td class="text-center">{{ $transaksi->jumlah ?? '-' }}</td>
+                                            <td class="text-end">
+                                                @if($transaksi->jumlah > 0)
+                                                    Rp {{ number_format($transaksi->total / $transaksi->jumlah, 0, ',', '.') }}
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
                                             <td class="text-end">Rp {{ number_format($transaksi->total, 0, ',', '.') }}</td>
                                         </tr>
                                     @else
@@ -112,7 +123,11 @@
                 </div>
             </div>
         </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
     <style>
         @media print {

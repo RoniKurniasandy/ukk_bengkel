@@ -11,13 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Membuat tabel servis baru
         Schema::create('servis', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('booking_id');
-            $table->decimal('harga', 12, 2)->default(0);
-            $table->string('sparepart')->nullable();
+            $table->unsignedBigInteger('booking_id')->nullable();
+            $table->foreign('booking_id')->references('booking_id')->on('booking')->onDelete('cascade');
+            
+            $table->foreignId('mekanik_id')->nullable()->constrained('users')->onDelete('set null');
+            
+            $table->decimal('estimasi_biaya', 12, 2)->default(0);
             $table->enum('status', ['dikerjakan', 'selesai'])->default('dikerjakan');
+            
+            $table->dateTime('waktu_mulai')->nullable();
+            $table->dateTime('waktu_selesai')->nullable();
+            
             $table->timestamps();
         });
     }

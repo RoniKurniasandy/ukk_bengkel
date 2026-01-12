@@ -96,7 +96,7 @@
           <h2><i class="bi bi-people-fill me-2"></i>Kelola User</h2>
           <p>Manajemen data pengguna sistem bengkel</p>
         </div>
-        <a href="#" class="btn btn-modern mt-3 mt-md-0"><i class="bi bi-plus-circle me-2"></i>Tambah User Baru</a>
+        <a href="{{ route('admin.user.create') }}" class="btn btn-modern mt-3 mt-md-0"><i class="bi bi-plus-circle me-2"></i>Tambah User Baru</a>
       </div>
     </div>
 
@@ -125,9 +125,49 @@
       </div>
     </div>
 
-    <div class="search-box">
-      <i class="bi bi-search"></i>
-      <input type="text" id="searchUser" class="form-control" placeholder="Cari user berdasarkan nama, email, atau no HP...">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <form action="{{ route('admin.user.index') }}" method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label for="search" class="form-label fw-bold small text-muted">Cari User</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" name="search" id="search" class="form-control border-start-0 ps-0" 
+                            placeholder="Nama, Email, atau No HP..." value="{{ request('search') }}">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label for="role" class="form-label fw-bold small text-muted">Role</label>
+                    <select name="role" id="role" class="form-select">
+                        <option value="">Semua Role</option>
+                        <option value="pelanggan" {{ request('role') == 'pelanggan' ? 'selected' : '' }}>Pelanggan</option>
+                        <option value="mekanik" {{ request('role') == 'mekanik' ? 'selected' : '' }}>Mekanik</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="start_date" class="form-label fw-bold small text-muted">Dari Tanggal</label>
+                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+                </div>
+                <div class="col-md-2">
+                    <label for="end_date" class="form-label fw-bold small text-muted">Sampai Tanggal</label>
+                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <div class="d-grid gap-2 w-100">
+                        <button type="submit" class="btn btn-primary fw-bold text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                            <i class="bi bi-filter me-1"></i> Filter
+                        </button>
+                    </div>
+                </div>
+                @if(request()->has('search') || request()->has('role') || request()->has('start_date'))
+                    <div class="col-12 text-center mt-2">
+                        <a href="{{ route('admin.user.index') }}" class="text-decoration-none small text-muted">
+                            <i class="bi bi-x-circle me-1"></i> Reset Pencarian
+                        </a>
+                    </div>
+                @endif
+            </form>
+        </div>
     </div>
 
     <div class="modern-card">
@@ -144,13 +184,17 @@
                 <th style="width: 15%;">Tanggal Daftar</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="user-table-body">
               @forelse($users as $index => $user)
-                <tr class="user-row" data-search="{{ strtolower($user->nama . ' ' . $user->email . ' ' . ($user->no_hp ?? '')) }}">
+                <tr class="user-row">
                   <td class="text-center">{{ $index + 1 }}</td>
                   <td>
                     <div class="user-info">
-                      <div class="user-avatar">{{ strtoupper(substr($user->nama, 0, 1)) }}</div>
+                      @if($user->foto)
+                        <img src="{{ asset('storage/photos/' . $user->foto) }}" alt="user-avatar" class="user-avatar" style="object-fit: cover;">
+                      @else
+                        <div class="user-avatar">{{ strtoupper(substr($user->nama, 0, 1)) }}</div>
+                      @endif
                       <span class="user-name">{{ $user->nama }}</span>
                     </div>
                   </td>
@@ -178,8 +222,8 @@
                   <td colspan="6">
                     <div class="empty-state">
                       <i class="bi bi-inbox"></i>
-                      <h5>Belum ada user terdaftar</h5>
-                      <p>Mulai tambahkan user baru untuk mengelola sistem</p>
+                      <h5>Belum ada user yang sesuai filter</h5>
+                      <p>Coba ubah kata kunci atau kriteria pencarian Anda</p>
                     </div>
                   </td>
                 </tr>
@@ -192,14 +236,79 @@
   </div>
 
   <script>
-    // Search functionality
-    document.getElementById('searchUser')?.addEventListener('input', function (e) {
-      const searchTerm = e.target.value.toLowerCase();
-      const rows = document.querySelectorAll('.user-row');
-      rows.forEach(row => {
-        const searchData = row.getAttribute('data-search');
-        row.style.display = searchData.includes(searchTerm) ? '' : 'none';
-      });
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search');
+        const roleSelect = document.getElementById('role');
+        const startDateInput = document.getElementById('start_date');
+        const endDateInput = document.getElementById('end_date');
+        const tableBody = document.getElementById('user-table-body');
+        const filterForm = document.querySelector('form');
+        
+        // Disable default form submission for enter key
+        filterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            fetchUsers();
+        });
+
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        // Main fetch function
+        function fetchUsers() {
+            // Show loading state
+            tableBody.style.opacity = '0.5';
+            
+            const params = new URLSearchParams({
+                search: searchInput.value,
+                role: roleSelect.value,
+                start_date: startDateInput.value,
+                end_date: endDateInput.value
+            });
+
+            const url = `{{ route('admin.user.index') }}?${params.toString()}`;
+
+            // Update URL in browser without reload
+            window.history.pushState({}, '', url);
+
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newTableBody = doc.getElementById('user-table-body');
+                
+                if (newTableBody) {
+                    tableBody.innerHTML = newTableBody.innerHTML;
+                }
+                
+                // Restore opacity
+                tableBody.style.opacity = '1';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                tableBody.style.opacity = '1';
+            });
+        }
+
+        // Event listeners
+        const debouncedFetch = debounce(fetchUsers, 500); // Wait 500ms after typing stops
+
+        searchInput.addEventListener('input', debouncedFetch);
+        roleSelect.addEventListener('change', fetchUsers);
+        startDateInput.addEventListener('change', fetchUsers);
+        endDateInput.addEventListener('change', fetchUsers);
     });
   </script>
+
+
 @endsection

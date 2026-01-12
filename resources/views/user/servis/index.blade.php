@@ -35,29 +35,47 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    {{ $s->kendaraan->merk }} {{ $s->kendaraan->model }}<br>
-                                    <small class="text-muted">{{ $s->kendaraan->plat_nomor }}</small>
+                                    @if($s->booking && $s->booking->kendaraan)
+                                        {{ $s->booking->kendaraan->merk }} {{ $s->booking->kendaraan->model }}<br>
+                                        <small class="text-muted">{{ $s->booking->kendaraan->plat_nomor }}</small>
+                                    @else
+                                        <span class="text-muted">Data kendaraan tidak tersedia</span>
+                                    @endif
                                 </td>
-                                <td>{{ $s->layanan->nama_layanan ?? 'Umum' }}</td>
+                                <td>{{ $s->booking->layanan->nama_layanan ?? 'Umum' }}</td>
                                 <td>
                                     <div><i
-                                            class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::parse($s->tanggal_booking)->format('d M Y') }}
+                                            class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::parse($s->booking->tanggal_booking)->format('d M Y') }}
                                     </div>
-                                    <div class="text-primary"><i class="bi bi-clock me-1"></i>{{ $s->jam_booking ?? '-' }}</div>
+                                    <div class="text-primary"><i
+                                            class="bi bi-clock me-1"></i>{{ $s->booking->jam_booking ?? '-' }}</div>
                                 </td>
                                 <td>
-                                    @if($s->status == 'disetujui')
-                                        <span class="badge bg-info text-dark">Sedang Dikerjakan</span>
-                                    @elseif($s->status == 'selesai')
-                                        <span class="badge bg-success">Selesai</span>
+                                    @if($s->booking->status == 'disetujui')
+                                        <div class="d-flex flex-column align-items-start">
+                                            <span class="badge bg-warning text-dark mb-1">
+                                                <i class="bi bi-check-circle-fill"></i> Disetujui
+                                            </span>
+                                            <small class="text-danger fw-bold" style="font-size: 0.75rem;">
+                                                <i class="bi bi-hourglass-split"></i> Menunggu Mekanik
+                                            </small>
+                                        </div>
+                                    @elseif($s->booking->status == 'dikerjakan')
+                                        <span class="badge bg-info text-dark">
+                                            <i class="bi bi-gear-fill"></i> Sedang Dikerjakan
+                                        </span>
+                                    @elseif($s->booking->status == 'selesai')
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> Selesai
+                                        </span>
                                     @else
-                                        <span class="badge bg-secondary">{{ ucfirst($s->status) }}</span>
+                                        <span class="badge bg-secondary">{{ ucfirst($s->booking->status) }}</span>
                                     @endif
                                 </td>
                                 <td>
-                                    @if($s->servis && $s->servis->estimasi_biaya)
+                                    @if($s->estimasi_biaya)
                                         <strong class="text-success">Rp
-                                            {{ number_format($s->servis->estimasi_biaya, 0, ',', '.') }}</strong>
+                                            {{ number_format($s->estimasi_biaya, 0, ',', '.') }}</strong>
                                     @else
                                         <span class="text-muted">Belum dihitung</span>
                                     @endif
@@ -68,24 +86,35 @@
                                         <i class="bi bi-file-text"></i> Detail / Nota
                                     </a>
 
-                                    @if($s->servis)
-                                        @php
-                                            $totalBayar = \App\Models\Pembayaran::where('servis_id', $s->servis->id)
-                                                ->where('status', 'diterima')
-                                                ->sum('jumlah');
-                                            $estimasiBiaya = $s->servis->estimasi_biaya;
-                                            $sisaTagihan = max(0, $estimasiBiaya - $totalBayar);
-                                        @endphp
+                                    @php
+                                        $totalBayar = \App\Models\Pembayaran::where('servis_id', $s->id)
+                                            ->where('status', 'diterima')
+                                            ->sum('jumlah');
 
-                                        @if($sisaTagihan > 0 && in_array($s->servis->status_pembayaran ?? '', ['belum_bayar', 'dp_lunas']))
-                                            <a href="{{ route('user.pembayaran.create', $s->servis->id) }}"
-                                                class="btn btn-sm btn-success">
-                                                <i class="bi bi-credit-card"></i> Bayar
-                                            </a>
-                                        @elseif($sisaTagihan == 0)
-                                            <span class="badge bg-success">
-                                                <i class="bi bi-check-circle"></i> Lunas
+                                        $pembayaranPending = \App\Models\Pembayaran::where('servis_id', $s->id)
+                                            ->where('status', 'pending')
+                                            ->sum('jumlah');
+
+                                        $estimasiBiaya = $s->estimasi_biaya;
+                                        $sisaTagihan = max(0, $estimasiBiaya - $totalBayar);
+                                    @endphp
+
+                                    @if($sisaTagihan == 0 && $pembayaranPending == 0 && $estimasiBiaya > 0)
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> Lunas
+                                        </span>
+                                    @else
+                                        @if($pembayaranPending > 0)
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="bi bi-hourglass-split"></i> Menunggu Konfirmasi
                                             </span>
+                                        @endif
+
+                                        @if($sisaTagihan > 0 && $pembayaranPending == 0 && in_array($s->status_pembayaran ?? '', ['belum_bayar', 'dp_lunas']))
+                                            <a href="{{ route('user.pembayaran.create', $s->id) }}" class="btn btn-sm btn-success mt-1">
+                                                <i class="bi bi-credit-card"></i> 
+                                                {{ ($s->status_pembayaran == 'dp_lunas' || $totalBayar > 0) ? 'Pelunasan' : 'Bayar' }}
+                                            </a>
                                         @endif
                                     @endif
                                 </td>

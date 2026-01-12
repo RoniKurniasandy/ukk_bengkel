@@ -12,18 +12,51 @@
     </li>
 
     @if(Auth::check() && Auth::user()->role === 'admin')
-      <li class="nav-item"><a href="{{ route('admin.servis.index') }}" class="nav-link text-white"><i
-            class="bi bi-wrench me-2"></i> Manajemen Servis</a></li>
-      <li class="nav-item"><a href="{{ route('admin.users') }}" class="nav-link text-white"><i
-            class="bi bi-people me-2"></i> Data Pengguna</a></li>
-      <li class="nav-item"><a href="{{ route('admin.stok.index') }}" class="nav-link text-white"><i
-            class="bi bi-box-seam me-2"></i> Stok Sparepart</a></li>
-      <li class="nav-item"><a href="{{ route('admin.layanan.index') }}" class="nav-link text-white"><i
-            class="bi bi-gear me-2"></i> Layanan</a></li>
-      <li class="nav-item"><a href="{{ route('admin.pembayaran.index') }}" class="nav-link text-white"><i
-            class="bi bi-credit-card me-2"></i> Pembayaran</a></li>
-      <li class="nav-item"><a href="{{ route('admin.transaksi') }}" class="nav-link text-white"><i
-            class="bi bi-cash-stack me-2"></i> Transaksi</a></li>
+      {{-- MASTER DATA --}}
+      <li class="nav-item mt-3 mb-2">
+        <span class="text-white-50 small text-uppercase fw-bold px-3" style="letter-spacing: 1px;">Master Data</span>
+      </li>
+      <li class="nav-item">
+        <a href="{{ route('admin.user.index') }}"
+          class="nav-link text-white {{ request()->routeIs('admin.user*') ? 'active bg-primary' : '' }}">
+          <i class="bi bi-people me-2"></i> Data Pengguna
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ route('admin.stok.index') }}"
+          class="nav-link text-white {{ request()->routeIs('admin.stok*') ? 'active bg-primary' : '' }}">
+          <i class="bi bi-box-seam me-2"></i> Data Sparepart
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ route('admin.layanan.index') }}"
+          class="nav-link text-white {{ request()->routeIs('admin.layanan*') ? 'active bg-primary' : '' }}">
+          <i class="bi bi-gear me-2"></i> Data Layanan
+        </a>
+      </li>
+
+      {{-- OPERASIONAL BENGKEL --}}
+      <li class="nav-item mt-3 mb-2">
+        <span class="text-white-50 small text-uppercase fw-bold px-3" style="letter-spacing: 1px;">Operasional</span>
+      </li>
+      <li class="nav-item">
+        <a href="{{ route('admin.servis.index') }}"
+          class="nav-link text-white {{ request()->routeIs('admin.servis*') ? 'active bg-primary' : '' }}">
+          <i class="bi bi-wrench me-2"></i> Servis & Booking
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ route('admin.pembayaran.index') }}"
+          class="nav-link text-white {{ request()->routeIs('admin.pembayaran*') ? 'active bg-primary' : '' }}">
+          <i class="bi bi-credit-card me-2"></i> Data Pembayaran
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ route('admin.transaksi') }}"
+          class="nav-link text-white {{ request()->routeIs('admin.transaksi*') ? 'active bg-primary' : '' }}">
+          <i class="bi bi-file-earmark-text me-2"></i> Laporan Transaksi
+        </a>
+      </li>
     @endif
 
     @if(Auth::check() && Auth::user()->role === 'mekanik')
@@ -37,7 +70,7 @@
 
     @if(Auth::check() && Auth::user()->role === 'pelanggan')
       <li class="nav-item">
-        <a href="{{ route('user.servis.index') }}"
+        <a href="{{ route('user.servis') }}"
           class="nav-link text-white {{ request()->is('pelanggan/servis') ? 'active bg-primary' : '' }}">
           <i class="bi bi-tools me-2"></i> Servis Saya
         </a>

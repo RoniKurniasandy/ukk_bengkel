@@ -45,7 +45,9 @@ Route::middleware('auth')->get('/dashboard', [DashboardController::class, 'index
 // Admin-only routes
 Route::middleware('role:admin')->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
-    Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
+    Route::get('/users', [AdminUserController::class, 'index'])->name('admin.user.index');
+    Route::get('/users/create', [AdminUserController::class, 'create'])->name('admin.user.create');
+    Route::post('/users', [AdminUserController::class, 'store'])->name('admin.user.store');
 
     // Manajemen Servis (Gabungan Booking & Servis)
     Route::get('/servis', [AdminServisController::class, 'index'])->name('admin.servis.index');
@@ -127,15 +129,13 @@ Route::middleware('role:mekanik')->prefix('mekanik')->group(function () {
 Route::middleware(['auth', 'role:pelanggan'])->prefix('pelanggan')->group(function () {
 
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard.user'); // Ubah nama route sesuai kebutuhan
-    Route::get('/servis', [App\Http\Controllers\User\ServisController::class, 'index'])
-        ->name('user.servis');
 
     Route::get('/kendaraan', [UserKendaraanController::class, 'index'])->name('user.kendaraan');
     Route::post('/kendaraan', [UserKendaraanController::class, 'store'])->name('user.kendaraan.store');
     Route::delete('/kendaraan/{id}', [UserKendaraanController::class, 'destroy'])->name('user.kendaraan.destroy');
 
-    // Servis (approved/ongoing services)
-    Route::get('/servis', [UserBookingController::class, 'servisIndex'])->name('user.servis.index');
+    // Servis Saya (riwayat servis yang sudah disetujui/dikerjakan)
+    Route::get('/servis', [App\Http\Controllers\User\ServisController::class, 'index'])->name('user.servis');
 
     Route::get('/booking', [UserBookingController::class, 'index'])->name('user.booking.index');
     Route::get('/booking/create', [UserBookingController::class, 'create'])->name('user.booking.create');

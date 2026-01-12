@@ -9,14 +9,22 @@ return new class extends Migration {
     {
         Schema::create('transaksi', function (Blueprint $table) {
             $table->id('transaksi_id');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('servis_id')->nullable();
-            $table->decimal('total', 10, 2)->default(0);
-            $table->string('status', 50)->default('pending');
-            $table->timestamps();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('servis_id')->nullable()->constrained('servis')->onDelete('set null');
+            
+            // Optional: Link to stock for direct sales/purchases
+            $table->unsignedBigInteger('stok_id')->nullable();
+            $table->foreign('stok_id')->references('stok_id')->on('stok')->onDelete('set null');
+            $table->integer('jumlah')->nullable();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('servis_id')->references('id')->on('servis')->onDelete('set null');
+            $table->enum('jenis_transaksi', ['pemasukan', 'pengeluaran'])->default('pemasukan');
+            $table->string('sumber')->default('servis'); // servis, belanja_stok, penjualan_stok
+            
+            $table->decimal('total', 15, 2)->default(0); // Increased size
+            $table->string('status', 50)->default('pending');
+            $table->text('keterangan')->nullable();
+            
+            $table->timestamps();
         });
     }
 

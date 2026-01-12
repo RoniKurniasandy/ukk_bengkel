@@ -18,11 +18,13 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request('status') == 'menunggu' ? 'active' : '' }}"
-                            href="{{ route('admin.servis.index', array_merge(request()->except('status'), ['status' => 'menunggu'])) }}">Menunggu Konfirmasi</a>
+                            href="{{ route('admin.servis.index', array_merge(request()->except('status'), ['status' => 'menunggu'])) }}">Menunggu
+                            Konfirmasi</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request('status') == 'proses' ? 'active' : '' }}"
-                            href="{{ route('admin.servis.index', array_merge(request()->except('status'), ['status' => 'proses'])) }}">Dalam Pengerjaan</a>
+                            href="{{ route('admin.servis.index', array_merge(request()->except('status'), ['status' => 'proses'])) }}">Dalam
+                            Pengerjaan</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request('status') == 'selesai' ? 'active' : '' }}"
@@ -44,26 +46,47 @@
                         <input type="hidden" name="status" value="{{ request('status') }}">
                     @endif
                     <div class="row g-2">
-                        <div class="col-md-4">
-                            <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
-                                <input type="text" name="search" class="form-control" 
-                                    placeholder="Cari Nama, Plat Nomor, atau Mekanik..." 
-                                    value="{{ request('search') }}">
-                            </div>
-                        </div>
                         <div class="col-md-3">
                             <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="bi bi-calendar"></i></span>
-                                <input type="date" name="date" class="form-control" 
-                                    value="{{ request('date') }}">
+                                <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+                                <input type="text" name="search" class="form-control"
+                                    placeholder="Cari Nama, Plat, Mekanik..." value="{{ request('search') }}">
                             </div>
                         </div>
                         <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-calendar"></i></span>
+                                <input type="date" name="date_from" class="form-control" placeholder="Dari Tanggal"
+                                    value="{{ request('date_from') }}">
+                            </div>
+                            <small class="text-muted">Dari Tanggal</small>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-calendar"></i></span>
+                                <input type="date" name="date_to" class="form-control" placeholder="Sampai Tanggal"
+                                    value="{{ request('date_to') }}">
+                            </div>
+                            <small class="text-muted">Sampai Tanggal</small>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-sort-down"></i></span>
+                                <select name="sort" class="form-select">
+                                    <option value="terbaru" {{ request('sort', 'terbaru') == 'terbaru' ? 'selected' : '' }}>
+                                        Terbaru</option>
+                                    <option value="terlama" {{ request('sort') == 'terlama' ? 'selected' : '' }}>Terlama
+                                    </option>
+                                </select>
+                            </div>
+                            <small class="text-muted">Urutkan</small>
+                        </div>
+                        <div class="col-md-1">
                             <button type="submit" class="btn btn-primary w-100">Cari</button>
                         </div>
                         <div class="col-md-2">
-                            <a href="{{ route('admin.servis.index', ['status' => request('status')]) }}" class="btn btn-outline-secondary w-100">Reset</a>
+                            <a href="{{ route('admin.servis.index', ['status' => request('status')]) }}"
+                                class="btn btn-outline-secondary w-100">Reset</a>
                         </div>
                     </div>
                 </form>

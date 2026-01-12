@@ -29,16 +29,30 @@ class ProfilController extends Controller
         $request->validate([
             'nama' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'no_hp' => 'nullable|string|max:15',
             'alamat' => 'nullable|string|max:255',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
         ]);
 
-        $user->update([
+        $data = [
             'nama' => $request->nama,
             'email' => $request->email,
-            'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
-        ]);
+        ];
+
+        // Handle File Upload
+        if ($request->hasFile('foto')) {
+            // Delete old photo if exists
+            if ($user->foto && file_exists(public_path('storage/photos/' . $user->foto))) {
+                unlink(public_path('storage/photos/' . $user->foto));
+            }
+
+            $file = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/photos', $filename);
+            $data['foto'] = $filename;
+        }
+
+        $user->update($data);
 
         return redirect()->route('mekanik.profil.index')->with('success', 'Profil berhasil diperbarui.');
     }
