@@ -92,6 +92,7 @@
                                         <th>Info Pembayaran</th>
                                         <th>Jenis</th>
                                         <th>Jumlah</th>
+                                        <th class="text-end">Promo/Diskon</th>
                                         <th>Metode</th>
                                         <th>Bukti</th>
                                         <th>Status</th>
@@ -135,6 +136,20 @@
                                                 @else <span class="badge bg-success">Lunas</span> @endif
                                             </td>
                                             <td class="fw-bold">Rp {{ number_format($p->jumlah, 0, ',', '.') }}</td>
+                                            <td class="text-end">
+                                                @if($p->kode_voucher)
+                                                    <span class="badge bg-info-subtle text-info border border-info mb-1" title="Voucher: {{ $p->kode_voucher }}">
+                                                        <i class="bi bi-ticket-perforated"></i> {{ $p->kode_voucher }}
+                                                    </span><br>
+                                                @endif
+                                                @if($p->diskon_member > 0 || $p->diskon_voucher > 0 || $p->diskon_manual > 0)
+                                                    <small class="text-success fw-bold">
+                                                        -Rp {{ number_format($p->diskon_member + $p->diskon_voucher + $p->diskon_manual, 0, ',', '.') }}
+                                                    </small>
+                                                @else
+                                                    <span class="text-muted small">-</span>
+                                                @endif
+                                            </td>
                                             <td>{{ ucfirst($p->metode_pembayaran) }}</td>
                                             <td>
                                                 @if($p->bukti_pembayaran)
@@ -254,8 +269,36 @@
                                                                     </tbody>
                                                                     <tfoot class="fw-bold">
                                                                         <tr>
-                                                                            <td colspan="3" class="text-end">Total Estimasi</td>
+                                                                            <td colspan="3" class="text-end">Subtotal Estimasi</td>
                                                                             <td class="text-end">Rp {{ number_format($p->servis->estimasi_biaya, 0, ',', '.') }}</td>
+                                                                        </tr>
+                                                                        @if($p->diskon_member > 0)
+                                                                            <tr class="text-success">
+                                                                                <td colspan="3" class="text-end">
+                                                                                    Diskon Member ({{ $p->servis->booking->user->membershipTier->nama_level ?? 'Silver' }})
+                                                                                </td>
+                                                                                <td class="text-end">- Rp {{ number_format($p->diskon_member, 0, ',', '.') }}</td>
+                                                                            </tr>
+                                                                        @endif
+                                                                        @if($p->diskon_voucher > 0)
+                                                                            <tr class="text-info">
+                                                                                <td colspan="3" class="text-end">Voucher: <strong>{{ $p->kode_voucher }}</strong></td>
+                                                                                <td class="text-end">- Rp {{ number_format($p->diskon_voucher, 0, ',', '.') }}</td>
+                                                                            </tr>
+                                                                        @endif
+                                                                        @if($p->diskon_manual > 0)
+                                                                            <tr class="text-warning">
+                                                                                <td colspan="3" class="text-end">Potongan Manual: <em>{{ $p->alasan_diskon_manual }}</em></td>
+                                                                                <td class="text-end">- Rp {{ number_format($p->diskon_manual, 0, ',', '.') }}</td>
+                                                                            </tr>
+                                                                        @endif
+                                                                        <tr class="table-primary">
+                                                                            <td colspan="3" class="text-end">Grand Total Tagihan</td>
+                                                                            <td class="text-end text-primary">Rp {{ number_format($p->grand_total ?: $p->servis->estimasi_biaya, 0, ',', '.') }}</td>
+                                                                        </tr>
+                                                                        <tr class="bg-light">
+                                                                            <td colspan="3" class="text-end">Pembayaran Ini</td>
+                                                                            <td class="text-end">Rp {{ number_format($p->jumlah, 0, ',', '.') }}</td>
                                                                         </tr>
                                                                     </tfoot>
                                                                 </table>

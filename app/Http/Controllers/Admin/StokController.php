@@ -96,7 +96,19 @@ class StokController extends Controller
 
     public function destroy($id)
     {
-        Stok::findOrFail($id)->delete();
+        $stok = Stok::findOrFail($id);
+
+        // Check if stock is used in service details
+        if ($stok->detailServis()->exists()) {
+            return redirect()->route('admin.stok.index')->with('error', 'Barang tidak bisa dihapus karena diperlukan untuk riwayat pencatatan servis. Kamu bisa mengedit data ini atau biarkan stok kosong jika tidak ingin digunakan lagi.');
+        }
+
+        // Check if stock is used in stock transactions (restock/etc)
+        if (\App\Models\Transaksi::where('stok_id', $id)->exists()) {
+             return redirect()->route('admin.stok.index')->with('error', 'Barang tidak bisa dihapus karena diperlukan untuk riwayat pencatatan transaksi. Kamu bisa mengedit data ini atau biarkan stok kosong jika tidak ingin digunakan lagi.');
+        }
+
+        $stok->delete();
         return redirect()->route('admin.stok.index')->with('success', 'Data barang berhasil dihapus');
     }
 }

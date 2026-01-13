@@ -17,9 +17,16 @@ use Illuminate\Notifications\Notifiable;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  */
-class User extends Authenticatable
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
+
+    public function membershipTier()
+    {
+        return $this->belongsTo(MembershipTier::class, 'membership_tier_id');
+    }
 
     protected $fillable = [
         'nama',
@@ -28,6 +35,9 @@ class User extends Authenticatable
         'no_hp',
         'alamat',
         'role',
+        'foto',
+        'total_transaksi',
+        'membership_tier_id',
     ];
 
     protected $hidden = [

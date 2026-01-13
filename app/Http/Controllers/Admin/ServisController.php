@@ -23,7 +23,7 @@ class ServisController extends Controller
         $search = $request->get('search');
         $dateFrom = $request->get('date_from');
         $dateTo = $request->get('date_to');
-        $sort = $request->get('sort', 'terbaru'); // default: terbaru
+        $sort = $request->get('sort'); // default: null (smart sort)
 
         $query = Booking::with(['user', 'kendaraan', 'servis.mekanik']);
 
@@ -74,10 +74,28 @@ class ServisController extends Controller
             $bookings = $query->orderBy('tanggal_booking', 'asc')
                 ->orderBy('jam_booking', 'asc')
                 ->get();
-        } else {
-            // Default: terbaru
-            $bookings = $query->orderBy('tanggal_booking', 'desc')
+        } elseif ($sort === 'terbaru') {
+             $bookings = $query->orderBy('tanggal_booking', 'desc')
                 ->orderBy('jam_booking', 'desc')
+                ->get();
+        } else {
+            // Default "Smart Sort" (Prioritas)
+            // 1. Menunggu (Urgent) -> Urut Terlama (FIFO)
+            // 2. Proses (Active) -> Urut Terbaru (Pantau yang baru masuk proses)
+            // 3. Selesai etc (History) -> Urut Terbaru
+            
+            $bookings = $query
+                ->orderByRaw("CASE 
+                    WHEN status = 'menunggu' THEN 1 
+                    WHEN status IN ('disetujui', 'dikerjakan') THEN 2 
+                    ELSE 3 
+                END ASC")
+                ->orderByRaw("CASE 
+                    WHEN status = 'menunggu' THEN CONCAT(tanggal_booking, ' ', jam_booking) 
+                END ASC")
+                ->orderByRaw("CASE 
+                    WHEN status != 'menunggu' THEN CONCAT(tanggal_booking, ' ', jam_booking) 
+                END DESC")
                 ->get();
         }
 

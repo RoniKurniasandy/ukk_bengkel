@@ -39,7 +39,25 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Dashboard redirect (otomatis sesuai role)
-Route::middleware('auth')->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::middleware('auth')->group(function() {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('vouchers/check', [\App\Http\Controllers\Admin\VoucherController::class, 'check'])->name('admin.vouchers.check');
+
+    // Email Verification Routes
+    Route::get('/email/verify', function () {
+        return view('auth.verify-email');
+    })->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
+        $request->fulfill();
+        return redirect('/dashboard');
+    })->middleware(['signed'])->name('verification.verify');
+
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+        return back()->with('success', 'Verification link sent!');
+    })->middleware(['throttle:6,1'])->name('verification.send');
+});
 
 // Admin-only routes
 // Admin-only routes
@@ -91,6 +109,16 @@ Route::middleware('role:admin')->prefix('admin')->group(function () {
         'update' => 'admin.layanan.update',
         'destroy' => 'admin.layanan.destroy',
     ]);
+
+    // Manajemen Voucher (CRUD)
+    Route::resource('vouchers', \App\Http\Controllers\Admin\VoucherController::class)->names([
+        'index' => 'admin.vouchers.index',
+        'create' => 'admin.vouchers.create',
+        'store' => 'admin.vouchers.store',
+        'edit' => 'admin.vouchers.edit',
+        'update' => 'admin.vouchers.update',
+        'destroy' => 'admin.vouchers.destroy',
+    ])->except(['show']);
 
     // Profil Admin
     Route::get('/profil', [App\Http\Controllers\Admin\ProfilController::class, 'index'])->name('admin.profil.index');

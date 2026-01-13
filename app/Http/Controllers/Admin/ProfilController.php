@@ -28,14 +28,14 @@ class ProfilController extends Controller
 
         $request->validate([
             'nama' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'no_hp' => 'nullable|string|max:20',
             'alamat' => 'nullable|string|max:255',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
         ]);
 
         $data = [
             'nama' => $request->nama,
-            'email' => $request->email,
+            'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
         ];
 
@@ -48,7 +48,7 @@ class ProfilController extends Controller
 
             $file = $request->file('foto');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/photos', $filename);
+            $file->storeAs('photos', $filename, 'public');
             $data['foto'] = $filename;
         }
 

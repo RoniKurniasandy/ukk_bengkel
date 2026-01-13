@@ -72,6 +72,7 @@
                                 <th>Sumber</th>
                                 <th>Keterangan</th>
                                 <th>User</th>
+                                <th class="text-end">Promo/Diskon</th>
                                 <th class="text-end">Total</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
@@ -108,6 +109,22 @@
                                         @endif
                                     </td>
                                     <td>{{ $t->user->nama ?? '-' }}</td>
+                                    <td class="text-end">
+                                        @if($t->kode_voucher)
+                                            <span class="badge bg-info-subtle text-info border border-info mb-1" title="Voucher: {{ $t->kode_voucher }}">
+                                                <i class="bi bi-ticket-perforated"></i> {{ $t->kode_voucher }}
+                                            </span>
+                                            <br>
+                                        @endif
+                                        @if($t->diskon_member > 0 || $t->diskon_voucher > 0 || $t->diskon_manual > 0)
+                                            @php $totalDisc = $t->diskon_member + $t->diskon_voucher + $t->diskon_manual; @endphp
+                                            <small class="text-success fw-bold">
+                                                -Rp {{ number_format($totalDisc, 0, ',', '.') }}
+                                            </small>
+                                        @else
+                                            <span class="text-muted small">-</span>
+                                        @endif
+                                    </td>
                                     <td
                                         class="text-end fw-bold {{ $t->jenis_transaksi == 'pemasukan' ? 'text-success' : 'text-danger' }}">
                                         {{ $t->jenis_transaksi == 'pemasukan' ? '+' : '-' }} Rp

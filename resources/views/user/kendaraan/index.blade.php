@@ -45,11 +45,10 @@
                             <td>{{ $item->plat_nomor }}</td>
                             <td>
                                 <form action="{{ route('user.kendaraan.destroy', $item->id) }}" 
-                                    method="POST" 
-                                    onsubmit="return confirm('Hapus kendaraan ini?')">
+                                    method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">
+                                    <button type="button" class="btn btn-sm btn-danger delete-confirm" data-message="Anda akan menghapus data kendaraan '{{ $item->merk }} {{ $item->model }}' dengan plat '{{ $item->plat_nomor }}'.">
                                         Hapus
                                     </button>
                                 </form>
@@ -98,7 +97,7 @@
 
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Batal</button>
-                <button class="btn btn-primary" type="submit">Simpan</button>
+                <button class="btn btn-primary save-confirm" type="submit" data-message="Daftarkan kendaraan baru ini ke akun Anda?">Simpan</button>
             </div>
         </form>
     </div>

@@ -1,116 +1,147 @@
 @extends('layouts.app')
-@section('title', 'Edit Profil')
+@section('title', 'Edit Profil Mekanik')
 
 @section('content')
-    <div class="container py-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <strong>Terjadi Kesalahan:</strong>
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
+<style>
+    .edit-header {
+        background: linear-gradient(135deg, #064e3b 0%, #10b981 100%);
+        padding: 40px 0;
+        border-radius: 20px;
+        margin-bottom: -40px;
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+</style>
+
+<div class="container py-4">
+    <div class="edit-header text-center text-white mb-5">
+        <h3 class="fw-bold mb-1">Update Data Mekanik</h3>
+        <p class="opacity-75 mb-0">Kelola informasi profesional dan akses akun Anda</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Data Profil -->
+            <div class="card border-0 shadow-lg rounded-4 glass-card mb-4 overflow-hidden">
+                <div class="card-header bg-white py-3 border-bottom d-flex align-items-center">
+                    <div class="bg-success bg-opacity-10 p-2 rounded-3 me-3">
+                        <i class="bi bi-tools text-success fs-5"></i>
                     </div>
-                @endif
-
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0"><i class="bi bi-person-circle me-2"></i>Edit Data Profil</h5>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('mekanik.profil.update') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
-
-                            <div class="mb-3">
-                                <label for="foto" class="form-label">Foto Profil</label>
-                                @if($user->foto)
-                                    <div class="mb-2">
-                                        <img src="{{ asset('storage/photos/' . $user->foto) }}" alt="Foto Profil" class="img-thumbnail rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
-                                    </div>
-                                @endif
-                                <input type="file" name="foto" id="foto" class="form-control">
-                                <small class="text-muted">Format: JPG, JPEG, PNG. Maks: 2MB</small>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="nama" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
-                                <input type="text" name="nama" id="nama" class="form-control"
-                                    value="{{ old('nama', $user->nama) }}" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                <input type="email" name="email" id="email" class="form-control"
-                                    value="{{ old('email', $user->email) }}" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="no_hp" class="form-label">No. HP</label>
-                                <input type="text" name="no_hp" id="no_hp" class="form-control bg-light"
-                                    value="{{ old('no_hp', $user->no_hp) }}" readonly>
-                                <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Hubungi Admin untuk mengubah nomor HP.</small>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="alamat" class="form-label">Alamat</label>
-                                <textarea name="alamat" id="alamat" class="form-control" rows="3"
-                                    placeholder="Masukkan alamat lengkap">{{ old('alamat', $user->alamat) }}</textarea>
-                            </div>
-
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-success">
-                                    <i class="bi bi-save"></i> Simpan Perubahan
-                                </button>
-                                <a href="{{ route('mekanik.profil.index') }}" class="btn btn-secondary">Batal</a>
-                            </div>
-                        </form>
-                    </div>
+                    <h6 class="fw-bold text-dark mb-0">Informasi Profesional</h6>
                 </div>
+                <div class="card-body p-4 text-start">
+                    <form action="{{ route('mekanik.profil.update') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
 
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-warning text-dark">
-                        <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Ubah Password</h5>
+                        <div class="row g-4">
+                            <!-- Profile Photo -->
+                            <div class="col-12 text-center mb-2">
+                                <div class="position-relative d-inline-block">
+                                    @if($user->foto)
+                                        <img src="{{ asset('storage/photos/' . $user->foto) }}" alt="Preview" id="profile-preview" 
+                                             class="rounded-circle border border-4 border-white shadow" 
+                                             style="width: 120px; height: 120px; object-fit: cover;">
+                                    @else
+                                        <div id="profile-placeholder" class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center border border-4 border-white shadow" 
+                                             style="width: 120px; height: 120px;">
+                                            <i class="bi bi-person-fill text-muted" style="font-size: 3rem;"></i>
+                                        </div>
+                                        <img src="" id="profile-preview" class="rounded-circle border border-4 border-white shadow d-none" 
+                                             style="width: 120px; height: 120px; object-fit: cover;">
+                                    @endif
+                                    <label for="foto" class="position-absolute bottom-0 end-0 bg-success text-white rounded-circle p-2 shadow" style="cursor: pointer; transform: translate(5px, 5px);">
+                                        <i class="bi bi-camera-fill"></i>
+                                    </label>
+                                    <input type="file" name="foto" id="foto" class="d-none" accept="image/*" onchange="previewImage(this)">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small fw-bold">NAMA LENGKAP</label>
+                                <input type="text" name="nama" class="form-control border-light shadow-none bg-light" value="{{ old('nama', $user->nama) }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small fw-bold">EMAIL</label>
+                                <input type="email" name="email" class="form-control border-light shadow-none bg-light" value="{{ old('email', $user->email) }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small fw-bold">NOMOR WHATSAPP</label>
+                                <input type="text" name="no_hp" class="form-control border-light shadow-none bg-light" value="{{ old('no_hp', $user->no_hp) }}">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-muted small fw-bold">ALAMAT TINGGAL</label>
+                                <textarea name="alamat" class="form-control border-light shadow-none bg-light" rows="3">{{ old('alamat', $user->alamat) }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                            <a href="{{ route('mekanik.profil.index') }}" class="btn btn-link text-muted text-decoration-none">
+                                <i class="bi bi-arrow-left me-1"></i> Kembali
+                            </a>
+                            <button type="submit" class="btn btn-success px-5 rounded-pill shadow save-confirm" data-message="Simpan perubahan data profesional Anda?">
+                                <i class="bi bi-save2-fill me-2"></i> Simpan Data Mekanik
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="card border-0 shadow-lg rounded-4 glass-card overflow-hidden">
+                <div class="card-header bg-white py-3 border-bottom d-flex align-items-center">
+                    <div class="bg-danger bg-opacity-10 p-2 rounded-3 me-3">
+                        <i class="bi bi-shield-lock-fill text-danger fs-5"></i>
                     </div>
-                    <div class="card-body">
-                        <form action="{{ route('mekanik.profil.password') }}" method="POST">
-                            @csrf
-                            @method('PUT')
-
-                            <div class="mb-3">
-                                <label for="password_lama" class="form-label">Password Lama <span
-                                        class="text-danger">*</span></label>
-                                <input type="password" name="password_lama" id="password_lama" class="form-control"
-                                    required>
+                    <h6 class="fw-bold text-dark mb-0">Ubah Password Akun</h6>
+                </div>
+                <div class="card-body p-4 text-start">
+                    <form action="{{ route('mekanik.profil.password') }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label text-muted small">Password Lama</label>
+                                <input type="password" name="password_lama" class="form-control border-light" required>
                             </div>
-
-                            <div class="mb-3">
-                                <label for="password_baru" class="form-label">Password Baru <span
-                                        class="text-danger">*</span></label>
-                                <input type="password" name="password_baru" id="password_baru" class="form-control"
-                                    required>
-                                <small class="text-muted">Minimal 8 karakter</small>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted small">Password Baru</label>
+                                <input type="password" name="password_baru" class="form-control border-light" required>
                             </div>
-
-                            <div class="mb-3">
-                                <label for="password_baru_confirmation" class="form-label">Konfirmasi Password Baru <span
-                                        class="text-danger">*</span></label>
-                                <input type="password" name="password_baru_confirmation" id="password_baru_confirmation"
-                                    class="form-control" required>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted small">Konfirmasi</label>
+                                <input type="password" name="password_baru_confirmation" class="form-control border-light" required>
                             </div>
-
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-warning">
-                                    <i class="bi bi-key"></i> Ubah Password
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="text-end mt-4">
+                            <button type="submit" class="btn btn-outline-danger px-4 rounded-pill save-confirm" data-message="Anda yakin ingin memperbarui password akun mekanik Anda?">
+                                <i class="bi bi-key-fill me-2"></i> Update Password
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var preview = document.getElementById('profile-preview');
+                var placeholder = document.getElementById('profile-placeholder');
+                
+                preview.src = e.target.result;
+                preview.classList.remove('d-none');
+                if(placeholder) placeholder.classList.add('d-none');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 @endsection

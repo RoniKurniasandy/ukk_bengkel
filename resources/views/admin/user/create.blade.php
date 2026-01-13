@@ -67,7 +67,7 @@
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a href="{{ route('admin.user.index') }}" class="btn btn-secondary me-md-2">Batal</a>
-                            <button type="submit" class="btn btn-primary">Simpan User</button>
+                            <button type="submit" class="btn btn-primary save-confirm" data-message="Simpan data user baru ini?">Simpan User</button>
                         </div>
                     </form>
                 </div>

@@ -98,9 +98,33 @@
                                         </tr>
                                     @endif
                                 </tbody>
-                                <tfoot class="bg-light fw-bold">
-                                    <tr>
-                                        <td colspan="3" class="text-end">TOTAL</td>
+                                <tfoot class="bg-light">
+                                    @if($transaksi->subtotal > 0 && ($transaksi->diskon_member > 0 || $transaksi->diskon_voucher > 0 || $transaksi->diskon_manual > 0))
+                                        <tr>
+                                            <td colspan="3" class="text-end">Subtotal</td>
+                                            <td class="text-end">Rp {{ number_format($transaksi->subtotal, 0, ',', '.') }}</td>
+                                        </tr>
+                                        @if($transaksi->diskon_member > 0)
+                                            <tr class="text-success">
+                                                <td colspan="3" class="text-end">Diskon Member ({{ $transaksi->servis->booking?->user?->membershipTier?->nama_level ?? 'Silver' }})</td>
+                                                <td class="text-end">- Rp {{ number_format($transaksi->diskon_member, 0, ',', '.') }}</td>
+                                            </tr>
+                                        @endif
+                                        @if($transaksi->diskon_voucher > 0)
+                                            <tr class="text-info">
+                                                <td colspan="3" class="text-end">Voucher: <strong>{{ $transaksi->kode_voucher }}</strong></td>
+                                                <td class="text-end">- Rp {{ number_format($transaksi->diskon_voucher, 0, ',', '.') }}</td>
+                                            </tr>
+                                        @endif
+                                        @if($transaksi->diskon_manual > 0)
+                                            <tr class="text-warning">
+                                                <td colspan="3" class="text-end">Potongan Manual: <em>{{ $transaksi->alasan_diskon_manual }}</em></td>
+                                                <td class="text-end">- Rp {{ number_format($transaksi->diskon_manual, 0, ',', '.') }}</td>
+                                            </tr>
+                                        @endif
+                                    @endif
+                                    <tr class="fw-bold">
+                                        <td colspan="3" class="text-end">TOTAL @if($transaksi->diskon_manual > 0 || $transaksi->diskon_voucher > 0 || $transaksi->diskon_member > 0) AKHIR @endif</td>
                                         <td class="text-end fs-5 text-primary">Rp
                                             {{ number_format($transaksi->total, 0, ',', '.') }}</td>
                                     </tr>

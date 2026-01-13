@@ -50,7 +50,7 @@
                     @enderror
                 </div>
 
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary save-confirm" data-message="Simpan perubahan data layanan ini?">Update</button>
                 <a href="{{ route('admin.layanan.index') }}" class="btn btn-secondary">Batal</a>
             </form>
         </div>

@@ -79,8 +79,8 @@
                                         <form method="POST" action="{{ route('user.booking.destroy', $b->booking_id) }}"
                                             class="d-inline">
                                             @csrf @method('DELETE')
-                                            <button class="btn btn-sm btn-danger"
-                                                onclick="return confirm('Yakin ingin membatalkan booking ini?')">
+                                            <button type="button" class="btn btn-sm btn-danger delete-confirm"
+                                                data-message="Yakin ingin membatalkan booking servis ini?">
                                                 <i class="bi bi-x-circle"></i> Batalkan
                                             </button>
                                         </form>

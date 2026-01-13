@@ -34,6 +34,12 @@
           <i class="bi bi-gear me-2"></i> Data Layanan
         </a>
       </li>
+      <li class="nav-item">
+        <a href="{{ route('admin.vouchers.index') }}"
+          class="nav-link text-white {{ request()->routeIs('admin.vouchers*') ? 'active bg-primary' : '' }}">
+          <i class="bi bi-ticket-perforated me-2"></i> Data Voucher
+        </a>
+      </li>
 
       {{-- OPERASIONAL BENGKEL --}}
       <li class="nav-item mt-3 mb-2">
@@ -111,10 +117,17 @@
       <a href="{{ $profileRoute }}" class="text-decoration-none">
         <div class="d-flex align-items-center p-2 rounded user-profile-hover">
           <div class="me-2">
-            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
-              style="width: 40px; height: 40px;">
-              <i class="bi bi-person-fill text-white fs-5"></i>
-            </div>
+            @if(Auth::user()->foto)
+              <img src="{{ asset('storage/photos/' . Auth::user()->foto) }}" 
+                   class="rounded-circle border border-2 border-primary" 
+                   style="width: 40px; height: 40px; object-fit: cover;"
+                   alt="Profile">
+            @else
+              <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px;">
+                <i class="bi bi-person-fill text-white fs-5"></i>
+              </div>
+            @endif
           </div>
           <div class="flex-grow-1 text-white">
             <div class="fw-semibold small">{{ Auth::user()->nama }}</div>

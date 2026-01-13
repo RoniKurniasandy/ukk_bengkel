@@ -170,10 +170,10 @@
 
                                             {{-- Hapus --}}
                                             <form action="{{ route('admin.servis.destroy', $item->booking_id) }}" method="POST"
-                                                class="d-inline" onsubmit="return confirm('Hapus data ini?');">
+                                                class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button class="btn btn-danger btn-sm" data-bs-toggle="tooltip"
+                                                <button type="button" class="btn btn-danger btn-sm delete-confirm" data-message="Anda yakin ingin menghapus data servis ini? Penghapusan ini permanen." data-bs-toggle="tooltip"
                                                     data-bs-placement="top" title="Hapus Data">
                                                     <i class="bi bi-trash"></i>
                                                 </button>

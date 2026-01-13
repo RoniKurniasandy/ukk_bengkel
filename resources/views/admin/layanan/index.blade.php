@@ -65,11 +65,11 @@
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
                                         <form action="{{ route('admin.layanan.destroy', $item->id) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('Yakin ingin menghapus layanan ini?')">
+                                            class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                style="border-radius: 8px;">
+                                            <button type="button" class="btn btn-sm btn-outline-danger delete-confirm"
+                                                style="border-radius: 8px;" data-message="Yakin ingin menghapus layanan '{{ $item->nama_layanan }}'?">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>

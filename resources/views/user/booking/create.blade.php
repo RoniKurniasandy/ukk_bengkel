@@ -22,7 +22,7 @@
             <div class="col-lg-8">
                 <div class="card-modern">
                     <div class="card-body p-4">
-                        <form action="{{ route('user.booking.store') }}" method="POST">
+                        <form action="{{ route('user.booking.store') }}" method="POST" id="bookingForm">
                             @csrf
 
                             <div class="mb-4">
@@ -112,7 +112,7 @@
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5">
                                 <a href="{{ route('user.booking.index') }}" class="btn btn-light btn-lg px-4 me-md-2"
                                     style="border-radius: 10px; font-weight: 600;">Batal</a>
-                                <button type="submit" class="btn btn-modern btn-lg px-5" id="btnBookingSubmit">
+                                <button type="submit" class="btn btn-modern btn-lg px-5 save-confirm" id="btnBookingSubmit" data-message="Konfirmasi booking servis?">
                                     <i class="bi bi-send me-2"></i>Kirim Booking
                                 </button>
                             </div>
@@ -124,8 +124,17 @@
     </div>
 
     <script>
-        document.querySelector('form').addEventListener('submit', function() {
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
             const btn = document.getElementById('btnBookingSubmit');
+            
+            // Prevent double submission if already detected
+            if (btn.hasAttribute('data-submitting')) {
+                e.preventDefault();
+                return false;
+            }
+
+            // Set submitting flag
+            btn.setAttribute('data-submitting', 'true');
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengirim...';
         });

@@ -21,31 +21,46 @@ class DiscountService
         $tier = MembershipTier::find($user->membership_tier_id);
         if (!$tier) return 0;
 
+        // Validasi tambahan: Pastikan total transaksi pelanggan benar-benar sudah mencapai syarat tier tersebut
+        // Ini mencegah "Member Hantu" yang dapet diskon padahal syarat (5jt) belum tercapai
+        if ($user->total_transaksi < $tier->min_transaksi) {
+            return 0;
+        }
+
         // Hitung diskon berdasarkan Jasa dan Part terpisah (jika data tersedia)
-        // Jika hanya subtotal yang dikirim, kita asumsikan diskon jasa (default behavior)
-        
-        // Skenario Ideal: Controller mengirim breakdown total Jasa dan Part
         if ($jasaTotal > 0 || $partTotal > 0) {
             $diskonJasa = $jasaTotal * ($tier->diskon_jasa / 100);
             $diskonPart = $partTotal * ($tier->diskon_part / 100);
             return $diskonJasa + $diskonPart;
         }
 
-        // Fallback: Diskon Flat dari Subtotal (pakai persentase jasa sebagai acuan utama)
+        // Fallback: Diskon Flat dari Subtotal
         return $subtotal * ($tier->diskon_jasa / 100);
     }
 
     /**
      * Validate and Calculate Voucher Discount
      */
-    public function calculateVoucherDiscount($code, $subtotal, $userId)
+    public function calculateVoucherDiscount($code, $subtotal, $userId, $serviceId = null)
     {
         if (empty($code)) return ['amount' => 0, 'error' => null];
+
+        // Pencegahan penggunaan voucher yang sama 2x pada servis yang sama (misal DP then Pelunasan)
+        if ($serviceId) {
+            $existingUsage = \App\Models\Pembayaran::where('servis_id', $serviceId)
+                ->where('kode_voucher', $code)
+                ->where('status', '!=', 'ditolak')
+                ->exists();
+
+            if ($existingUsage) {
+                return ['amount' => 0, 'error' => 'Kode ini sudah digunakan pada pembayaran sebelumnya di servis ini.'];
+            }
+        }
 
         $voucher = Voucher::where('kode', $code)->first();
 
         if (!$voucher) {
-            return ['amount' => 0, 'error' => 'Kode voucher tidak valid.'];
+            return ['amount' => 0, 'error' => 'Kode tidak valid'];
         }
 
         if (!$voucher->is_active) {
@@ -56,7 +71,7 @@ class DiscountService
             return ['amount' => 0, 'error' => 'Voucher belum berlaku.'];
         }
 
-        if ($voucher->tgl_berakhir && Carbon::now()->gt($voucher->tgl_berakhir)) {
+        if ($voucher->tgl_berakhir && Carbon::now()->gt(Carbon::parse($voucher->tgl_berakhir)->endOfDay())) {
             return ['amount' => 0, 'error' => 'Voucher sudah kadaluarsa.'];
         }
 

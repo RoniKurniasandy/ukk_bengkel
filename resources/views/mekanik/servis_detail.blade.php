@@ -158,10 +158,10 @@
                                         @if($servis->status != 'selesai')
                                             <td class="text-center">
                                                 <form action="{{ route('mekanik.servis.removeItem', $detail->id) }}" method="POST"
-                                                    class="d-inline" onsubmit="return confirm('Hapus barang ini?');">
+                                                    class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" data-bs-toggle="tooltip"
+                                                    <button type="button" class="btn btn-danger btn-sm delete-confirm" data-message="Hapus barang '{{ $detail->stok->nama_barang }}' dari daftar servis ini?" data-bs-toggle="tooltip"
                                                         title="Hapus">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
@@ -195,11 +195,10 @@
                         <i class="bi bi-arrow-left"></i> Kembali
                     </a>
                     @if($servis->status == 'dikerjakan')
-                        <form action="{{ route('mekanik.servis.update', $servis->id) }}" method="POST"
-                            onsubmit="return confirm('Tandai servis ini sebagai selesai?');">
+                        <form action="{{ route('mekanik.servis.update', $servis->id) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <button type="submit" class="btn btn-success">
+                            <button type="button" class="btn btn-success save-confirm" data-message="Tandai servis ini sebagai selesai? Status akan berubah dan biaya akan final.">
                                 <i class="bi bi-check-circle-fill"></i> Tandai Selesai
                             </button>
                         </form>

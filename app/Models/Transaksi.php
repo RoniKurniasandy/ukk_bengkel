@@ -14,6 +14,13 @@ class Transaksi extends Model
         'stok_id',
         'jenis_transaksi', // pemasukan, pengeluaran
         'sumber', // servis, belanja_stok, penjualan_stok
+        'subtotal',
+        'diskon_member',
+        'diskon_voucher',
+        'kode_voucher',
+        'diskon_manual',
+        'alasan_diskon_manual',
+        'grand_total',
         'jumlah',
         'total',
         'keterangan',

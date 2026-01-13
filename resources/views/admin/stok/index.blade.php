@@ -13,7 +13,6 @@
         <strong class="text-secondary">Manajemen Barang</strong>
     </div>
     <div class="card-body">
-
         {{-- Jika data kosong --}}
         @if($stok->isEmpty())
             <div class="text-center py-4 text-muted">
@@ -55,11 +54,11 @@
                             <a href="{{ route('admin.stok.edit', $item->stok_id) }}" class="btn btn-sm btn-warning">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-                            <form action="{{ route('admin.stok.destroy', $item->stok_id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus barang ini?')">
+                            <form action="{{ route('admin.stok.destroy', $item->stok_id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-sm btn-danger">
-                                    Hapus<i class="bi bi-trash"></i>
+                                <button type="button" class="btn btn-sm btn-danger delete-confirm" data-message="Anda akan menghapus data sparepart '{{ $item->nama_barang }}'.">
+                                    <i class="bi bi-trash"></i> Hapus
                                 </button>
                             </form>
                         </td>
