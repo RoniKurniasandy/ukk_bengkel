@@ -59,7 +59,7 @@ class UserController extends Controller
             'nama' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'no_hp' => 'nullable|string|max:15',
+            'no_hp' => 'nullable|string|max:15|unique:users,no_hp',
             'alamat' => 'nullable|string',
             'role' => 'required|in:admin,mekanik,pelanggan',
         ]);

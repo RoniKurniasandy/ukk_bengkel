@@ -22,7 +22,7 @@
                 {{-- Header --}}
                 <div class="d-flex justify-content-between border-bottom pb-2 mb-3">
                     <div>
-                        <h4 class="fw-bold mb-0">BENGKEL MOBIL SEJAHTERA</h4>
+                        <h4 class="fw-bold mb-0">KINGS BENGKEL MOBIL</h4>
                         <p class="text-muted small mb-0">Jl. Raya Bengkel No. 123, Kota Otomotif | Telp: (021) 555-0123</p>
                     </div>
                     <div class="text-end">

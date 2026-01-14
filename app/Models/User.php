@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\EmailVerificationOTP;
+
 
 /**
  * @property int $id
@@ -38,7 +40,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'foto',
         'total_transaksi',
         'membership_tier_id',
+        'email_verification_code',
     ];
+
 
     protected $hidden = [
         'password',
@@ -56,4 +60,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Booking::class, 'user_id');
     }
+
+    public function sendEmailVerificationNotification()
+    {
+        $otp = rand(100000, 999999);
+        $this->update(['email_verification_code' => $otp]);
+        
+        $this->notify(new EmailVerificationOTP($otp));
+    }
 }
+

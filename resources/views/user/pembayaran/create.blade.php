@@ -85,7 +85,7 @@
                                         </div>
                                         <div class="small">
                                             <div><strong>Bank BCA:</strong> 1234567890</div>
-                                            <div><strong>A.N:</strong> Bengkel Mobil Sejahtera</div>
+                                            <div><strong>A.N:</strong> Kings Bengkel Mobil</div>
                                         </div>
                                     </div>
 

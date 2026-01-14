@@ -36,6 +36,19 @@
                                     <p class="mb-0">{{ $transaksi->servis->booking?->kendaraan?->plat_nomor ?? '-' }}</p>
                                 </div>
                             </div>
+                            
+                            <!-- Info Mekanik -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="alert alert-info d-flex align-items-center">
+                                        <i class="bi bi-wrench fs-4 me-3"></i>
+                                        <div>
+                                            <strong>Mekanik yang Mengerjakan:</strong>
+                                            {{ $transaksi->servis->mekanik?->nama ?? 'Belum ditugaskan' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         @endif
 
                         <!-- Tabel Rincian -->

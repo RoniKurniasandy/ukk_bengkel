@@ -9,6 +9,8 @@ use App\Http\Controllers\MekanikDashboardController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\LandingController;
 use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\Auth\EmailVerificationController;
+
 
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\ServisController as AdminServisController;
@@ -33,35 +35,45 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [RegisterController::class, 'register']);
+
+    // Password Reset
+    Route::get('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/password/verify-otp', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showVerifyForm'])->name('password.verify.otp.form');
+    Route::post('/password/verify-otp', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'verifyOtp'])->name('password.verify.otp');
+    Route::get('/reset-password/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
 });
 
 // Logout
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Dashboard redirect (otomatis sesuai role)
-Route::middleware('auth')->group(function() {
+Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('vouchers/check', [\App\Http\Controllers\Admin\VoucherController::class, 'check'])->name('admin.vouchers.check');
-
-    // Email Verification Routes
-    Route::get('/email/verify', function () {
-        return view('auth.verify-email');
-    })->name('verification.notice');
-
-    Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
-        $request->fulfill();
-        return redirect('/dashboard');
-    })->middleware(['signed'])->name('verification.verify');
-
-    Route::post('/email/verification-notification', function (Request $request) {
-        $request->user()->sendEmailVerificationNotification();
-        return back()->with('success', 'Verification link sent!');
-    })->middleware(['throttle:6,1'])->name('verification.send');
+    Route::post('/notifications/mark-all-read', [DashboardController::class, 'markAllAsRead'])->name('notifications.markAllRead');
 });
 
+// Email Verification (OTP)
+Route::middleware('auth')->group(function() {
+    Route::get('/email/verify', [EmailVerificationController::class, 'showOTPForm'])
+        ->name('verification.notice');
+
+    Route::post('/email/verify-otp', [EmailVerificationController::class, 'verify'])
+        ->middleware(['throttle:6,1'])
+        ->name('verification.verify.otp');
+
+    Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
+        ->middleware(['throttle:6,1'])
+        ->name('verification.send');
+});
+
+
 // Admin-only routes
 // Admin-only routes
-Route::middleware('role:admin')->prefix('admin')->group(function () {
+// Admin-only routes
+Route::middleware(['role:admin', 'verified'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.user.index');
     Route::get('/users/create', [AdminUserController::class, 'create'])->name('admin.user.create');
@@ -131,7 +143,8 @@ Route::middleware('role:admin')->prefix('admin')->group(function () {
 
 
 // Mekanik-only routes
-Route::middleware('role:mekanik')->prefix('mekanik')->group(function () {
+// Mekanik-only routes
+Route::middleware(['role:mekanik', 'verified'])->prefix('mekanik')->group(function () {
     Route::get('/dashboard', [MekanikDashboardController::class, 'index'])->name('dashboard.mekanik');
 
     // Jadwal Servis
@@ -154,7 +167,8 @@ Route::middleware('role:mekanik')->prefix('mekanik')->group(function () {
 
 
 // Pelanggan-only routes
-Route::middleware(['auth', 'role:pelanggan'])->prefix('pelanggan')->group(function () {
+// Pelanggan-only routes
+Route::middleware(['auth', 'role:pelanggan', 'verified'])->prefix('pelanggan')->group(function () {
 
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard.user'); // Ubah nama route sesuai kebutuhan
 
@@ -180,6 +194,11 @@ Route::middleware(['auth', 'role:pelanggan'])->prefix('pelanggan')->group(functi
     Route::get('/profil/edit', [App\Http\Controllers\User\ProfilController::class, 'edit'])->name('user.profil.edit');
     Route::put('/profil/update', [App\Http\Controllers\User\ProfilController::class, 'update'])->name('user.profil.update');
     Route::put('/profil/password', [App\Http\Controllers\User\ProfilController::class, 'updatePassword'])->name('user.profil.password');
+
+    // Phone Verification
+    Route::get('/profil/verify-phone', [App\Http\Controllers\User\PhoneVerificationController::class, 'showVerifyForm'])->name('user.profil.phone.verify');
+    Route::post('/profil/verify-phone', [App\Http\Controllers\User\PhoneVerificationController::class, 'verify']);
+    Route::post('/profil/verify-phone/resend', [App\Http\Controllers\User\PhoneVerificationController::class, 'resend'])->name('user.profil.phone.resend');
 });
 
 require __DIR__ . '/debug.php';

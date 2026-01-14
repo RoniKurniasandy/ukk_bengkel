@@ -226,7 +226,7 @@ class PembayaranController extends Controller
             }
 
             Transaksi::create([
-                'user_id' => auth()->id(),
+                'user_id' => $servis->booking->user_id,
                 'servis_id' => $servis->id,
                 'jenis_transaksi' => 'pemasukan',
                 'sumber' => 'servis',

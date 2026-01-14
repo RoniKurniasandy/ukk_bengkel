@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules;
+use App\Notifications\PhoneVerification;
+
 
 class ProfilController extends Controller
 {
@@ -29,7 +31,7 @@ class ProfilController extends Controller
 
         $request->validate([
             'nama' => 'required|string|max:100',
-            'no_hp' => 'nullable|string|max:20',
+            'no_hp' => 'nullable|string|max:20|unique:users,no_hp,' . $user->id,
             'alamat' => 'nullable|string|max:255',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
         ]);
@@ -40,7 +42,6 @@ class ProfilController extends Controller
             'alamat' => $request->alamat,
         ];
 
-        // Handle File Upload
         if ($request->hasFile('foto')) {
             // Delete old photo if exists
             if ($user->foto && file_exists(public_path('storage/photos/' . $user->foto))) {
@@ -53,9 +54,27 @@ class ProfilController extends Controller
             $data['foto'] = $filename;
         }
 
+        // Handle Phone Number Change Verification
+        if ($request->no_hp && $request->no_hp != $user->no_hp) {
+            $code = rand(100000, 999999);
+            $user->update([
+                'pending_no_hp' => $request->no_hp,
+                'phone_verification_code' => $code,
+                'nama' => $request->nama,
+                'alamat' => $request->alamat,
+                'foto' => $data['foto'] ?? $user->foto
+            ]);
+
+            $user->notify(new PhoneVerification($code));
+
+            return redirect()->route('user.profil.phone.verify')
+                ->with('info', 'Silakan verifikasi nomor HP baru Anda melalui kode yang dikirim ke email.');
+        }
+
         $user->update($data);
 
         return redirect()->route('user.profil.index')->with('success', 'Profil berhasil diperbarui.');
+
     }
 
     public function updatePassword(Request $request)

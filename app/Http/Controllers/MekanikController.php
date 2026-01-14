@@ -11,6 +11,9 @@ use App\Models\Stok;
 use App\Models\DetailServis;
 use App\Models\Transaksi;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\BookingNotification;
+use App\Models\User;
+
 
 class MekanikController extends Controller
 {
@@ -57,6 +60,16 @@ class MekanikController extends Controller
         // Update booking status to dikerjakan
         $booking->update(['status' => 'dikerjakan']);
 
+        // Notify User
+        $booking->user->notify(new BookingNotification([
+            'title' => 'Servis Dimulai',
+            'message' => 'Mekanik kami sudah mulai mengerjakan kendaraan Anda (' . $booking->kendaraan->plat_nomor . ')',
+            'url' => route('user.servis'),
+            'icon' => 'bi-wrench',
+            'type' => 'primary'
+        ]));
+
+
         return redirect()->route('mekanik.servis.aktif')
             ->with('success', 'Servis berhasil dimulai. Anda sekarang dapat menambahkan sparepart jika diperlukan.');
     }
@@ -97,16 +110,32 @@ class MekanikController extends Controller
         // Opsional: Update status booking juga jika perlu sinkronisasi
         $servis->booking->update(['status' => 'selesai']);
 
-        // Create Transaction Record (Pemasukan) - Status Pending (Waiting for payment/admin)
-        Transaksi::create([
-            'user_id' => Auth::id(), // Mekanik who finished it
-            'servis_id' => $servis->id,
-            'jenis_transaksi' => 'pemasukan',
-            'sumber' => 'servis',
-            'total' => $servis->estimasi_biaya,
-            'keterangan' => 'Servis Selesai oleh Mekanik - ' . $servis->booking->kendaraan->plat_nomor,
-            'status' => 'pending' // Pending until admin confirms payment? Or just 'selesai'? Let's stick to pending for mechanic.
-        ]);
+        // Notify User
+        $servis->booking->user->notify(new BookingNotification([
+            'title' => 'Servis Selesai',
+            'message' => 'Kendaraan Anda (' . $servis->booking->kendaraan->plat_nomor . ') sudah selesai diservis!',
+            'url' => route('user.servis'),
+            'icon' => 'bi-check-circle',
+            'type' => 'success'
+        ]));
+
+        // Notify Admin
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new BookingNotification([
+                'title' => 'Servis Diselesaikan Mekanik',
+                'message' => 'Mekanik ' . Auth::user()->nama . ' telah menyelesaikan servis untuk ' . $servis->booking->kendaraan->plat_nomor,
+                'url' => route('admin.servis.index'),
+                'icon' => 'bi-flag',
+                'type' => 'info'
+            ]));
+        }
+
+
+        // Update booking status juga jika perlu sinkronisasi
+        $servis->booking->update(['status' => 'selesai']);
+
+        // Notify User
 
         return redirect()->route('mekanik.servis.aktif')
             ->with('success', 'Servis berhasil diselesaikan.');

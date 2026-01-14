@@ -13,6 +13,7 @@ use App\Models\DetailServis;
 use App\Models\Transaksi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\BookingNotification;
 
 class ServisController extends Controller
 {
@@ -142,8 +143,40 @@ class ServisController extends Controller
 
         $booking->save();
 
+        // NOTIFICATION LOGIC
+        if ($booking->status === 'disetujui') {
+            // Notify User
+            $booking->user->notify(new BookingNotification([
+                'title' => 'Booking Disetujui',
+                'message' => 'Booking Anda untuk ' . $booking->kendaraan->plat_nomor . ' telah disetujui.',
+                'url' => route('user.booking.index'),
+                'icon' => 'bi-check-circle',
+                'type' => 'success'
+            ]));
+
+            // Notify Assigned Mechanic
+            if ($booking->mekanik_id) {
+                $mechanic = User::find($booking->mekanik_id);
+                $mechanic->notify(new BookingNotification([
+                    'title' => 'Tugas Servis Baru',
+                    'message' => 'Anda ditugaskan untuk menservis ' . $booking->kendaraan->plat_nomor,
+                    'url' => route('mekanik.jadwal.servis'),
+                    'icon' => 'bi-wrench',
+                    'type' => 'info'
+                ]));
+            }
+        } elseif ($booking->status === 'ditolak') {
+            $booking->user->notify(new BookingNotification([
+                'title' => 'Booking Ditolak',
+                'message' => 'Mohon maaf, booking Anda untuk ' . $booking->kendaraan->plat_nomor . ' ditolak.',
+                'url' => route('user.booking.index'),
+                'icon' => 'bi-x-circle',
+                'type' => 'danger'
+            ]));
+        }
+
         return redirect()->route('admin.servis.index')
-            ->with('success', 'Booking berhasil disetujui dan mekanik ditugaskan. Servis akan dimulai saat mekanik menekan tombol "Kerjakan".');
+            ->with('success', 'Booking berhasil diperbarui!');
     }
 
     public function destroy($id)
@@ -171,17 +204,6 @@ class ServisController extends Controller
             $servis->update([
                 'status' => 'selesai',
                 'waktu_selesai' => now() // Set waktu selesai real-time
-            ]);
-
-            // Create Transaction Record (Pemasukan)
-            Transaksi::create([
-                'user_id' => Auth::id(), // Admin who finalized it
-                'servis_id' => $servis->id,
-                'jenis_transaksi' => 'pemasukan',
-                'sumber' => 'servis',
-                'total' => $servis->estimasi_biaya,
-                'keterangan' => 'Pembayaran Servis - ' . $booking->kendaraan->plat_nomor,
-                'status' => 'selesai'
             ]);
         }
 

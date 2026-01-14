@@ -28,7 +28,7 @@ class ProfilController extends Controller
 
         $request->validate([
             'nama' => 'required|string|max:100',
-            'no_hp' => 'nullable|string|max:20',
+            'no_hp' => 'nullable|string|max:20|unique:users,no_hp,' . $user->id,
             'alamat' => 'nullable|string|max:255',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
         ]);

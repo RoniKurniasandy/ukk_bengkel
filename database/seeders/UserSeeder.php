@@ -26,6 +26,7 @@ class UserSeeder extends Seeder
                 'no_hp' => '081234567890',
                 'alamat' => 'Jl. Raya Utama No. 1',
                 'role' => 'admin', // Explicitly set role
+                'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -36,6 +37,7 @@ class UserSeeder extends Seeder
                 'no_hp' => '08155667788',
                 'alamat' => 'Jl. Kenanga No. 10',
                 'role' => 'mekanik', // Explicitly set role
+                'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -46,6 +48,7 @@ class UserSeeder extends Seeder
                 'no_hp' => '08166778899',
                 'alamat' => 'Jl. Flamboyan No. 12',
                 'role' => 'mekanik', // Explicitly set role
+                'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -56,6 +59,7 @@ class UserSeeder extends Seeder
                 'no_hp' => '08122334455',
                 'alamat' => 'Jl. Melati No. 5',
                 'role' => 'pelanggan', // Explicitly set role
+                'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -66,6 +70,7 @@ class UserSeeder extends Seeder
                 'no_hp' => '08133445566',
                 'alamat' => 'Jl. Mawar No. 8',
                 'role' => 'pelanggan', // Explicitly set role
+                'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

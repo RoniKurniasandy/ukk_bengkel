@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Layanan;
 
+use App\Models\Booking;
+
 class LayananController extends Controller
 {
     public function index()
@@ -59,8 +61,16 @@ class LayananController extends Controller
 
     public function destroy($id)
     {
+        // Cek apakah layanan sedang digunakan di tabel booking
+        $isUsed = Booking::where('layanan_id', $id)->exists();
+
+        if ($isUsed) {
+            return redirect()->route('admin.layanan.index')
+                ->with('error', 'Layanan tidak dapat dihapus karena sudah ada riwayat transaksi/booking yang menggunakannya.');
+        }
+
         Layanan::findOrFail($id)->delete();
         return redirect()->route('admin.layanan.index')
-            ->with('success','Layanan berhasil dihapus!');
+            ->with('success', 'Layanan berhasil dihapus!');
     }
 }

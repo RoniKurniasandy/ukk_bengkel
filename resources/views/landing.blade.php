@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bengkel Mobil Sejahtera - Servis Berkualitas, Harga Terjangkau</title>
+    <title>Kings Bengkel Mobil - Servis Berkualitas, Harga Terjangkau</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -77,7 +77,8 @@
             transition: width 0.3s ease;
         }
 
-        .navbar-nav .nav-link:hover::after {
+        .navbar-nav .nav-link:hover::after,
+        .navbar-nav .nav-link.active::after {
             width: 80%;
         }
 
@@ -398,10 +399,15 @@
                 font-size: 1.2rem;
             }
         }
+
+        /* Fix for Scrollspy and Fixed Navbar */
+        section {
+            scroll-margin-top: 100px;
+        }
     </style>
 </head>
 
-<body>
+<body class="position-relative">
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
@@ -581,7 +587,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p class="mb-0">&copy; {{ date('Y') }} Bengkel Mobil Sejahtera. All rights reserved.</p>
+            <p class="mb-0">&copy; {{ date('Y') }} Kings Bengkel Mobil. All rights reserved.</p>
         </div>
     </footer>
 
@@ -597,6 +603,63 @@
             } else {
                 navbar.classList.remove('scrolled');
             }
+        });
+
+        // Robust Scrollspy using IntersectionObserver
+        document.addEventListener('DOMContentLoaded', function () {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -70% 0px', // Adjust this to control when section becomes active
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => observer.observe(section));
+
+            // Manual Smooth Scroll Fix for Navbar Links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = href.substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        
+                        if (targetElement) {
+                            const offset = 80; // Navbar height
+                            const elementPosition = targetElement.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: "smooth"
+                            });
+
+                            // Close mobile menu if open
+                            const navbarCollapse = document.getElementById('navbarNav');
+                            if (navbarCollapse.classList.contains('show')) {
+                                bootstrap.Collapse.getInstance(navbarCollapse).hide();
+                            }
+                        }
+                    }
+                });
+            });
         });
     </script>
 

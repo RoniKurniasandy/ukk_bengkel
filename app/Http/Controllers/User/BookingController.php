@@ -8,6 +8,9 @@ use App\Models\Booking;
 use App\Models\Kendaraan;
 use App\Models\Layanan;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\BookingNotification;
+use App\Models\User;
+
 
 class BookingController extends Controller
 {
@@ -61,7 +64,7 @@ class BookingController extends Controller
             'jam_booking.date_format' => 'Format jam tidak valid',
         ]);
 
-        Booking::create([
+        $booking = Booking::create([
             'user_id' => Auth::id(),
             'kendaraan_id' => $request->kendaraan_id,
             'layanan_id' => $request->layanan_id,
@@ -70,6 +73,19 @@ class BookingController extends Controller
             'keluhan' => $request->keluhan,
             'status' => 'menunggu',
         ]);
+
+        // Notify Admin
+        $admins = User::where('role', 'admin')->get();
+        $notifData = [
+            'title' => 'Booking Baru Masuk',
+            'message' => 'Ada pesanan servis baru dari ' . Auth::user()->nama,
+            'url' => route('admin.servis.index'),
+            'icon' => 'bi-wrench',
+            'type' => 'danger'
+        ];
+        foreach ($admins as $admin) {
+            $admin->notify(new BookingNotification($notifData));
+        }
 
         return redirect()->route('user.booking.index')
             ->with('success', 'Booking berhasil dikirim!');

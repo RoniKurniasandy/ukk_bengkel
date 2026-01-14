@@ -18,4 +18,10 @@ class DashboardController extends Controller
             return redirect()->route('dashboard.user');
         }
     }
+
+    public function markAllAsRead()
+    {
+        Auth::user()->unreadNotifications->markAsRead();
+        return response()->json(['success' => true]);
+    }
 }

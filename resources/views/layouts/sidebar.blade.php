@@ -1,6 +1,6 @@
 <div class="sidebar bg-dark text-white position-fixed h-100" id="sidebar" style="width:250px;">
   <div class="p-3 border-bottom">
-    <h5 class="fw-bold">Bengkel Mobil Sejahtera</h5>
+    <h5 class="fw-bold">Kings Bengkel Mobil</h5>
   </div>
 
   <ul class="nav flex-column" style=" height: calc(100% - 89.06px);">
@@ -47,14 +47,20 @@
       </li>
       <li class="nav-item">
         <a href="{{ route('admin.servis.index') }}"
-          class="nav-link text-white {{ request()->routeIs('admin.servis*') ? 'active bg-primary' : '' }}">
-          <i class="bi bi-wrench me-2"></i> Servis & Booking
+          class="nav-link text-white {{ request()->routeIs('admin.servis*') ? 'active bg-primary' : '' }} d-flex justify-content-between align-items-center">
+          <span><i class="bi bi-wrench me-2"></i> Servis & Booking</span>
+          @if(($sideBadges['booking_waiting'] ?? 0) > 0)
+            <span class="badge rounded-pill bg-danger shadow-sm">{{ $sideBadges['booking_waiting'] }}</span>
+          @endif
         </a>
       </li>
       <li class="nav-item">
         <a href="{{ route('admin.pembayaran.index') }}"
-          class="nav-link text-white {{ request()->routeIs('admin.pembayaran*') ? 'active bg-primary' : '' }}">
-          <i class="bi bi-credit-card me-2"></i> Data Pembayaran
+          class="nav-link text-white {{ request()->routeIs('admin.pembayaran*') ? 'active bg-primary' : '' }} d-flex justify-content-between align-items-center">
+          <span><i class="bi bi-credit-card me-2"></i> Data Pembayaran</span>
+          @if(($sideBadges['payment_pending'] ?? 0) > 0)
+            <span class="badge rounded-pill bg-danger shadow-sm">{{ $sideBadges['payment_pending'] }}</span>
+          @endif
         </a>
       </li>
       <li class="nav-item">
@@ -66,10 +72,22 @@
     @endif
 
     @if(Auth::check() && Auth::user()->role === 'mekanik')
-      <li class="nav-item"><a href="{{ route('mekanik.jadwal.servis') }}" class="nav-link text-white"><i
-            class="bi bi-calendar-check me-2"></i> Jadwal Servis</a></li>
-      <li class="nav-item"><a href="{{ route('mekanik.servis.aktif') }}" class="nav-link text-white"><i
-            class="bi bi-tools me-2"></i> Servis Dikerjakan</a></li>
+      <li class="nav-item">
+        <a href="{{ route('mekanik.jadwal.servis') }}" class="nav-link text-white d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-calendar-check me-2"></i> Jadwal Servis</span>
+            @if(($sideBadges['jadwal_servis'] ?? 0) > 0)
+                <span class="badge rounded-pill bg-danger shadow-sm">{{ $sideBadges['jadwal_servis'] }}</span>
+            @endif
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ route('mekanik.servis.aktif') }}" class="nav-link text-white d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-tools me-2"></i> Servis Dikerjakan</span>
+            @if(($sideBadges['servis_aktif'] ?? 0) > 0)
+                <span class="badge rounded-pill bg-danger shadow-sm">{{ $sideBadges['servis_aktif'] }}</span>
+            @endif
+        </a>
+      </li>
       <li class="nav-item"><a href="{{ route('mekanik.servis.selesai') }}" class="nav-link text-white"><i
             class="bi bi-check-circle me-2"></i> Servis Selesai</a></li>
     @endif
@@ -77,8 +95,11 @@
     @if(Auth::check() && Auth::user()->role === 'pelanggan')
       <li class="nav-item">
         <a href="{{ route('user.servis') }}"
-          class="nav-link text-white {{ request()->is('pelanggan/servis') ? 'active bg-primary' : '' }}">
-          <i class="bi bi-tools me-2"></i> Servis Saya
+          class="nav-link text-white {{ request()->is('pelanggan/servis') ? 'active bg-primary' : '' }} d-flex justify-content-between align-items-center">
+          <span><i class="bi bi-tools me-2"></i> Servis Saya</span>
+          @if(($sideBadges['servis_selesai'] ?? 0) > 0)
+            <span class="badge rounded-pill bg-danger shadow-sm">{{ $sideBadges['servis_selesai'] }}</span>
+          @endif
         </a>
       </li>
 
@@ -91,8 +112,11 @@
 
       <li class="nav-item">
         <a href="{{ route('user.booking.index') }}"
-          class="nav-link text-white {{ request()->is('pelanggan/booking') ? 'active bg-primary' : '' }}">
-          <i class="bi bi-calendar-check me-2"></i> Booking Servis
+          class="nav-link text-white {{ request()->is('pelanggan/booking') ? 'active bg-primary' : '' }} d-flex justify-content-between align-items-center">
+          <span><i class="bi bi-calendar-check me-2"></i> Booking Servis</span>
+          @if(($sideBadges['booking_aktif'] ?? 0) > 0)
+            <span class="badge rounded-pill bg-danger shadow-sm">{{ $sideBadges['booking_aktif'] }}</span>
+          @endif
         </a>
       </li>
 
@@ -105,6 +129,7 @@
     @endif
 
     <li class="mt-auto border-top pt-3">
+      @auth
       @php
         $profileRoute = match (Auth::user()->role) {
           'pelanggan' => route('user.profil.index'),
@@ -145,6 +170,7 @@
           <i class="bi bi-box-arrow-right"></i> Keluar
         </button>
       </form>
+      @endauth
     </li>
   </ul>
 

@@ -29,7 +29,50 @@
         <span class="page-title">@yield('title', 'Dashboard')</span>
       </div>
 
-
+      <div class="d-flex align-items-center me-3">
+        {{-- Notification Bell --}}
+        <div class="dropdown me-3">
+            <button class="btn btn-link position-relative text-dark p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-bell fs-4"></i>
+                @if($unreadNotificationsCount > 0)
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                        {{ $unreadNotificationsCount }}
+                    </span>
+                @endif
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-0 overflow-hidden" style="width: 300px;">
+                <li class="dropdown-header bg-light py-3 border-bottom">
+                    <h6 class="mb-0 fw-bold">Notifikasi</h6>
+                </li>
+                <div class="notification-list" style="max-height: 350px; overflow-y: auto;">
+                    @forelse($recentNotifications as $notification)
+                        <li>
+                            <a class="dropdown-item p-3 border-bottom d-flex align-items-start {{ $notification->read_at ? '' : 'bg-light-subtle' }}" href="{{ $notification->data['url'] ?? '#' }}">
+                                <div class="bg-{{ $notification->data['type'] ?? 'info' }}-subtle text-{{ $notification->data['type'] ?? 'info' }} rounded-circle p-2 me-3">
+                                    <i class="bi {{ $notification->data['icon'] ?? 'bi-info-circle' }}"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold small text-wrap">{{ $notification->data['title'] }}</div>
+                                    <div class="small text-muted text-wrap">{{ $notification->data['message'] }}</div>
+                                    <div class="x-small text-muted mt-1" style="font-size: 0.7rem;">{{ $notification->created_at->diffForHumans() }}</div>
+                                </div>
+                            </a>
+                        </li>
+                    @empty
+                        <li class="p-4 text-center text-muted">
+                            <i class="bi bi-bell-slash fs-2 mb-2 d-block"></i>
+                            <span class="small">Tidak ada notifikasi baru</span>
+                        </li>
+                    @endforelse
+                </div>
+                @if(count($recentNotifications) > 0)
+                    <li class="p-2 text-center bg-light">
+                        <button id="markAllRead" class="btn btn-link btn-sm small text-primary text-decoration-none fw-semibold border-0">Tandai semua terbaca</button>
+                    </li>
+                @endif
+            </ul>
+        </div>
+      </div>
     </nav>
 
     <!--  Area konten utama -->
@@ -184,6 +227,23 @@
           }
         }
       });
+    });
+  </script>
+
+  <script>
+    document.getElementById('markAllRead')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        fetch("{{ route('notifications.markAllRead') }}", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+            },
+        }).then(response => {
+            if (response.ok) {
+                location.reload();
+            }
+        });
     });
   </script>
 

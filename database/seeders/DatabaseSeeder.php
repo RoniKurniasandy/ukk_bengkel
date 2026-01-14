@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
         // Panggil UserSeeder untuk memasukkan data user
         $this->call([
             UserSeeder::class,
+            LayananSeeder::class,
             // Tambahkan seeder lain jika ada, contoh:
-            // KendaraanSeeder::class,
             // BookingSeeder::class,
         ]);
     }

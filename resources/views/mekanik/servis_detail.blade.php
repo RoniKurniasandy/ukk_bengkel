@@ -161,7 +161,7 @@
                                                     class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button" class="btn btn-danger btn-sm delete-confirm" data-message="Hapus barang '{{ $detail->stok->nama_barang }}' dari daftar servis ini?" data-bs-toggle="tooltip"
+                                                    <button type="submit" class="btn btn-danger btn-sm delete-confirm" data-message="Hapus barang '{{ $detail->stok->nama_barang }}' dari daftar servis ini?" data-bs-toggle="tooltip"
                                                         title="Hapus">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
@@ -198,7 +198,7 @@
                         <form action="{{ route('mekanik.servis.update', $servis->id) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <button type="button" class="btn btn-success save-confirm" data-message="Tandai servis ini sebagai selesai? Status akan berubah dan biaya akan final.">
+                            <button type="submit" class="btn btn-success save-confirm" data-message="Tandai servis ini sebagai selesai? Status akan berubah dan biaya akan final.">
                                 <i class="bi bi-check-circle-fill"></i> Tandai Selesai
                             </button>
                         </form>

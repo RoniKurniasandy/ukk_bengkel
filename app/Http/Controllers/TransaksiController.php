@@ -58,6 +58,7 @@ class TransaksiController extends Controller
             'user',
             'servis.booking.kendaraan',
             'servis.booking.user',
+            'servis.mekanik',
             'servis.detailServis.stok',
             'stok'
         ])->findOrFail($id);
