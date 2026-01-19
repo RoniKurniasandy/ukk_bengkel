@@ -19,6 +19,10 @@ return new class extends Migration
             $table->decimal('diskon_part', 5, 2)->default(0); // Persen diskon part (0-100)
             $table->timestamps();
         });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreign('membership_tier_id')->references('id')->on('membership_tiers')->onDelete('set null');
+        });
     }
 
     /**
@@ -26,6 +30,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['membership_tier_id']);
+        });
         Schema::dropIfExists('membership_tiers');
     }
 };

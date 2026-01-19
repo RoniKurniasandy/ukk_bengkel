@@ -20,6 +20,14 @@ return new class extends Migration {
             $table->enum('jenis_transaksi', ['pemasukan', 'pengeluaran'])->default('pemasukan');
             $table->string('sumber')->default('servis'); // servis, belanja_stok, penjualan_stok
             
+            $table->decimal('subtotal', 15, 2)->default(0);
+            $table->decimal('diskon_member', 15, 2)->default(0);
+            $table->decimal('diskon_voucher', 15, 2)->default(0);
+            $table->string('kode_voucher')->nullable();
+            $table->decimal('diskon_manual', 15, 2)->default(0);
+            $table->string('alasan_diskon_manual')->nullable();
+            $table->decimal('grand_total', 15, 2)->default(0);
+
             $table->decimal('total', 15, 2)->default(0); // Increased size
             $table->string('status', 50)->default('pending');
             $table->text('keterangan')->nullable();

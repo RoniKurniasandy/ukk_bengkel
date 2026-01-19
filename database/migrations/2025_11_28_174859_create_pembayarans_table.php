@@ -14,6 +14,13 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('servis_id');
             $table->decimal('jumlah', 10, 2);
+            $table->decimal('subtotal', 15, 2)->nullable();
+            $table->decimal('diskon_member', 15, 2)->default(0);
+            $table->decimal('diskon_voucher', 15, 2)->default(0);
+            $table->string('kode_voucher')->nullable();
+            $table->decimal('grand_total', 15, 2)->nullable();
+            $table->decimal('diskon_manual', 15, 2)->default(0);
+            $table->string('alasan_diskon_manual')->nullable();
             $table->enum('jenis_pembayaran', ['dp', 'pelunasan', 'full']); // dp = down payment, pelunasan = sisa, full = bayar lunas langsung
             $table->string('metode_pembayaran')->default('tunai'); // tunai, transfer
             $table->string('bukti_pembayaran')->nullable(); // path gambar
