@@ -16,7 +16,7 @@
             </span>
         </div>
 
-        <p>Kode ini akan kadaluarsa dalam 60 menit.</p>
+        <p>Kode ini akan kadaluarsa dalam 10 menit.</p>
         <p>Jika Anda tidak meminta reset password, abaikan email ini.</p>
         
         <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">

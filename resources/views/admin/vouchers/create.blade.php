@@ -1,28 +1,36 @@
 @extends('layouts.app')
 
+@section('title', 'Buat Voucher Baru')
+
 @section('content')
 <div class="container-fluid px-4">
+    <div class="user-management-header mb-4"
+        style="background: var(--banner-gradient); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 30px rgba(30, 58, 138, 0.2);">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h2 class="text-white fw-bold m-0" style="font-size: 1.75rem;"><i
+                        class="bi bi-plus-circle me-2"></i>Buat Voucher</h2>
+                <p class="text-white-50 m-0 mt-2">Formulir pembuatan kode promo baru</p>
+            </div>
+            <a href="{{ route('admin.vouchers.index') }}"
+                class="btn btn-light text-primary fw-bold mt-3 mt-md-0 shadow-sm" style="border-radius: 10px;">
+                <i class="bi bi-arrow-left me-2"></i>Kembali
+            </a>
+        </div>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <h1 class="mt-4">Buat Voucher Baru</h1>
-            <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item"><a href="{{ route('dashboard.admin') }}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.vouchers.index') }}">Voucher</a></li>
-                <li class="breadcrumb-item active">Buat Baru</li>
-            </ol>
-
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-ticket-plus me-2"></i>Form Voucher</h5>
-                </div>
-                <div class="card-body">
+            <div class="card-modern">
+                <div class="card-body p-4">
                     @if($errors->any())
-                        <div class="alert alert-danger">
+                        <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-4" style="border-radius: 12px;">
                             <ul class="mb-0">
                                 @foreach($errors->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     @endif
 
@@ -30,65 +38,70 @@
                         @csrf
                         
                         <div class="mb-4">
-                            <label for="kode" class="form-label fw-bold">Kode Voucher</label>
-                            <input type="text" class="form-control form-control-lg text-uppercase fw-bold font-monospace" id="kode" name="kode" value="{{ old('kode') }}" placeholder="CONTOH: PROMO10" required>
-                            <div class="form-text">Gunakan huruf kapital dan angka. Kode harus unik.</div>
+                            <label for="kode" class="form-label fw-bold text-secondary">Kode Voucher</label>
+                            <input type="text" class="form-control form-control-lg text-uppercase fw-bold font-monospace @error('kode') is-invalid @enderror" 
+                                id="kode" name="kode" value="{{ old('kode') }}" placeholder="CONTOH: PROMO10" required 
+                                style="border-radius: 10px; letter-spacing: 2px; color: #667eea;">
+                            <div class="form-text mt-2"><i class="bi bi-info-circle me-1"></i>Gunakan huruf kapital dan angka. Kode harus unik.</div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="tipe_diskon" class="form-label">Tipe Diskon</label>
-                                <select class="form-select" id="tipe_diskon" name="tipe_diskon" required>
+                            <div class="col-md-6 mb-4">
+                                <label for="tipe_diskon" class="form-label fw-bold text-secondary">Tipe Diskon</label>
+                                <select class="form-select form-select-lg @error('tipe_diskon') is-invalid @enderror" id="tipe_diskon" name="tipe_diskon" required style="border-radius: 10px;">
                                     <option value="nominal" {{ old('tipe_diskon') == 'nominal' ? 'selected' : '' }}>Nominal (Rp)</option>
                                     <option value="persen" {{ old('tipe_diskon') == 'persen' ? 'selected' : '' }}>Persentase (%)</option>
                                 </select>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="nilai" class="form-label">Nilai Potongan</label>
+                            <div class="col-md-6 mb-4">
+                                <label for="nilai" class="form-label fw-bold text-secondary">Nilai Potongan</label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="addon-nilai">Rp</span>
-                                    <input type="number" class="form-control" id="nilai" name="nilai" value="{{ old('nilai', 0) }}" min="0" required>
+                                    <span class="input-group-text bg-light border-end-0" id="addon-nilai" style="border-radius: 10px 0 0 10px;">Rp</span>
+                                    <input type="number" class="form-control form-control-lg border-start-0 @error('nilai') is-invalid @enderror" 
+                                        id="nilai" name="nilai" value="{{ old('nilai', 0) }}" min="0" required style="border-radius: 0 10px 10px 0;">
                                 </div>
-                                <div class="form-text">Jika persen, masukkan angka 1-100.</div>
+                                <div class="form-text mt-2">Jika persen, masukkan angka 1-100.</div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="min_transaksi" class="form-label">Minimal Belanja</label>
+                            <div class="col-md-6 mb-4">
+                                <label for="min_transaksi" class="form-label fw-bold text-secondary">Minimal Belanja</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="number" class="form-control" id="min_transaksi" name="min_transaksi" value="{{ old('min_transaksi', 0) }}" min="0">
+                                    <span class="input-group-text bg-light border-end-0" style="border-radius: 10px 0 0 10px;">Rp</span>
+                                    <input type="number" class="form-control form-control-lg border-start-0 @error('min_transaksi') is-invalid @enderror" 
+                                        id="min_transaksi" name="min_transaksi" value="{{ old('min_transaksi', 0) }}" min="0" style="border-radius: 0 10px 10px 0;">
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="kuota" class="form-label">Kuota Penggunaan</label>
-                                <input type="number" class="form-control" id="kuota" name="kuota" value="{{ old('kuota', 100) }}" min="0">
-                                <div class="form-text">Masukkan jumlah maksimal voucher bisa digunakan.</div>
+                            <div class="col-md-6 mb-4">
+                                <label for="kuota" class="form-label fw-bold text-secondary">Kuota Penggunaan</label>
+                                <input type="number" class="form-control form-control-lg @error('kuota') is-invalid @enderror" 
+                                    id="kuota" name="kuota" value="{{ old('kuota', 100) }}" min="0" style="border-radius: 10px;">
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="tgl_mulai" class="form-label">Tanggal Mulai (Opsional)</label>
-                                <input type="date" class="form-control" id="tgl_mulai" name="tgl_mulai" value="{{ old('tgl_mulai') }}">
+                            <div class="col-md-6 mb-4">
+                                <label for="tgl_mulai" class="form-label fw-bold text-secondary">Tanggal Mulai</label>
+                                <input type="date" class="form-control form-control-lg @error('tgl_mulai') is-invalid @enderror" 
+                                    id="tgl_mulai" name="tgl_mulai" value="{{ old('tgl_mulai') }}" style="border-radius: 10px;">
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="tgl_berakhir" class="form-label">Tanggal Berakhir (Opsional)</label>
-                                <input type="date" class="form-control" id="tgl_berakhir" name="tgl_berakhir" value="{{ old('tgl_berakhir') }}">
+                            <div class="col-md-6 mb-4">
+                                <label for="tgl_berakhir" class="form-label fw-bold text-secondary">Tanggal Berakhir</label>
+                                <input type="date" class="form-control form-control-lg @error('tgl_berakhir') is-invalid @enderror" 
+                                    id="tgl_berakhir" name="tgl_berakhir" value="{{ old('tgl_berakhir') }}" style="border-radius: 10px;">
                             </div>
                         </div>
 
-                        <div class="form-check form-switch mb-4">
+                        <div class="form-check form-switch mb-5">
                             <input class="form-check-input" type="checkbox" role="switch" id="is_active" name="is_active" value="1" checked>
-                            <label class="form-check-label" for="is_active">Aktifkan Voucher Ini</label>
+                            <label class="form-check-label fw-semibold text-secondary" for="is_active">Aktifkan Voucher Ini</label>
                         </div>
 
-                        <div class="d-flex justify-content-end gap-2">
-                            <a href="{{ route('admin.vouchers.index') }}" class="btn btn-secondary">Batal</a>
-                            <button type="submit" class="btn btn-primary px-4 save-confirm" data-message="Simpan data voucher ini?"><i class="bi bi-save me-1"></i> Simpan Voucher</button>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ route('admin.vouchers.index') }}" class="btn btn-light btn-lg px-4 me-md-2" style="border-radius: 10px; font-weight: 600;">Batal</a>
+                            <button type="submit" class="btn btn-modern btn-lg px-5 save-confirm" data-message="Simpan data voucher ini?">Simpan Voucher</button>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -97,7 +110,6 @@
 </div>
 
 <script>
-    // Simple script to switch addon text based on type
     document.getElementById('tipe_diskon').addEventListener('change', function() {
         const addon = document.getElementById('addon-nilai');
         if (this.value === 'persen') {

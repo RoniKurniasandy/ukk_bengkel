@@ -49,10 +49,11 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Dashboard redirect (otomatis sesuai role)
-Route::middleware(['auth', 'verified'])->group(function() {
+Route::middleware(['auth'])->group(function() {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('vouchers/check', [\App\Http\Controllers\Admin\VoucherController::class, 'check'])->name('admin.vouchers.check');
     Route::post('/notifications/mark-all-read', [DashboardController::class, 'markAllAsRead'])->name('notifications.markAllRead');
+    Route::get('/get-realtime-updates', [DashboardController::class, 'getRealtimeUpdates'])->name('realtime.updates');
 });
 
 // Email Verification (OTP)
@@ -71,13 +72,14 @@ Route::middleware('auth')->group(function() {
 
 
 // Admin-only routes
-// Admin-only routes
-// Admin-only routes
-Route::middleware(['role:admin', 'verified'])->prefix('admin')->group(function () {
+Route::middleware(['role:admin', 'verified.soft'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.user.index');
     Route::get('/users/create', [AdminUserController::class, 'create'])->name('admin.user.create');
     Route::post('/users', [AdminUserController::class, 'store'])->name('admin.user.store');
+    Route::get('/users/{id}/edit', [AdminUserController::class, 'edit'])->name('admin.user.edit');
+    Route::put('/users/{id}', [AdminUserController::class, 'update'])->name('admin.user.update');
+    Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('admin.user.destroy');
 
     // Manajemen Servis (Gabungan Booking & Servis)
     Route::get('/servis', [AdminServisController::class, 'index'])->name('admin.servis.index');
@@ -143,8 +145,7 @@ Route::middleware(['role:admin', 'verified'])->prefix('admin')->group(function (
 
 
 // Mekanik-only routes
-// Mekanik-only routes
-Route::middleware(['role:mekanik', 'verified'])->prefix('mekanik')->group(function () {
+Route::middleware(['role:mekanik', 'verified.soft'])->prefix('mekanik')->group(function () {
     Route::get('/dashboard', [MekanikDashboardController::class, 'index'])->name('dashboard.mekanik');
 
     // Jadwal Servis
@@ -167,8 +168,7 @@ Route::middleware(['role:mekanik', 'verified'])->prefix('mekanik')->group(functi
 
 
 // Pelanggan-only routes
-// Pelanggan-only routes
-Route::middleware(['auth', 'role:pelanggan', 'verified'])->prefix('pelanggan')->group(function () {
+Route::middleware(['auth', 'role:pelanggan', 'verified.soft'])->prefix('pelanggan')->group(function () {
 
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard.user'); // Ubah nama route sesuai kebutuhan
 

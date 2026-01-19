@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth' => Authenticate::class,                // arahkan ke App\Http\Middleware
             'guest' => RedirectIfAuthenticated::class,    // arahkan ke App\Http\Middleware
             'role' => RoleMiddleware::class,              // middleware custom role
+            'verified.soft' => \App\Http\Middleware\EnsureEmailIsVerifiedSoft::class,
         ]);
     })
 

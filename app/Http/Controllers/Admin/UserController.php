@@ -64,7 +64,7 @@ class UserController extends Controller
             'role' => 'required|in:admin,mekanik,pelanggan',
         ]);
 
-        User::create([
+        $user = User::create([
             'nama' => $request->nama,
             'email' => $request->email,
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
@@ -73,6 +73,58 @@ class UserController extends Controller
             'role' => $request->role,
         ]);
 
+        $user->sendEmailVerificationNotification();
+
         return redirect()->route('admin.user.index')->with('success', 'User berhasil ditambahkan.');
+    }
+
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.user.edit', compact('user'));
+    }
+
+    public function update(\Illuminate\Http\Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:8',
+            'no_hp' => 'nullable|string|max:15|unique:users,no_hp,' . $user->id,
+            'alamat' => 'nullable|string',
+            'role' => 'required|in:admin,mekanik,pelanggan',
+        ]);
+
+        $data = [
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'role' => $request->role,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return redirect()->route('admin.user.index')->with('success', 'Data user berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Prevent deleting own account
+        if ($user->id === auth()->id()) {
+            return redirect()->route('admin.user.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        $user->delete();
+
+        return redirect()->route('admin.user.index')->with('success', 'User berhasil dihapus.');
     }
 }

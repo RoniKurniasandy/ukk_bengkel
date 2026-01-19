@@ -15,13 +15,6 @@
         </button>
     </div>
 
-    {{-- Notifikasi --}}
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
 
     {{-- Tabel Kendaraan --}}
     <div class="card shadow-sm border-0">
@@ -70,34 +63,54 @@
 
 {{-- Modal Tambah Kendaraan --}}
 <div class="modal fade" id="addKendaraanModal" tabindex="-1">
-    <div class="modal-dialog">
-        <form action="{{ route('user.kendaraan.store') }}" method="POST" class="modal-content">
+    <div class="modal-dialog modal-dialog-centered">
+        <form action="{{ route('user.kendaraan.store') }}" method="POST" class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
             @csrf
-            <div class="modal-header">
-                <h5 class="modal-title">Tambah Kendaraan</h5>
+            <div class="modal-header border-0 p-4 pb-0">
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2 me-3">
+                        <i class="bi bi-car-front-fill fs-4"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold">Tambah Kendaraan</h5>
+                        <p class="text-muted small mb-0">Daftarkan kendaraan baru untuk booking servis</p>
+                    </div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label">Merk</label>
-                    <input type="text" name="merk" class="form-control" required>
+            <div class="modal-body p-4">
+                <div class="mb-4">
+                    <label class="form-label fw-bold small text-secondary">Merk Kendaraan</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="bi bi-tag text-primary"></i></span>
+                        <input type="text" name="merk" class="form-control bg-light border-0 p-2" placeholder="Contoh: Toyota, Honda..." required style="border-radius: 0 10px 10px 0;">
+                    </div>
                 </div>
                 
-                <div class="mb-3">
-                    <label class="form-label">Model</label>
-                    <input type="text" name="model" class="form-control" required>
+                <div class="mb-4">
+                    <label class="form-label fw-bold small text-secondary">Model / Tipe</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="bi bi-info-circle text-primary"></i></span>
+                        <input type="text" name="model" class="form-control bg-light border-0 p-2" placeholder="Contoh: Avanza, Civic..." required style="border-radius: 0 10px 10px 0;">
+                    </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Nomor Plat</label>
-                    <input type="text" name="plat_nomor" class="form-control" required>
+                    <label class="form-label fw-bold small text-secondary">Nomor Plat</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="bi bi-hash text-primary"></i></span>
+                        <input type="text" name="plat_nomor" class="form-control bg-light border-0 p-2" placeholder="Contoh: B 1234 ABC" required style="border-radius: 0 10px 10px 0;">
+                    </div>
+                    <div class="form-text small">Gunakan huruf kapital untuk nomor plat agar mudah dikenali.</div>
                 </div>
             </div>
 
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Batal</button>
-                <button class="btn btn-primary save-confirm" type="submit" data-message="Daftarkan kendaraan baru ini ke akun Anda?">Simpan</button>
+            <div class="modal-footer border-0 p-4 pt-0">
+                <button class="btn btn-light fw-bold px-4 py-2 me-2" type="button" data-bs-dismiss="modal" style="border-radius: 12px;">Batal</button>
+                <button class="btn btn-primary fw-bold px-4 py-2 save-confirm" type="submit" data-message="Daftarkan kendaraan baru ini ke akun Anda?" style="border-radius: 12px; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border: none;">
+                    <i class="bi bi-plus-lg me-1"></i> Simpan Kendaraan
+                </button>
             </div>
         </form>
     </div>

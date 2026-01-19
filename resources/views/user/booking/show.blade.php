@@ -179,32 +179,37 @@
     </div>
 
     <style>
-        @medi
-    a print {
+        @media print {
             body * {
+                visibility: hidden;
+            }
 
-                       visibility: hidden;
+            #sidebar, .navbar-dashboard, .d-print-none {
+                display: none !important;
             }
 
             #invoice-area, #invoice-area * {
                 visibility: visible;
             }
+
             #invoice-area {
                 position: absolute;
                 left: 0;
                 top: 0;
-
-       width: 100%;
+                width: 100%;
                 border: none !important;
                 box-shadow: none !important;
+                margin: 0;
+                padding: 0;
             }
 
-            .d-print-none {
-                display: none !important;
-            }
             @page {
                 size: A4;
-                margin: 10mm;
+                margin: 0;
+            }
+
+            body {
+                padding: 15mm;
             }
         }
     </style>

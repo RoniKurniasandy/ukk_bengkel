@@ -35,8 +35,12 @@
             <button class="btn btn-link position-relative text-dark p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-bell fs-4"></i>
                 @if($unreadNotificationsCount > 0)
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                    <span id="notification-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
                         {{ $unreadNotificationsCount }}
+                    </span>
+                @else
+                    <span id="notification-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" style="font-size: 0.6rem;">
+                        0
                     </span>
                 @endif
             </button>
@@ -112,18 +116,33 @@
       const hasSwal = typeof Swal !== 'undefined';
       if (!hasSwal) console.warn('Antigravity Warning: SweetAlert2 not loaded correctly.');
 
-      // Konfigurasi Toast
+      // Modern Toast Configuration
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        background: '#ffffff',
+        color: '#1e293b',
+        iconColor: 'var(--primary-color, #4f46e5)',
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      });
+
       const showToast = (icon, title) => {
         if (hasSwal) {
-          Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-          }).fire({ icon, title });
+          Toast.fire({ 
+            icon: icon, 
+            title: title,
+            customClass: {
+              popup: 'shadow-sm border-0 rounded-4'
+            }
+          });
         } else {
-          console.log('Success:', title);
+          console.log(`${icon.toUpperCase()}:`, title);
         }
       };
 
@@ -134,28 +153,35 @@
       @if(session('error'))
         if (hasSwal) {
           Swal.fire({
-            icon: 'warning',
-            title: 'Perhatian',
+            icon: 'error',
+            title: 'Oops...',
             text: "{{ session('error') }}",
-            confirmButtonColor: '#4f46e5',
+            confirmButtonColor: '#1e3a8a',
+            background: '#ffffff',
+            customClass: {
+              popup: 'rounded-4 border-0 shadow'
+            },
+            showClass: {
+              popup: 'animate__animated animate__fadeInDown'
+            }
           });
         } else {
-          alert("Perhatian: {{ session('error') }}");
+          alert("Error: {{ session('error') }}");
         }
       @endif
 
       @if($errors->any())
         if (hasSwal) {
-          let errorMessages = '';
-          @foreach($errors->all() as $error)
-            errorMessages += "{{ $error }}\n";
-          @endforeach
+          let errorMessages = `@foreach($errors->all() as $error)• {{ $error }}<br>@endforeach`;
 
           Swal.fire({
             icon: 'error',
-            title: 'Terjadi Kesalahan',
-            text: errorMessages,
-            confirmButtonColor: '#f5576c',
+            title: 'Validasi Gagal',
+            html: `<div class="text-start small">${errorMessages}</div>`,
+            confirmButtonColor: '#ef4444',
+            customClass: {
+              popup: 'rounded-4 border-0 shadow'
+            }
           });
         }
       @endif
@@ -180,7 +206,7 @@
               cancelButtonText: 'Batal'
             }).then((result) => {
               if (result.isConfirmed) {
-                if (typeof form.requestSubmit === 'function') {
+                if (deleteBtn.type === 'submit' && typeof form.requestSubmit === 'function') {
                   form.requestSubmit(deleteBtn);
                 } else {
                   form.submit();
@@ -213,7 +239,7 @@
               cancelButtonText: 'Batal'
             }).then((result) => {
               if (result.isConfirmed) {
-                if (typeof form.requestSubmit === 'function') {
+                if (saveBtn.type === 'submit' && typeof form.requestSubmit === 'function') {
                   form.requestSubmit(saveBtn);
                 } else {
                   form.submit();
@@ -241,10 +267,67 @@
             },
         }).then(response => {
             if (response.ok) {
-                location.reload();
+                // Instead of reload, just clear the UI immediately
+                const countBadge = document.getElementById('notification-count');
+                if (countBadge) {
+                    countBadge.textContent = '0';
+                    countBadge.classList.add('d-none');
+                }
+                updateRealtimeData(); // Refresh list via AJAX
             }
         });
     });
+
+    // Real-time Updates (Polling)
+    function updateRealtimeData() {
+        fetch("{{ route('realtime.updates') }}", {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update Notification Count
+            const countBadge = document.getElementById('notification-count');
+            if (countBadge) {
+                countBadge.textContent = data.unreadNotificationsCount;
+                if (data.unreadNotificationsCount > 0) {
+                    countBadge.classList.remove('d-none');
+                } else {
+                    countBadge.classList.add('d-none');
+                }
+            }
+
+            // Update Notification List
+            const listContainer = document.querySelector('.notification-list');
+            if (listContainer && data.recentNotifications) {
+                listContainer.innerHTML = data.recentNotifications;
+            }
+
+            // Update Sidebar Badges
+            if (data.sideBadges) {
+                for (const [id, count] of Object.entries(data.sideBadges)) {
+                    const badgeId = `badge-${id.replace(/_/g, '-')}`;
+                    const badgeElem = document.getElementById(badgeId);
+                    if (badgeElem) {
+                        badgeElem.textContent = count;
+                        if (count > 0) {
+                            badgeElem.classList.remove('d-none');
+                        } else {
+                            badgeElem.classList.add('d-none');
+                        }
+                    }
+                }
+            }
+        })
+        .catch(error => console.error('Realtime update error:', error));
+    }
+
+    // Start polling every 5 seconds
+    @auth
+        setInterval(updateRealtimeData, 5000);
+    @endauth
   </script>
 
   @stack('scripts')

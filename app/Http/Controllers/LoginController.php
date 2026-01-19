@@ -17,11 +17,19 @@ class LoginController extends Controller
     // Proses login user
     public function login(Request $request)
     {
-        // Validasi input email dan password
-        $credentials = $request->validate([
-            'email' => 'required|email',    // Email harus diisi dan valid
-            'password' => 'required',       // Password harus diisi
+        // Validasi input login (bisa email atau no_hp) dan password
+        $request->validate([
+            'login' => 'required|string',
+            'password' => 'required',
         ]);
+
+        $login = $request->input('login');
+        $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'no_hp';
+
+        $credentials = [
+            $fieldType => $login,
+            'password' => $request->password,
+        ];
 
         // Coba autentikasi user dengan data yang diberikan
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
@@ -43,8 +51,8 @@ class LoginController extends Controller
 
         // Jika gagal login, kembali ke halaman login dengan pesan error
         return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->onlyInput('email');
+            'login' => 'Email/Nomor HP atau password salah.',
+        ])->onlyInput('login');
     }
 
     // Proses logout user

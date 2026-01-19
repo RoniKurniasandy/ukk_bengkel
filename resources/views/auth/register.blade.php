@@ -262,21 +262,35 @@
         </div>
 
         <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
+          <label for="no_hp" class="form-label">Nomor HP</label>
           <div class="input-icon">
+            <input id="no_hp" name="no_hp" type="text" value="{{ old('no_hp') }}" required class="form-control"
+              placeholder="081234567890" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            <i class="bi bi-telephone"></i>
+          </div>
+          <small class="text-muted">Gunakan nomor aktif untuk kemudahan login</small>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
             <input id="password" name="password" type="password" required class="form-control"
-              placeholder="Minimal 8 karakter">
-            <i class="bi bi-lock"></i>
+              placeholder="Minimal 8 karakter" style="border-right: none;">
+            <button class="btn btn-outline-secondary" type="button" id="togglePassword" style="border: 2px solid #e2e8f0; border-left: none; border-radius: 0 12px 12px 0; background: #fff;">
+              <i class="bi bi-eye-slash" id="eyeIcon"></i>
+            </button>
           </div>
           <small class="text-muted">Password minimal 8 karakter</small>
         </div>
 
         <div class="mb-3">
           <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
-          <div class="input-icon">
+          <div class="input-group">
             <input id="password_confirmation" name="password_confirmation" type="password" required class="form-control"
-              placeholder="Ulangi password">
-            <i class="bi bi-lock-fill"></i>
+              placeholder="Ulangi password" style="border-right: none;">
+            <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword" style="border: 2px solid #e2e8f0; border-left: none; border-radius: 0 12px 12px 0; background: #fff;">
+              <i class="bi bi-eye-slash" id="eyeIconConfirm"></i>
+            </button>
           </div>
         </div>
 
@@ -312,6 +326,30 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    togglePassword.addEventListener('click', function() {
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      eyeIcon.classList.toggle('bi-eye');
+      eyeIcon.classList.toggle('bi-eye-slash');
+    });
+
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+    const passwordConfirmation = document.getElementById('password_confirmation');
+    const eyeIconConfirm = document.getElementById('eyeIconConfirm');
+
+    toggleConfirmPassword.addEventListener('click', function() {
+      const type = passwordConfirmation.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordConfirmation.setAttribute('type', type);
+      eyeIconConfirm.classList.toggle('bi-eye');
+      eyeIconConfirm.classList.toggle('bi-eye-slash');
+    });
+  </script>
 
 </body>
 

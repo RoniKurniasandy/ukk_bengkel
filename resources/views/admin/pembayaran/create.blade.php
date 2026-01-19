@@ -11,12 +11,6 @@
         </a>
     </div>
 
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
 
     <div class="row">
         <!-- Left Column: Customer & Discount Details -->
@@ -96,7 +90,10 @@
                                     <input type="text" class="form-control" name="alasan_diskon_manual" id="alasan_diskon_manual" value="{{ old('alasan_diskon_manual') }}" placeholder="Alasan wajib diisi (Contoh: Teman Owner)">
                                 </div>
                             </div>
-                            <div class="form-text text-danger d-none" id="manualReasonError">Alasan wajib diisi jika ada diskon manual.</div>
+                            <div class="form-text mt-1" id="manualReasonError">
+                                <span class="text-danger d-none" id="errorMsg"><i class="bi bi-exclamation-triangle me-1"></i>Alasan wajib diisi jika ada diskon manual.</span>
+                                <span class="text-muted" id="defaultMsg">Berikan alasan mengapa diskon diberikan.</span>
+                            </div>
                         </div>
 
                 </div>
@@ -343,14 +340,20 @@
         
         // Manual Reason Validation Hint
         els.manualReason.addEventListener('input', () => {
-             if(els.manualReason.value.trim() !== '') els.manualError.classList.add('d-none');
+             if(els.manualReason.value.trim() !== '') {
+                 document.getElementById('errorMsg').classList.add('d-none');
+                 document.getElementById('defaultMsg').classList.remove('d-none');
+                 els.manualReason.classList.remove('is-invalid');
+             }
         });
 
         // Form Submit Validation
         els.form.addEventListener('submit', function(e) {
             if (state.manualDiscVal > 0 && els.manualReason.value.trim() === '') {
                 e.preventDefault();
-                els.manualError.classList.remove('d-none');
+                document.getElementById('errorMsg').classList.remove('d-none');
+                document.getElementById('defaultMsg').classList.add('d-none');
+                els.manualReason.classList.add('is-invalid');
                 els.manualReason.focus();
                 return;
             }

@@ -41,7 +41,7 @@ class EmailVerificationOTP extends Notification
                     ->greeting('Halo, ' . $notifiable->nama . '!')
                     ->line('Terima kasih telah mendaftar. Gunakan kode verifikasi di bawah ini untuk mengaktifkan akun Anda:')
                     ->line($this->otp)
-                    ->line('Kode ini berlaku selama 60 menit.')
+                    ->line('Kode ini berlaku selama 10 menit.')
                     ->line('Jika Anda tidak merasa melakukan pendaftaran, abaikan saja email ini.');
     }
 

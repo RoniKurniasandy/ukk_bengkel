@@ -182,6 +182,7 @@
                 <th style="width: 15%;">No HP</th>
                 <th style="width: 15%;">Role</th>
                 <th style="width: 15%;">Tanggal Daftar</th>
+                <th class="text-center pe-4" style="width: 10%;">Aksi</th>
               </tr>
             </thead>
             <tbody id="user-table-body">
@@ -216,10 +217,25 @@
                     @endif
                   </td>
                   <td><i class="bi bi-calendar-event me-2" style="color: #6c757d;"></i>{{ $user->created_at->format('d M Y') }}</td>
+                  <td class="text-center pe-4">
+                    <div class="btn-group shadow-sm" style="border-radius: 8px; overflow: hidden;">
+                      <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-sm btn-outline-warning" title="Edit User">
+                        <i class="bi bi-pencil-square"></i>
+                      </a>
+                      <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-sm btn-outline-danger delete-confirm" 
+                          data-message="Yakin ingin menghapus user '{{ $user->nama }}'?" title="Hapus User">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </td>
                 </tr>
               @empty
                 <tr>
-                  <td colspan="6">
+                  <td colspan="7">
                     <div class="empty-state">
                       <i class="bi bi-inbox"></i>
                       <h5>Belum ada user yang sesuai filter</h5>

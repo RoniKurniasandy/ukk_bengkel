@@ -4,9 +4,6 @@
     <div class="container">
         <h3 class="mb-4">Daftar Servis (Dikerjakan)</h3>
 
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
 
         <div class="card">
             <div class="card-body">

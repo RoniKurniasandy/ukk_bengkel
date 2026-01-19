@@ -113,7 +113,7 @@ class PembayaranController extends Controller
             'catatan' => 'nullable|string',
             'kode_voucher' => 'nullable|string',
             'diskon_manual' => 'nullable|numeric|min:0',
-            'alasan_diskon_manual' => 'required_if:diskon_manual,>,0',
+            'alasan_diskon_manual' => 'required_unless:diskon_manual,0',
         ]);
 
         $servis = Servis::with(['booking.user', 'detailServis'])->findOrFail($servisId);

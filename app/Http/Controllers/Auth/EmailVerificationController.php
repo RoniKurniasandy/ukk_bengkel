@@ -23,6 +23,11 @@ class EmailVerificationController extends Controller
         $user = Auth::user();
 
         if ($request->otp == $user->email_verification_code) {
+            // Cek kedaluwarsa (10 menit)
+            if ($user->updated_at->addMinutes(10)->isPast()) {
+                return back()->withErrors(['otp' => 'Kode OTP sudah kadaluarsa. Silakan kirim ulang.']);
+            }
+
             $user->forceFill([
                 'email_verified_at' => Carbon::now(),
                 'email_verification_code' => null,

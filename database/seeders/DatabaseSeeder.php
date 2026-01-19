@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             LayananSeeder::class,
+            StokSeeder::class,
             // Tambahkan seeder lain jika ada, contoh:
             // BookingSeeder::class,
         ]);

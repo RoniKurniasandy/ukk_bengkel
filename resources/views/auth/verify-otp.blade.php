@@ -1,59 +1,93 @@
 @extends('layouts.app')
 
-@section('title', 'Verifikasi OTP')
+@section('title', 'Verifikasi Email')
 
 @section('content')
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg border-0 rounded-4">
-                <div class="card-header bg-primary text-white py-3">
-                    <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Verifikasi OTP</h5>
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
+                <div class="card-header bg-primary text-white text-center py-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; border: none;">
+                    <div class="icon-shape bg-white text-primary rounded-circle shadow-sm d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="bi bi-shield-check fs-2"></i>
+                    </div>
+                    <h4 class="fw-bold mb-1">Verifikasi Akun</h4>
+                    <p class="text-white-50 m-0 small">Demi keamanan, silakan verifikasi email Anda</p>
                 </div>
-                <div class="card-body p-4">
-                    <p class="text-muted mb-4">
-                        Masukkan 6 digit kode OTP yang telah kami kirimkan ke email Anda: <strong>{{ session('email', old('email')) }}</strong>
-                    </p>
-
-                    @if (session('error'))
-                        <div class="alert alert-danger">
-                            {{ session('error') }}
+                <div class="card-body p-4 p-md-5">
+                    @if (session('success'))
+                        <div class="alert alert-success border-0 shadow-sm mb-4" style="border-radius: 12px;">
+                            <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('password.verify.otp') }}">
-                        @csrf
-                        <input type="hidden" name="email" value="{{ session('email', old('email')) }}">
+                    @if (session('error'))
+                        <div class="alert alert-danger border-0 shadow-sm mb-4" style="border-radius: 12px;">
+                            <i class="bi bi-exclamation-circle-fill me-2"></i> {{ session('error') }}
+                        </div>
+                    @endif
 
-                        <div class="mb-3 text-center">
-                            <label for="otp" class="form-label visually-hidden">Kode OTP</label>
-                            <input id="otp" type="text" class="form-control form-control-lg text-center fs-2 tracking-widest @error('otp') is-invalid @enderror" name="otp" required autofocus maxlength="6" placeholder="000000" style="letter-spacing: 0.5em;">
+                    @php
+                        $userEmail = auth()->user()->email ?? session('email');
+                    @endphp
+
+                    <div class="text-center mb-4">
+                        <p class="text-muted">
+                            Kami telah mengirimkan 6 digit kode OTP ke email:<br>
+                            <span class="text-dark fw-bold">{{ $userEmail }}</span>
+                        </p>
+                    </div>
+
+                    <form method="POST" action="{{ route('verification.verify.otp') }}">
+                        @csrf
+                        <div class="mb-4 text-center">
+                            <input type="text" 
+                                   name="otp" 
+                                   id="otp" 
+                                   class="form-control form-control-lg text-center fw-bold @error('otp') is-invalid @enderror" 
+                                   maxlength="6" 
+                                   placeholder="0 0 0 0 0 0"
+                                   required 
+                                   autofocus
+                                   style="font-size: 2.5rem; letter-spacing: 0.3em; border-radius: 15px; border: 2px solid #e2e8f0; height: 80px;"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             @error('otp')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                                <div class="invalid-feedback mt-2">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-primary rounded-pill btn-lg">
-                                Verifikasi
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold py-3" style="border-radius: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                                Verifikasi Sekarang
                             </button>
                         </div>
                     </form>
 
-                    <div class="text-center mt-3">
-                        <form action="{{ route('password.email') }}" method="POST" class="d-inline">
+                    <div class="text-center border-top pt-4">
+                        <p class="text-muted small mb-3">Tidak menerima kode? (Cek folder spam/update)</p>
+                        <form action="{{ route('verification.send') }}" method="POST">
                             @csrf
-                            <input type="hidden" name="email" value="{{ session('email', old('email')) }}">
-                            <button type="submit" class="btn btn-link p-0 text-decoration-none small">
-                                Kirim Ulang OTP
+                            <button type="submit" class="btn btn-outline-primary btn-sm px-4 fw-bold" style="border-radius: 10px;">
+                                <i class="bi bi-send-fill me-1"></i> Kirim Ulang Kode
                             </button>
                         </form>
                     </div>
                 </div>
             </div>
+
+            <div class="text-center mt-4">
+                <a href="{{ route('dashboard') }}" class="text-muted text-decoration-none small">
+                    <i class="bi bi-arrow-left me-1"></i> Kembali ke Dashboard
+                </a>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    #otp:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+    }
+</style>
 @endsection

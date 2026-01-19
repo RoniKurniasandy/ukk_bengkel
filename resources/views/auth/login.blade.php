@@ -235,20 +235,22 @@
         @csrf
 
         <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
+          <label for="login" class="form-label">Email atau Nomor HP</label>
           <div class="input-icon">
-            <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus
-              class="form-control" placeholder="nama@email.com">
-            <i class="bi bi-envelope"></i>
+            <input id="login" name="login" type="text" value="{{ old('login') }}" required autofocus
+              class="form-control" placeholder="nama@email.com atau 0812...">
+            <i class="bi bi-person"></i>
           </div>
         </div>
 
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
-          <div class="input-icon">
+          <div class="input-group">
             <input id="password" name="password" type="password" required class="form-control"
-              placeholder="Masukkan password">
-            <i class="bi bi-lock"></i>
+              placeholder="Masukkan password" style="border-right: none;">
+            <button class="btn btn-outline-secondary" type="button" id="togglePassword" style="border: 2px solid #e2e8f0; border-left: none; border-radius: 0 12px 12px 0; background: #fff;">
+              <i class="bi bi-eye-slash" id="eyeIcon"></i>
+            </button>
           </div>
         </div>
 
@@ -287,6 +289,19 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    togglePassword.addEventListener('click', function() {
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      eyeIcon.classList.toggle('bi-eye');
+      eyeIcon.classList.toggle('bi-eye-slash');
+    });
+  </script>
 
 </body>
 

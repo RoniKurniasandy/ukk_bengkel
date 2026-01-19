@@ -4,7 +4,7 @@
 @section('content')
     <div class="container-fluid px-4">
         <div class="user-management-header mb-4"
-            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);">
+            style="background: var(--banner-gradient); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 30px rgba(30, 58, 138, 0.2);">
             <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div>
                     <h2 class="text-white fw-bold m-0" style="font-size: 1.75rem;"><i

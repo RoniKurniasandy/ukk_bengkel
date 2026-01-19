@@ -3,6 +3,20 @@
 
 @section('content')
   <div class="container-fluid py-4">
+    @if(auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !auth()->user()->hasVerifiedEmail())
+      <div class="alert alert-warning border-0 shadow-sm mb-4 d-flex align-items-center justify-content-between" style="border-radius: 12px; background: #fffcf0; border-left: 5px solid #ffc107 !important;">
+        <div class="d-flex align-items-center">
+          <div class="icon-circle bg-warning text-white me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%;">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+          </div>
+          <div>
+            <h6 class="mb-0 fw-bold text-dark">Email Belum Diverifikasi</h6>
+            <p class="mb-0 text-muted small">Silakan verifikasi email Anda untuk melakukan booking dan melihat riwayat servis lengkap.</p>
+          </div>
+        </div>
+        <a href="{{ route('verification.notice') }}" class="btn btn-warning btn-sm fw-bold px-3" style="border-radius: 8px;">Verifikasi Sekarang</a>
+      </div>
+    @endif
     <h2 class="fw-bold text-indigo mb-4">Dashboard Pelanggan</h2>
 
     {{-- Statistics Cards --}}
