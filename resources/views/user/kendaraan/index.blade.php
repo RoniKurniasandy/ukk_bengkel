@@ -3,59 +3,71 @@
 @section('title', 'Kendaraan Saya')
 
 @section('content')
-<div class="container mt-4">
+<div class="container-fluid px-4 py-4">
 
-    {{-- Judul Halaman --}}
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="fw-bold">Kendaraan Saya</h3>
-        
-        <!-- Tombol Tambah Kendaraan -->
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKendaraanModal">
-            + Tambah Kendaraan
+    <!-- Header -->
+    <div class="user-management-header mb-4"
+      style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 30px rgba(30, 58, 138, 0.2);">
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <div>
+          <h2 class="text-white fw-bold m-0" style="font-size: 1.75rem;"><i class="bi bi-bicycle me-2"></i>Kendaraan Saya</h2>
+          <p class="text-white-50 m-0 mt-2">Kelola daftar kendaraan yang Anda gunakan untuk servis</p>
+        </div>
+        <button class="btn btn-white fw-bold px-4 py-2" data-bs-toggle="modal" data-bs-target="#addKendaraanModal" style="border-radius: 12px; background: #fff; color: #1e3a8a;">
+            <i class="bi bi-plus-lg me-1"></i> Tambah Kendaraan
         </button>
+      </div>
     </div>
 
-
     {{-- Tabel Kendaraan --}}
-    <div class="card shadow-sm border-0">
+    <div class="card-modern shadow-lg border-0">
         <div class="card-body p-0">
-            <table class="table table-striped mb-0">
-                <thead class="text-white" style="background:#0d6efd;">
-                    <tr>
-                        <th>No</th>
-                        <th>Merk</th>
-                        <th>Model</th>
-                        <th>No. Plat</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($kendaraan as $index => $item)
+            <div class="table-responsive">
+                <table class="table-modern mb-0">
+                    <thead>
                         <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $item->merk }}</td>
-                            <td>{{ $item->model }}</td>
-                            <td>{{ $item->plat_nomor }}</td>
-                            <td>
-                                <form action="{{ route('user.kendaraan.destroy', $item->id) }}" 
-                                    method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger delete-confirm" data-message="Anda akan menghapus data kendaraan '{{ $item->merk }} {{ $item->model }}' dengan plat '{{ $item->plat_nomor }}'.">
-                                        Hapus
-                                    </button>
-                                </form>
-                            </td>
+                            <th class="ps-4">No</th>
+                            <th>Merk Kendaraan</th>
+                            <th>Model / Tipe</th>
+                            <th>Nomor Plat</th>
+                            <th class="pe-4 text-center">Aksi</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center py-3 text-secondary">
-                                Belum ada kendaraan terdaftar
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @forelse ($kendaraan as $index => $item)
+                            <tr>
+                                <td class="ps-4">{{ $index + 1 }}</td>
+                                <td>
+                                    <div class="fw-semibold text-primary">{{ $item->merk }}</div>
+                                </td>
+                                <td>{{ $item->model }}</td>
+                                <td>
+                                    <span class="badge bg-light text-dark border px-3 py-2 fw-bold" style="letter-spacing: 1px;">{{ $item->plat_nomor }}</span>
+                                </td>
+                                <td class="pe-4 text-center">
+                                    <form action="{{ route('user.kendaraan.destroy', $item->id) }}" 
+                                        method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="btn btn-sm btn-outline-danger px-3 delete-confirm" data-message="Anda akan menghapus data kendaraan '{{ $item->merk }} {{ $item->model }}' dengan plat '{{ $item->plat_nomor }}'." style="border-radius: 8px;">
+                                            <i class="bi bi-trash me-1"></i> Hapus
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <div class="text-muted">
+                                        <i class="bi bi-car-front fs-1 d-block mb-3 opacity-50"></i>
+                                        <p class="mb-0">Belum ada kendaraan terdaftar. Silakan tambahkan kendaraan untuk mulai booking.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -118,8 +130,10 @@
 
 @if ($errors->any())
 <script>
-    var addModal = new bootstrap.Modal(document.getElementById('addKendaraanModal'));
-    addModal.show();
+    document.addEventListener('DOMContentLoaded', function() {
+        var addModal = new bootstrap.Modal(document.getElementById('addKendaraanModal'));
+        addModal.show();
+    });
 </script>
 @endif
 

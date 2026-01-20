@@ -110,7 +110,9 @@
                             <label class="form-label">Metode Pembayaran</label>
                             <select name="metode_pembayaran" class="form-select form-select-lg">
                                 <option value="tunai">Tunai (Cash)</option>
-                                <option value="transfer">Transfer Bank</option>
+                                <option value="BCA">Transfer BCA</option>
+                                <option value="Mandiri">Transfer Mandiri</option>
+                                <option value="DANA">E-Wallet DANA</option>
                             </select>
                         </div>
                         <div class="col-md-6">

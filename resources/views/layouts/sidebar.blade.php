@@ -8,14 +8,8 @@
     </div>
 
     {{-- Navigation List --}}
-    <ul class="nav flex-column flex-nowrap flex-grow-1 overflow-y-auto py-3 px-2">
-        <li class="nav-item mb-1">
-            <a href="{{ route('dashboard') }}"
-                class="nav-link text-white rounded d-flex align-items-center {{ request()->is('dashboard') ? 'active bg-primary' : '' }}">
-                <i class="bi bi-speedometer2 me-2"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
+<ul class="nav flex-column flex-nowrap flex-grow-1 overflow-y-auto py-2 px-2">
+
 
         @if(Auth::check() && Auth::user()->role === 'admin')
             {{-- MASTER DATA --}}
@@ -210,11 +204,9 @@
 
     <style>
         .sidebar .nav-link {
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        padding-top: 0.61rem;
+        padding-bottom: 0.61rem;
+    }
         .sidebar .nav-link:hover {
             background-color: rgba(255, 255, 255, 0.1);
             transform: translateX(4px);

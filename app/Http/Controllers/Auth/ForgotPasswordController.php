@@ -54,10 +54,14 @@ class ForgotPasswordController extends Controller
 
     public function showVerifyForm()
     {
-        if (!session('email')) {
+        $email = session('email');
+        if (!$email) {
              return redirect()->route('password.request');
         }
-        return view('auth.verify-otp');
+        return view('auth.verify-otp', [
+            'type' => 'password',
+            'email' => $email
+        ]);
     }
 
     public function verifyOtp(Request $request)

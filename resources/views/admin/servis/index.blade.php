@@ -43,6 +43,12 @@
                         <i class="bi bi-check-circle me-2"></i>Selesai
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link py-3 fw-bold border-0 border-bottom {{ request('status') == 'batal' ? 'active text-danger' : 'text-secondary' }}"
+                        href="{{ route('admin.servis.index', array_merge(request()->except('status'), ['status' => 'batal'])) }}">
+                        <i class="bi bi-x-circle me-2"></i>Dibatalkan
+                    </a>
+                </li>
             </ul>
         </div>
         
@@ -96,6 +102,8 @@
                             <th class="ps-4">No</th>
                             <th>Pelanggan</th>
                             <th>Kendaraan</th>
+                            <th>Layanan</th>
+                            <th>Keluhan</th>
                             <th>Waktu Booking</th>
                             <th>Mekanik</th>
                             <th>Status</th>
@@ -118,6 +126,15 @@
                                 <td>
                                     <div class="fw-semibold text-primary">{{ $item->kendaraan->plat_nomor ?? '-' }}</div>
                                     <small class="text-muted">{{ $item->kendaraan->merk ?? '' }} {{ $item->kendaraan->model ?? '' }}</small>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark">{{ $item->layanan->nama_layanan ?? 'Umum' }}</div>
+                                    <small class="text-muted">Estimasi: Rp {{ number_format($item->layanan->harga ?? 0, 0, ',', '.') }}</small>
+                                </td>
+                                <td>
+                                    <div class="text-dark small text-wrap" style="max-width: 200px;">
+                                        {{ Str::limit($item->keluhan, 50) }}
+                                    </div>
                                 </td>
                                 <td>
                                     <div class="text-dark"><i class="bi bi-calendar3 me-1 text-primary"></i>{{ \Carbon\Carbon::parse($item->tanggal_booking)->format('d M Y') }}</div>
@@ -153,6 +170,8 @@
                                         <span class="badge badge-modern" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">Selesai</span>
                                     @elseif($item->status == 'ditolak')
                                         <span class="badge badge-modern bg-danger">Ditolak</span>
+                                    @elseif($item->status == 'dibatalkan')
+                                        <span class="badge badge-modern bg-secondary">Dibatalkan</span>
                                     @else
                                         <span class="badge badge-modern bg-secondary">{{ ucfirst($item->status) }}</span>
                                     @endif
@@ -176,7 +195,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-5">
+                                <td colspan="8" class="text-center py-5">
                                     <div class="text-muted">
                                         <i class="bi bi-calendar-x fs-1 d-block mb-3 opacity-50"></i>
                                         <p class="mb-0">Tidak ditemukan data servis sesuai filter.</p>

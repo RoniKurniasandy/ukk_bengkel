@@ -8,11 +8,19 @@
         <div class="col-md-5">
             <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
                 <div class="card-header bg-primary text-white text-center py-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; border: none;">
+                    @php
+                        $userEmail = auth()->user()->email ?? session('email');
+                        $type = $type ?? 'email'; // Default to email verification
+                        $formAction = ($type === 'password') ? route('password.verify.otp') : route('verification.verify.otp');
+                        $title = ($type === 'password') ? 'Reset Password' : 'Verifikasi Akun';
+                        $subtitle = ($type === 'password') ? 'Masukkan kode OTP untuk mereset password Anda' : 'Demi keamanan, silakan verifikasi email Anda';
+                    @endphp
+
                     <div class="icon-shape bg-white text-primary rounded-circle shadow-sm d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                        <i class="bi bi-shield-check fs-2"></i>
+                        <i class="bi {{ $type === 'password' ? 'bi-key' : 'bi-shield-check' }} fs-2"></i>
                     </div>
-                    <h4 class="fw-bold mb-1">Verifikasi Akun</h4>
-                    <p class="text-white-50 m-0 small">Demi keamanan, silakan verifikasi email Anda</p>
+                    <h4 class="fw-bold mb-1">{{ $title }}</h4>
+                    <p class="text-white-50 m-0 small">{{ $subtitle }}</p>
                 </div>
                 <div class="card-body p-4 p-md-5">
                     @if (session('success'))
@@ -27,10 +35,6 @@
                         </div>
                     @endif
 
-                    @php
-                        $userEmail = auth()->user()->email ?? session('email');
-                    @endphp
-
                     <div class="text-center mb-4">
                         <p class="text-muted">
                             Kami telah mengirimkan 6 digit kode OTP ke email:<br>
@@ -38,8 +42,9 @@
                         </p>
                     </div>
 
-                    <form method="POST" action="{{ route('verification.verify.otp') }}">
+                    <form method="POST" action="{{ $formAction }}">
                         @csrf
+                        <input type="hidden" name="email" value="{{ $userEmail }}">
                         <div class="mb-4 text-center">
                             <input type="text" 
                                    name="otp" 

@@ -40,20 +40,25 @@ class DashboardController extends Controller
         ];
 
         // Add role-specific badges
+        // Add role-specific badges (Keys must match IDs in sidebar.blade.php: badge-{key-with-dashes})
         if ($user->role === 'admin') {
             $data['sideBadges'] = [
-                'pending_bookings' => \App\Models\Booking::where('status', 'menunggu')->count(),
-                'pending_payments' => \App\Models\Pembayaran::where('status', 'pending')->count(),
-                'active_servis' => \App\Models\Servis::where('status', 'dikerjakan')->count(),
+                'booking_waiting' => \App\Models\Booking::where('status', 'menunggu')->count(),
+                'payment_pending' => \App\Models\Pembayaran::where('status', 'pending')->count(),
             ];
         } elseif ($user->role === 'mekanik') {
             $data['sideBadges'] = [
-                'assigned_bookings' => \App\Models\Booking::where('mekanik_id', $user->id)
+                'jadwal_servis' => \App\Models\Booking::where('mekanik_id', $user->id)
                     ->where('status', 'disetujui')
                     ->count(),
-                'active_servis' => \App\Models\Servis::whereHas('booking', function($q) use($user) {
+                'servis_aktif' => \App\Models\Servis::whereHas('booking', function($q) use($user) {
                     $q->where('mekanik_id', $user->id);
                 })->where('status', 'dikerjakan')->count(),
+            ];
+        } elseif ($user->role === 'pelanggan') {
+            $data['sideBadges'] = [
+                'servis_selesai' => \App\Models\Booking::where('user_id', $user->id)->where('status', 'dikerjakan')->count(),
+                'booking_aktif' => \App\Models\Booking::where('user_id', $user->id)->whereIn('status', ['menunggu', 'disetujui'])->count(),
             ];
         }
 

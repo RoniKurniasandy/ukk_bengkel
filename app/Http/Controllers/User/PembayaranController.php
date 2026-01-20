@@ -40,7 +40,7 @@ class PembayaranController extends Controller
         // Validasi input
         $request->validate([
             'jenis_pembayaran' => 'required|in:dp,pelunasan,full',
-            'metode_pembayaran' => 'required|in:transfer,tunai',
+            'metode_pembayaran' => 'required|string',
             'jumlah' => 'nullable|numeric|min:0',
             'bukti_pembayaran' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
             'kode_voucher' => 'nullable|string',
@@ -84,7 +84,7 @@ class PembayaranController extends Controller
         }
 
         // Validasi manual untuk transfer harus ada bukti
-        if ($request->metode_pembayaran === 'transfer' && !$request->hasFile('bukti_pembayaran')) {
+        if ($request->metode_pembayaran !== 'tunai' && !$request->hasFile('bukti_pembayaran')) {
             return redirect()->back()->withErrors(['bukti_pembayaran' => 'Bukti pembayaran wajib diupload untuk metode transfer.'])->withInput();
         }
 

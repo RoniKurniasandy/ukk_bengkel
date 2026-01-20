@@ -1,109 +1,102 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mt-4">
-
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="fw-bold">Daftar Booking Servis</h3>
-            <a href="{{ route('user.booking.create') }}" class="btn btn-primary px-4">
-                <i class="bi bi-plus-lg"></i> Booking Baru
+    <div class="container-fluid px-4 py-4">
+        <!-- Header -->
+        <div class="user-management-header mb-4"
+          style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 30px rgba(79, 172, 254, 0.2);">
+          <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+              <h2 class="text-white fw-bold m-0" style="font-size: 1.75rem;"><i class="bi bi-calendar-event me-2"></i>Daftar Booking Servis</h2>
+              <p class="text-white-50 m-0 mt-2">Daftar permintaan servis yang sedang menunggu konfirmasi admin</p>
+            </div>
+            <a href="{{ route('user.booking.create') }}" class="btn btn-white fw-bold px-4 py-2" style="border-radius: 12px; background: #fff; color: #4facfe;">
+                <i class="bi bi-plus-lg me-1"></i> Booking Baru
             </a>
+          </div>
         </div>
 
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-
-        @if(session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
-
-        <div class="alert alert-info">
-            <i class="bi bi-info-circle"></i> <strong>Info:</strong> Halaman ini hanya menampilkan booking yang
-            <strong>belum disetujui</strong>.
-            Untuk melihat servis yang sudah disetujui/dikerjakan, silakan ke menu <a href="{{ route('user.servis') }}"
-                class="alert-link"><strong>Servis Saya</strong></a>.
-        </div>
-
-        <div class="card shadow-lg border-0">
+        <div class="card-modern shadow-lg border-0">
             <div class="card-body p-0">
-                <table class="table table-hover mb-0">
-                    <thead class="bg-primary text-white">
-                        <tr>
-                            <th>No</th>
-                            <th>Layanan Servis</th>
-                            <th>Waktu Booking</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @forelse($bookings as $b)
+                <div class="table-responsive">
+                    <table class="table-modern mb-0">
+                        <thead>
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $b->layanan->nama_layanan ?? 'Umum' }}</td>
-                                <td>
-                                    <div>
-                                        <i
-                                            class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::parse($b->tanggal_booking)->format('d M Y') }}
-                                    </div>
-                                    <div class="text-primary">
-                                        <i class="bi bi-clock me-1"></i><strong>{{ $b->jam_booking ?? '-' }}</strong> WIB
-                                    </div>
-                                </td>
-                                <td>
-                                    @if($b->status == 'disetujui')
-                                        <div class="d-flex flex-column align-items-start">
-                                            <span class="badge bg-warning text-dark mb-1">
-                                                <i class="bi bi-check-circle-fill"></i> Disetujui
-                                            </span>
-                                            <small class="text-danger fw-bold" style="font-size: 0.75rem;">
-                                                <i class="bi bi-hourglass-split"></i> Menunggu Mekanik
-                                            </small>
+                                <th class="ps-4">No</th>
+                                <th>Layanan Servis</th>
+                                <th>Kendaraan</th>
+                                <th>Waktu Booking</th>
+                                <th>Status</th>
+                                <th class="pe-4 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @forelse($bookings as $b)
+                                <tr>
+                                    <td class="ps-4">{{ $loop->iteration }}</td>
+                                    <td>
+                                        <div class="fw-semibold text-primary">{{ $b->layanan->nama_layanan ?? 'Umum' }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold">{{ $b->kendaraan->merk ?? '-' }} {{ $b->kendaraan->model ?? '-' }}</div>
+                                        <div class="badge bg-light text-dark border small mt-1">{{ $b->kendaraan->plat_nomor ?? '-' }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold"><i class="bi bi-calendar3 me-1 text-primary"></i> {{ \Carbon\Carbon::parse($b->tanggal_booking)->format('d M Y') }}</div>
+                                        <div class="small text-muted"><i class="bi bi-clock me-1"></i> {{ $b->jam_booking ?? '-' }} WIB</div>
+                                    </td>
+                                    <td>
+                                        @if($b->status == 'disetujui')
+                                            <span class="badge badge-modern" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">Disetujui</span>
+                                        @elseif($b->status == 'menunggu')
+                                            <span class="badge badge-modern bg-secondary">Menunggu Admin</span>
+                                        @elseif($b->status == 'ditolak')
+                                            <span class="badge badge-modern bg-danger">Ditolak</span>
+                                        @elseif($b->status == 'dibatalkan')
+                                            <span class="badge badge-modern bg-light text-muted border">Dibatalkan</span>
+                                        @else
+                                            <span class="badge badge-modern bg-secondary">{{ ucfirst($b->status) }}</span>
+                                        @endif
+                                    </td>
+                                    <td class="pe-4 text-center">
+                                        @if($b->status == 'menunggu')
+                                            <form method="POST" action="{{ route('user.booking.destroy', $b->booking_id) }}"
+                                                class="d-inline">
+                                                @csrf @method('DELETE')
+                                                <button type="button" class="btn btn-sm btn-outline-danger px-3 delete-confirm"
+                                                    data-message="Yakin ingin membatalkan booking servis ini?" style="border-radius: 8px;">
+                                                    <i class="bi bi-x-circle"></i> Batalkan
+                                                </button>
+                                            </form>
+                                        @else
+                                            <span class="text-muted small">Sudah diproses</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td class="text-center py-5" colspan="6">
+                                        <div class="text-muted">
+                                            <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
+                                            <p class="mb-0">Tidak ada booking yang sedang menunggu konfirmasi.</p>
                                         </div>
-                                    @elseif($b->status == 'menunggu')
-                                        <span class="badge bg-warning text-dark">
-                                            <i class="bi bi-hourglass-top"></i> Menunggu Konfirmasi
-                                        </span>
-                                    @elseif($b->status == 'ditolak')
-                                        <span class="badge bg-danger">Ditolak</span>
-                                    @elseif($b->status == 'dibatalkan')
-                                        <span class="badge bg-secondary">Dibatalkan</span>
-                                    @else
-                                        <span class="badge bg-secondary">{{ ucfirst($b->status) }}</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($b->status == 'menunggu')
-                                        <form method="POST" action="{{ route('user.booking.destroy', $b->booking_id) }}"
-                                            class="d-inline">
-                                            @csrf @method('DELETE')
-                                            <button type="button" class="btn btn-sm btn-danger delete-confirm"
-                                                data-message="Yakin ingin membatalkan booking servis ini?">
-                                                <i class="bi bi-x-circle"></i> Batalkan
-                                            </button>
-                                        </form>
-                                    @else
-                                        <span class="text-muted">-</span>
-                                    @endif
-                                </td>
-
-                            </tr>
-                        @empty
-                            <tr>
-                                <td class="text-center py-4" colspan="5">
-                                    <div class="text-muted">
-                                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                                        Tidak ada booking yang menunggu konfirmasi.
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
+        @if($bookings->count() > 0)
+            <div class="alert alert-info border-0 shadow-sm mt-4 d-flex align-items-center" style="border-radius: 12px; background: #eef2ff; border-left: 5px solid #667eea !important;">
+                <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
+                <div class="small">
+                    Halaman ini menampilkan booking yang belum diproses atau sedang menunggu. Jika sudah disetujui mekanik, silakan pantau di menu <a href="{{ route('user.servis') }}" class="fw-bold text-primary text-decoration-none">Riwayat Servis</a>.
+                </div>
+            </div>
+        @endif
     </div>
 @endsection

@@ -8,7 +8,7 @@ class MetodePembayaran extends Model
 {
     protected $table = 'metode_pembayaran';
     protected $primaryKey = 'metode_id';
-    protected $fillable = ['nama_metode','deskripsi'];
+    protected $fillable = ['tipe', 'nama_bank', 'nomor_rekening', 'atas_nama', 'deskripsi', 'is_active'];
 
     public function transaksi()
     {

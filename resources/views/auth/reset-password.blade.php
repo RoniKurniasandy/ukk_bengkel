@@ -27,17 +27,27 @@
 
                         <div class="mb-3">
                             <label for="password" class="form-label">Password Baru</label>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autofocus>
-                            @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                            <div class="input-group">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autofocus>
+                                <button class="btn btn-outline-secondary toggle-password" type="button">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="password-confirm" class="form-label">Konfirmasi Password Baru</label>
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                            <div class="input-group">
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                                <button class="btn btn-outline-secondary toggle-password" type="button">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="d-grid">
@@ -52,3 +62,22 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.querySelectorAll('.toggle-password').forEach(button => {
+        button.addEventListener('click', function() {
+            const input = this.parentElement.querySelector('input');
+            const icon = this.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('bi-eye', 'bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('bi-eye-slash', 'bi-eye');
+            }
+        });
+    });
+</script>
+@endpush

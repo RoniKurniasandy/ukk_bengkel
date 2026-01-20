@@ -42,7 +42,9 @@
                         <select name="payment_method" class="form-select" style="border-radius: 10px;">
                             <option value="">Semua Metode</option>
                             <option value="tunai" {{ request('payment_method') == 'tunai' ? 'selected' : '' }}>Tunai</option>
-                            <option value="transfer" {{ request('payment_method') == 'transfer' ? 'selected' : '' }}>Transfer</option>
+                            <option value="BCA" {{ request('payment_method') == 'BCA' ? 'selected' : '' }}>BCA</option>
+                            <option value="Mandiri" {{ request('payment_method') == 'Mandiri' ? 'selected' : '' }}>Mandiri</option>
+                            <option value="DANA" {{ request('payment_method') == 'DANA' ? 'selected' : '' }}>DANA</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -167,6 +169,7 @@
                                     <th>Sudah Bayar</th>
                                     <th>Sisa Tagihan</th>
                                     <th>Status Servis</th>
+                                    <th>Status Bayar</th>
                                     <th class="text-end pe-4">Aksi</th>
                                 </tr>
                             </thead>
@@ -193,6 +196,15 @@
                                                 {{ ucfirst($s->status) }}
                                             </span>
                                         </td>
+                                        <td>
+                                            @if($s->status_pembayaran == 'lunas')
+                                                <span class="badge badge-modern" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">Lunas</span>
+                                            @elseif($s->status_pembayaran == 'dp_lunas')
+                                                <span class="badge badge-modern bg-info">DP Lunas</span>
+                                            @else
+                                                <span class="badge badge-modern bg-warning">Belum Bayar</span>
+                                            @endif
+                                        </td>
                                         <td class="text-end pe-4">
                                             <div class="d-flex justify-content-end gap-1">
                                                 <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#detailTagihanModal{{ $s->id }}" style="border-radius: 8px;">
@@ -205,7 +217,7 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr><td colspan="7" class="text-center py-5 text-muted">Tidak ada tagihan tertunggak.</td></tr>
+                                    <tr><td colspan="8" class="text-center py-5 text-muted">Tidak ada tagihan tertunggak.</td></tr>
                                 @endforelse
                             </tbody>
                         </table>

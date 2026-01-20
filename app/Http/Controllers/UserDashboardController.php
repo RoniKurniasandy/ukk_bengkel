@@ -34,6 +34,8 @@ class UserDashboardController extends Controller
 
         // Hitung statistik
         $allBookings = Booking::with(['servis'])->where('user_id', Auth::id())->get();
+        $user = Auth::user()->load('membershipTier');
+        $totalKendaraan = \App\Models\Kendaraan::where('user_id', $user->id)->count();
 
         $totalServis = $allBookings->filter(function ($b) {
             return $b->servis !== null;
@@ -59,7 +61,9 @@ class UserDashboardController extends Controller
             'totalServis',
             'servisAktif',
             'totalPengeluaran',
-            'sisaTagihan'
+            'sisaTagihan',
+            'totalKendaraan',
+            'user'
         ));
     }
 

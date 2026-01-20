@@ -24,11 +24,41 @@ class VoucherController extends Controller
         $request->validate([
             'kode' => 'required|unique:vouchers,kode|max:50', // Uppercase handled by mutator or simple input transform
             'tipe_diskon' => 'required|in:nominal,persen',
-            'nilai' => 'required|numeric|min:0',
+            'nilai' => [
+                'required',
+                'numeric',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->tipe_diskon === 'persen' && ($value < 1 || $value > 100)) {
+                        $fail('Nilai persentase harus antara 1 sampai 100.');
+                    }
+                    if ($value < 0) {
+                        $fail('Nilai voucher tidak boleh negatif.');
+                    }
+                },
+            ],
             'min_transaksi' => 'required|numeric|min:0',
             'kuota' => 'required|integer|min:0',
-            'tgl_mulai' => 'nullable|date',
-            'tgl_berakhir' => 'nullable|date|after_or_equal:tgl_mulai',
+            'tgl_mulai' => 'required|date',
+            'tgl_berakhir' => 'required|date|after_or_equal:tgl_mulai',
+        ], [
+            'kode.required' => 'Kode voucher wajib diisi.',
+            'kode.unique' => 'Kode voucher sudah ada.',
+            'kode.max' => 'Kode voucher maksimal 50 karakter.',
+            'tipe_diskon.required' => 'Tipe diskon wajib dipilih.',
+            'tipe_diskon.in' => 'Tipe diskon tidak valid.',
+            'nilai.required' => 'Nilai voucher wajib diisi.',
+            'nilai.numeric' => 'Nilai voucher harus berupa angka.',
+            'min_transaksi.required' => 'Minimal transaksi wajib diisi.',
+            'min_transaksi.numeric' => 'Minimal transaksi harus berupa angka.',
+            'min_transaksi.min' => 'Minimal transaksi tidak boleh negatif.',
+            'kuota.required' => 'Kuota wajib diisi.',
+            'kuota.integer' => 'Kuota harus berupa angka bulat.',
+            'kuota.min' => 'Kuota tidak boleh negatif.',
+            'tgl_mulai.required' => 'Tanggal mulai wajib diisi.',
+            'tgl_mulai.date' => 'Format tanggal mulai tidak valid.',
+            'tgl_berakhir.required' => 'Tanggal berakhir wajib diisi.',
+            'tgl_berakhir.date' => 'Format tanggal berakhir tidak valid.',
+            'tgl_berakhir.after_or_equal' => 'Tanggal berakhir harus sama atau setelah tanggal mulai.',
         ]);
         
         // Force Uppercase Code
@@ -54,11 +84,41 @@ class VoucherController extends Controller
         $request->validate([
             'kode' => 'required|max:50|unique:vouchers,kode,' . $voucher->id,
             'tipe_diskon' => 'required|in:nominal,persen',
-            'nilai' => 'required|numeric|min:0',
+            'nilai' => [
+                'required',
+                'numeric',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->tipe_diskon === 'persen' && ($value < 1 || $value > 100)) {
+                        $fail('Nilai persentase harus antara 1 sampai 100.');
+                    }
+                    if ($value < 0) {
+                        $fail('Nilai voucher tidak boleh negatif.');
+                    }
+                },
+            ],
             'min_transaksi' => 'required|numeric|min:0',
             'kuota' => 'required|integer|min:0',
-            'tgl_mulai' => 'nullable|date',
-            'tgl_berakhir' => 'nullable|date|after_or_equal:tgl_mulai',
+            'tgl_mulai' => 'required|date',
+            'tgl_berakhir' => 'required|date|after_or_equal:tgl_mulai',
+        ], [
+            'kode.required' => 'Kode voucher wajib diisi.',
+            'kode.unique' => 'Kode voucher sudah ada.',
+            'kode.max' => 'Kode voucher maksimal 50 karakter.',
+            'tipe_diskon.required' => 'Tipe diskon wajib dipilih.',
+            'tipe_diskon.in' => 'Tipe diskon tidak valid.',
+            'nilai.required' => 'Nilai voucher wajib diisi.',
+            'nilai.numeric' => 'Nilai voucher harus berupa angka.',
+            'min_transaksi.required' => 'Minimal transaksi wajib diisi.',
+            'min_transaksi.numeric' => 'Minimal transaksi harus berupa angka.',
+            'min_transaksi.min' => 'Minimal transaksi tidak boleh negatif.',
+            'kuota.required' => 'Kuota wajib diisi.',
+            'kuota.integer' => 'Kuota harus berupa angka bulat.',
+            'kuota.min' => 'Kuota tidak boleh negatif.',
+            'tgl_mulai.required' => 'Tanggal mulai wajib diisi.',
+            'tgl_mulai.date' => 'Format tanggal mulai tidak valid.',
+            'tgl_berakhir.required' => 'Tanggal berakhir wajib diisi.',
+            'tgl_berakhir.date' => 'Format tanggal berakhir tidak valid.',
+            'tgl_berakhir.after_or_equal' => 'Tanggal berakhir harus sama atau setelah tanggal mulai.',
         ]);
         
         $data = $request->all();

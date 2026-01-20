@@ -11,7 +11,7 @@ class EmailVerificationController extends Controller
 {
     public function showOTPForm()
     {
-        return view('auth.verify-otp');
+        return view('auth.verify-otp', ['type' => 'email']);
     }
 
     public function verify(Request $request)

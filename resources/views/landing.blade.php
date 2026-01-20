@@ -460,6 +460,12 @@
                     <div class="hero-image">
                         <i class="bi bi-car-front-fill" style="font-size: 15rem; color: rgba(255, 255, 255, 0.2);"></i>
                     </div>
+
+                    <!-- <div class="hero-image text-center">
+                               <img src="{{ asset('img/mobil-mase.png') }}" class="img-fluid" style="max-height: 400px;"
+                            alt="Bagus Bengkel">
+                    </div> -->
+
                 </div>
             </div>
         </div>

@@ -190,24 +190,27 @@ class PembayaranController extends Controller
                 }
             } elseif ($totalBayarSekarang > 0) {
                 $servis->status_pembayaran = 'dp_lunas';
+            } else {
+                $servis->status_pembayaran = 'belum_bayar';
             }
             $servis->save();
 
             // 3. Buat record Transaksi
-            // Transaksi records the "Event", but usually we track the Payment amount as "Total" in simple accounting.
-            // However, with discounts, we want to record the full breakdown.
+            // Hitung diskon member yang SUDAH tercatat sebelumnya di tabel transaksi untuk servis ini
+            $recordedMemberDiscount = Transaksi::where('servis_id', $servis->id)
+                ->where('status', 'selesai')
+                ->sum('diskon_member');
             
-            // Logic: Is this transaction record representing the *payment* or the *invoice*?
-            // Existing code: 'total' => $request->jumlah. This means it tracks cash flow.
-            // The discount columns should probably be stored to indicate "This payment had these discounts applied" 
-            // OR we create a final "Invoice" transaction when lunas?
-            // Let's stick to: Transaksi tracks the Financial Event.
-            // If this is a payment, 'total' is the money in.
-            // But we added columns `diskon_member`, etc to `transaksi`. 
-            // Usually discounts apply to the whole Order, not just one partial payment.
-            // Let's save the discount details ONLY if it's the final payment or if we decide to store it on every payment?
-            // Better: Store discount details. 'subtotal' here might be the Service subtotal.
-            
+            // Hanya catat selisihnya (Diskon Total Seharusnya - Diskon Yg Sudah Tercatat)
+            $diskonMemberToRecord = max(0, $diskonMember - $recordedMemberDiscount);
+
+            // Logika sama untuk voucher jika voucher memungkinkan partial use (tapi biasanya voucher sekali pakai)
+            // Untuk voucher, kita asumsikan 1x pakai per servis, jadi kita cek apakah sudah pernah dicatat
+            $recordedVoucherDiscount = Transaksi::where('servis_id', $servis->id)
+                ->where('status', 'selesai')
+                ->sum('diskon_voucher');
+            $diskonVoucherToRecord = max(0, $diskonVoucher - $recordedVoucherDiscount);
+
             $sisaTagihan = max(0, $grandTotal - $totalBayarSekarang);
             $keterangan = 'Pembayaran Manual (' . ucfirst($request->metode_pembayaran) . ')';
             $keterangan .= ' - Servis #' . $servis->id;
@@ -220,8 +223,6 @@ class PembayaranController extends Controller
 
             // Decrement Voucher Quota if used
             if ($kodeVoucher) {
-                // Ideally check if not already decreed for this service? 
-                // For simplicity, we assume one voucher per service and decrement now.
                  \App\Models\Voucher::where('kode', $kodeVoucher)->decrement('kuota');
             }
 
@@ -234,10 +235,10 @@ class PembayaranController extends Controller
                 'keterangan' => $keterangan,
                 'status' => 'selesai',
                 
-                // Discount Details (Snapshot)
-                'subtotal' => $subtotal,
-                'diskon_member' => $diskonMember,
-                'diskon_voucher' => $diskonVoucher,
+                // Discount Details (Snapshot - Only record the new/unrecorded portion)
+                'subtotal' => $subtotal, // Subtotal tetap dicatat utuh sebagai referensi nilai projek
+                'diskon_member' => $diskonMemberToRecord, 
+                'diskon_voucher' => $diskonVoucherToRecord,
                 'kode_voucher' => $kodeVoucher,
                 'diskon_manual' => $diskonManual,
                 'alasan_diskon_manual' => $request->alasan_diskon_manual,
@@ -246,8 +247,12 @@ class PembayaranController extends Controller
 
             // Update User's Total Transactions & Check for Upgrade
             // Since this is manual payment, we accumulate right away
-            if ($user) {
+            if ($user && $request->jumlah > 0) {
+                // Update total transaksi hanya menambah jumlah uang yang dibayar
                 $user->increment('total_transaksi', $request->jumlah);
+                
+                // Cek upgrade member HANYA jika pembayaran ini membuat lunas (opsional, atau setiap pembayaran)
+                // Best practice: Cek setiap ada pembayaran masuk yang signifikan
                 $discountService->checkAndUpgradeMembership($user->fresh());
             }
 
@@ -320,6 +325,18 @@ class PembayaranController extends Controller
                     $keterangan .= ' (Sisa: Rp ' . number_format($sisaTagihan, 0, ',', '.') . ')';
                 }
 
+                // Hitung diskon member yang SUDAH tercatat sebelumnya
+                $recordedMemberDiscount = Transaksi::where('servis_id', $servis->id)
+                    ->where('status', 'selesai')
+                    ->sum('diskon_member');
+                $diskonMemberToRecord = max(0, $pembayaran->diskon_member - $recordedMemberDiscount);
+
+                // Hitung diskon voucher yang SUDAH tercatat sebelumnya
+                $recordedVoucherDiscount = Transaksi::where('servis_id', $servis->id)
+                    ->where('status', 'selesai')
+                    ->sum('diskon_voucher');
+                $diskonVoucherToRecord = max(0, $pembayaran->diskon_voucher - $recordedVoucherDiscount);
+
                 Transaksi::create([
                     'user_id' => $servis->booking->user_id,
                     'servis_id' => $servis->id,
@@ -327,8 +344,8 @@ class PembayaranController extends Controller
                     'sumber' => 'servis',
                     'total' => $pembayaran->jumlah,
                     'subtotal' => $pembayaran->subtotal,
-                    'diskon_member' => $pembayaran->diskon_member,
-                    'diskon_voucher' => $pembayaran->diskon_voucher,
+                    'diskon_member' => $diskonMemberToRecord, // Simpan selisih
+                    'diskon_voucher' => $diskonVoucherToRecord, // Simpan selisih
                     'kode_voucher' => $pembayaran->kode_voucher,
                     'grand_total' => $pembayaran->grand_total,
                     'keterangan' => $keterangan,

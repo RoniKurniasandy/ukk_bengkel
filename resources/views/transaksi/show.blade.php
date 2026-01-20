@@ -152,7 +152,10 @@
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4 no-print">
-                            <button onclick="window.print()" class="btn btn-outline-dark me-md-2">
+                            <a href="{{ route('admin.transaksi') }}" class="btn btn-secondary px-4 me-md-2 shadow-sm">
+                                <i class="bi bi-arrow-left"></i> KEMBALI 
+                            </a>
+                            <button onclick="window.print()" class="btn btn-outline-dark px-4">
                                 <i class="bi bi-printer"></i> Cetak
                             </button>
                         </div>
@@ -174,6 +177,13 @@
 
             body {
                 background-color: white !important;
+            }
+
+            .container {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
 
             .card {

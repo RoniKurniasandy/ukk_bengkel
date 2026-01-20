@@ -13,13 +13,6 @@
                     <h4 class="mb-0 fw-bold">Pembayaran Servis #{{ $servis->id }}</h4>
                 </div>
 
-                @if (session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
                 <div class="row g-4">
                     <!-- Left Column: Form -->
                     <div class="col-md-7">
@@ -71,9 +64,11 @@
 
                                     <div class="mb-3 pt-3 border-top">
                                         <label for="metode_pembayaran" class="form-label fw-semibold">Metode Pembayaran</label>
-                                        <select name="metode_pembayaran" id="metode_pembayaran" class="form-select" required>
-                                            <option value="tunai" {{ old('metode_pembayaran', 'tunai') == 'tunai' ? 'selected' : '' }}>Bayar di Kasir (Cash/QRIS)</option>
-                                            <option value="transfer" {{ old('metode_pembayaran') == 'transfer' ? 'selected' : '' }}>Transfer Bank</option>
+                                        <select name="metode_pembayaran" id="metode_pembayaran" class="form-select form-select-lg" required>
+                                            <option value="">Pilih Metode Pembayaran</option>
+                                            <option value="BCA" data-tipe="transfer" data-rek="1234567890" data-an="KINGS BENGKEL MOBIL">Transfer Bank BCA</option>
+                                            <option value="Mandiri" data-tipe="transfer" data-rek="0987654321" data-an="KINGS BENGKEL MOBIL">Transfer Bank Mandiri</option>
+                                            <option value="DANA" data-tipe="transfer" data-rek="08123456789" data-an="KINGS BENGKEL MOBIL">E-Wallet DANA</option>
                                         </select>
                                     </div>
 
@@ -81,11 +76,10 @@
                                     <div class="mb-3 p-3 rounded" id="rekening-info" style="display: none; background-color: #f0f7ff; border: 1px solid #cce5ff;">
                                         <div class="d-flex align-items-center mb-2">
                                             <i class="bi bi-info-circle-fill text-primary me-2"></i>
-                                            <span class="fw-bold text-primary">Rekening Transfer</span>
+                                            <span class="fw-bold text-primary" id="rek-title">Informasi Pembayaran</span>
                                         </div>
                                         <div class="small">
-                                            <div><strong>Bank BCA:</strong> 1234567890</div>
-                                            <div><strong>A.N:</strong> Kings Bengkel Mobil</div>
+                                            <div id="rek-detail"></div>
                                         </div>
                                     </div>
 
@@ -201,7 +195,10 @@
             summaryRemaining: document.getElementById('summaryRemaining'),
             
             form: document.getElementById('paymentForm'),
-            submitBtn: document.getElementById('btnSubmit')
+            submitBtn: document.getElementById('btnSubmit'),
+            
+            rekTitle: document.getElementById('rek-title'),
+            rekDetail: document.getElementById('rek-detail')
         };
 
         function formatRp(num) {
@@ -290,12 +287,35 @@
         });
 
         els.metode.addEventListener('change', function () {
-            if (this.value === 'transfer') {
+            const selected = this.options[this.selectedIndex];
+            const tipe = selected.getAttribute('data-tipe');
+            const rek = selected.getAttribute('data-rek');
+            const an = selected.getAttribute('data-an');
+
+            if (this.value === "") {
+                els.rekeningInfo.style.display = 'none';
+                els.buktiContainer.style.display = 'none';
+                els.buktiInput.required = false;
+                return;
+            }
+
+            if (tipe === 'transfer') {
+                els.rekTitle.innerText = 'Informasi Transfer';
+                els.rekDetail.innerHTML = `
+                    <div><strong>Nama Bank:</strong> ${this.value}</div>
+                    <div><strong>No. Rekening:</strong> ${rek}</div>
+                    <div><strong>A.N:</strong> ${an}</div>
+                `;
+                
                 els.rekeningInfo.style.display = 'block';
                 els.buktiContainer.style.display = 'block';
                 els.buktiInput.required = true;
             } else {
-                els.rekeningInfo.style.display = 'none';
+                // Tunai
+                els.rekTitle.innerText = 'Informasi Pembayaran';
+                els.rekDetail.innerHTML = `<div><strong>${this.value}</strong></div>`;
+                
+                els.rekeningInfo.style.display = 'block';
                 els.buktiContainer.style.display = 'none';
                 els.buktiInput.required = false;
             }

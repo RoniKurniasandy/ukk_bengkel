@@ -53,6 +53,7 @@ class MekanikController extends Controller
             'booking_id' => $booking->booking_id,
             'mekanik_id' => Auth::id(),
             'status' => 'dikerjakan',
+            'status_pembayaran' => 'belum_bayar',
             'estimasi_biaya' => $hargaLayanan,
             'waktu_mulai' => now(),
         ]);
