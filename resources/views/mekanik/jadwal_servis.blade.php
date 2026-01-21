@@ -60,7 +60,7 @@
                                             <i class="bi bi-hourglass-split"></i> {{ $b->layanan->estimasi_waktu ?? '-' }}
                                         </span>
                                     </td>
-                                    <td class="pe-4 text-center">
+                                    <!-- <td class="pe-4 text-center">
                                         <form action="{{ route('mekanik.booking.start', $b->booking_id) }}" method="POST"
                                             class="d-inline">
                                             @csrf
@@ -69,7 +69,17 @@
                                                 <i class="bi bi-play-circle me-1"></i> Kerjakan
                                             </button>
                                         </form>
+                                    </td> -->
+                                
+                                    <td>
+                                        <form action="{{ route('mekanik.booking.start', $b->booking_id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Mulai mengerjakan servis inii?')">
+                                                <i class="bi bi-play-circle"></i> Kerjakan
+                                            </button>
+                                        </form>
                                     </td>
+                                
                                 </tr>
                             @empty
                                 <tr>

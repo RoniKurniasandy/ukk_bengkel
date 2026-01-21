@@ -12,6 +12,15 @@
 
 
         @if(Auth::check() && Auth::user()->role === 'admin')
+
+                    <li class="nav-item mb-1">
+                <a href="{{ route('dashboard.admin') }}"
+                    class="nav-link text-white rounded d-flex align-items-center {{ request()->routeIs('admin.dashboard*') ? 'active bg-primary' : '' }}">
+                    <i class="bi bi-speedometer me-2"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
             {{-- MASTER DATA --}}
             <li class="nav-item mt-3 mb-2 px-3">
                 <span class="text-white-50 small text-uppercase fw-bold" style="letter-spacing: 1px; font-size: 0.7rem;">Master Data</span>
@@ -83,6 +92,15 @@
         @endif
 
         @if(Auth::check() && Auth::user()->role === 'mekanik')
+
+          <li class="nav-item mb-1">
+                <a href="{{ route('dashboard.mekanik') }}"
+                    class="nav-link text-white rounded d-flex align-items-center {{ request()->routeIs('mekanik.dashboard*') ? 'active bg-primary' : '' }}">
+                    <i class="bi bi-speedometer me-2"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
             <li class="nav-item mb-1">
                 <a href="{{ route('mekanik.jadwal.servis') }}" 
                     class="nav-link text-white rounded d-flex justify-content-between align-items-center">
@@ -116,6 +134,15 @@
         @endif
 
         @if(Auth::check() && Auth::user()->role === 'pelanggan')
+
+                  <li class="nav-item mb-1">
+                <a href="{{ route('dashboard.user') }}"
+                    class="nav-link text-white rounded d-flex align-items-center {{ request()->routeIs('user.dashboard*') ? 'active bg-primary' : '' }}">
+                    <i class="bi bi-speedometer me-2"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
             <li class="nav-item mb-1">
                 <a href="{{ route('user.servis') }}"
                     class="nav-link text-white rounded d-flex justify-content-between align-items-center {{ request()->is('pelanggan/servis') ? 'active bg-primary' : '' }}">
