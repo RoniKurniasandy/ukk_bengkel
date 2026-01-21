@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             LayananSeeder::class,
             StokSeeder::class,
+            MembershipSeeder::class,
+            MetodePembayaranSeeder::class,
             // Tambahkan seeder lain jika ada, contoh:
             // BookingSeeder::class,
         ]);
