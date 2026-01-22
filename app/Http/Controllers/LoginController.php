@@ -21,7 +21,19 @@ class LoginController extends Controller
         $request->validate([
             'login' => 'required|string',
             'password' => 'required',
+            'g-recaptcha-response' => 'required',
         ]);
+
+        // Verify reCAPTCHA
+        $response = \Illuminate\Support\Facades\Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => env('RECAPTCHA_SECRET_KEY'),
+            'response' => $request->input('g-recaptcha-response'),
+            'remoteip' => $request->ip(),
+        ]);
+
+        if (!$response->json()['success']) {
+             return back()->withErrors(['captcha' => 'Verifikasi reCAPTCHA gagal, silakan coba lagi.'])->onlyInput('login');
+        }
 
         $login = $request->input('login');
         $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'no_hp';

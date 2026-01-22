@@ -207,7 +207,10 @@
       }
     }
   </style>
+  <!-- Google reCAPTCHA -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
+
 
 <body>
 
@@ -262,6 +265,10 @@
             </label>
           </div>
           <a href="{{ route('password.request') }}" style="color: #3b82f6; font-size: 0.9rem; text-decoration: none;">Lupa password?</a>
+        </div>
+
+        <div class="mb-3 d-flex justify-content-center">
+            <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
         </div>
 
         <button type="submit" class="btn btn-login">

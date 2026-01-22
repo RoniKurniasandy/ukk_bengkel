@@ -216,7 +216,10 @@
       }
     }
   </style>
+  <!-- Google reCAPTCHA -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
+
 
 <body>
 
@@ -299,7 +302,13 @@
           <label class="form-check-label" for="terms" style="color: #64748b; font-size: 0.85rem;">
             Saya setuju dengan <a href="#" style="color: #3b82f6;">syarat dan ketentuan</a> yang berlaku
           </label>
+          </label>
         </div>
+
+        <div class="mb-3 d-flex justify-content-center">
+            <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+        </div>
+
 
         <button type="submit" class="btn btn-register">
           <i class="bi bi-person-plus me-2"></i>Daftar Sekarang

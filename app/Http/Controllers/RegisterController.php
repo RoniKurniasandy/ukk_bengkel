@@ -24,7 +24,19 @@ class RegisterController extends Controller
             'email' => ['required', 'email', 'unique:users,email'],
             'no_hp' => ['required', 'string', 'max:15', 'unique:users,no_hp'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'g-recaptcha-response' => ['required'],
         ]);
+
+        // Verify reCAPTCHA
+        $response = \Illuminate\Support\Facades\Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => env('RECAPTCHA_SECRET_KEY'),
+            'response' => $request->input('g-recaptcha-response'),
+            'remoteip' => $request->ip(),
+        ]);
+
+        if (!$response->json()['success']) {
+             return back()->withErrors(['captcha' => 'Verifikasi reCAPTCHA gagal, silakan coba lagi.'])->withInput();
+        }
 
         $user = User::create([
             'nama' => $request->nama,
