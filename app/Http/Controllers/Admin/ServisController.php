@@ -100,6 +100,10 @@ class ServisController extends Controller
                 ->get();
         }
 
+        if ($request->ajax()) {
+            return view('admin.servis.table_rows', compact('bookings'));
+        }
+
         return view('admin.servis.index', compact('bookings'));
     }
 

@@ -67,8 +67,12 @@
                                             <form action="{{ route('mekanik.servis.update', $item->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('PUT')
-                                                <button type="button" class="btn btn-success btn-sm delete-confirm px-3 fw-bold" 
-                                                    data-message="Apakah servis ini sudah selesai?" style="border-radius: 8px;">
+                                                <button type="button" class="btn btn-success btn-sm action-confirm px-3 fw-bold" 
+                                                    data-title="Konfirmasi Selesai"
+                                                    data-message="Apakah servis ini sudah selesai?" 
+                                                    data-confirm-text="Ya, Selesai!"
+                                                    data-confirm-color="#198754"
+                                                    style="border-radius: 8px;">
                                                     <i class="bi bi-check-circle"></i> Selesai
                                                 </button>
                                             </form>

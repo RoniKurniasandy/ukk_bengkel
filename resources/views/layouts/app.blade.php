@@ -229,6 +229,42 @@
             }
           }
         }
+        // Global Generic Action Confirmation
+        const actionBtn = e.target.closest('.action-confirm');
+        if (actionBtn) {
+          e.preventDefault();
+          const form = actionBtn.closest('form');
+          const title = actionBtn.dataset.title || 'Konfirmasi';
+          const message = actionBtn.dataset.message || 'Apakah Anda yakin?';
+          const icon = actionBtn.dataset.icon || 'question';
+          const confirmText = actionBtn.dataset.confirmText || 'Ya';
+          const confirmColor = actionBtn.dataset.confirmColor || '#3085d6';
+          
+          if (hasSwal) {
+            Swal.fire({
+              title: title,
+              text: message,
+              icon: icon,
+              showCancelButton: true,
+              confirmButtonColor: confirmColor,
+              cancelButtonColor: '#6c757d',
+              confirmButtonText: confirmText,
+              cancelButtonText: 'Batal'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                if (actionBtn.type === 'submit' && typeof form.requestSubmit === 'function') {
+                  form.requestSubmit(actionBtn);
+                } else {
+                  form.submit();
+                }
+              }
+            });
+          } else {
+            if (confirm(message)) {
+              form.submit();
+            }
+          }
+        }
       });
     });
   </script>
