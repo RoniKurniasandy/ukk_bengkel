@@ -22,7 +22,7 @@ class RegisterController extends Controller
         $request->validate([
             'nama' => ['required', 'string', 'max:100'],
             'email' => ['required', 'email', 'unique:users,email'],
-            'no_hp' => ['required', 'string', 'max:15', 'unique:users,no_hp'],
+            'no_hp' => ['required', 'numeric', 'digits_between:10,13', 'unique:users,no_hp'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'g-recaptcha-response' => ['required'],
         ]);

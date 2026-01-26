@@ -268,10 +268,10 @@
           <label for="no_hp" class="form-label">Nomor HP</label>
           <div class="input-icon">
             <input id="no_hp" name="no_hp" type="text" value="{{ old('no_hp') }}" required class="form-control"
-              placeholder="081234567890" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+              placeholder="081234567890" oninput="this.value = this.value.replace(/[^0-9]/g, '')" minlength="10" maxlength="13">
             <i class="bi bi-telephone"></i>
           </div>
-          <small class="text-muted">Gunakan nomor aktif untuk kemudahan login</small>
+          <small class="text-muted">Gunakan nomor aktif (10-13 digit) untuk kemudahan login</small>
         </div>
 
         <div class="mb-3">
